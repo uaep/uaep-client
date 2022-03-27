@@ -1,4 +1,4 @@
-package com.example.uaep.login
+package com.example.uaep.ui.login.components
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.KeyboardOptions

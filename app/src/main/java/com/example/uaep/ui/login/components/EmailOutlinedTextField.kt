@@ -1,11 +1,13 @@
-package com.example.uaep.login
+package com.example.uaep.ui.login.components
 
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.TextFieldDefaults.outlinedTextFieldColors
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.input.KeyboardType
 
 @Composable
 fun EmailOutlinedTextField(
@@ -29,6 +31,7 @@ fun EmailOutlinedTextField(
             unfocusedLabelColor = color,
             focusedLabelColor = color,
             focusedBorderColor = color
-        )
+        ),
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
     )
 }
