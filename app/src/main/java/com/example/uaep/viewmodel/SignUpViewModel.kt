@@ -1,4 +1,4 @@
-package com.example.uaep.ui.signup
+package com.example.uaep.viewmodel
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
@@ -58,6 +58,10 @@ class SignUpViewModel : ViewModel() {
 
     fun isSamePassword(password: String, confirmedPassword: String): Boolean {
         return password == confirmedPassword
+    }
+
+    fun isMinLength(password: String, confirmedPassword: String): Boolean {
+        return password.length >= 8 && confirmedPassword.length >= 8
     }
 
     private val EMAIL_ADDRESS_PATTERN: Pattern = Pattern.compile(

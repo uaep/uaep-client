@@ -1,4 +1,4 @@
-package com.example.uaep.ui.signup.components
+package com.example.uaep.view
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -10,9 +10,8 @@ import androidx.compose.material.TextFieldDefaults.outlinedTextFieldColors
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
-import com.example.uaep.ui.signup.SignUpViewModel
+import com.example.uaep.viewmodel.SignUpViewModel
 
 @Composable
 fun GenderExposedDropDownMenu(

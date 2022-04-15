@@ -7,9 +7,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.ui.Modifier
-import com.example.uaep.ui.login.LoginView
-import com.example.uaep.ui.signup.SignUpView
 import com.example.uaep.ui.theme.UaepTheme
+import com.example.uaep.view.CommonScreenView
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -21,7 +20,9 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background,
                 ) {
-                    SignUpView()
+//                    LoginView()
+//                    SignUpView()
+                    CommonScreenView()
                 }
             }
         }

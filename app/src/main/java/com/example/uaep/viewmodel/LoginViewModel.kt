@@ -1,4 +1,4 @@
-package com.example.uaep.ui.login
+package com.example.uaep.viewmodel
 
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
