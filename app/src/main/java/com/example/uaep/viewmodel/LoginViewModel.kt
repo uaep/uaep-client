@@ -7,18 +7,18 @@ import androidx.lifecycle.ViewModel
 // ViewModel basically exposes model data to the view.
 class LoginViewModel : ViewModel() {
 
-    private val _email = mutableStateOf("")
-    private val _password = mutableStateOf("")
+    private val mEmail = mutableStateOf("")
+    private val mPassword = mutableStateOf("")
 
     // Getter와 같은 역할
-    val email: State<String> = _email
-    val password: State<String> = _password
+    val email: State<String> = mEmail
+    val password: State<String> = mPassword
 
     fun updateEmail(email: String) {
-        _email.value = email
+        mEmail.value = email
     }
 
     fun updatePassword(password: String) {
-        _password.value = password
+        mPassword.value = password
     }
 }

@@ -12,44 +12,44 @@ import java.util.regex.Pattern
 
 class SignUpViewModel : ViewModel() {
 
-    private val _name = mutableStateOf("")
-    private val _email = mutableStateOf("")
-    private val _password = mutableStateOf("")
-    private val _confirmedPassword = mutableStateOf("")
-    private val _gender = mutableStateOf("")
-    private val _enabled = mutableStateOf(false)
+    private val mName = mutableStateOf("")
+    private val mEmail = mutableStateOf("")
+    private val mPassword = mutableStateOf("")
+    private val mConfirmedPassword = mutableStateOf("")
+    private val mGender = mutableStateOf("")
+    private val mEnabled = mutableStateOf(false)
 
-    val name: State<String> = _name
-    val email: State<String> = _email
-    val password: State<String> = _password
-    val confirmedPassword: State<String> = _confirmedPassword
-    val gender: State<String> = _gender
-    val enabled: State<Boolean> = _enabled
+    val name: State<String> = mName
+    val email: State<String> = mEmail
+    val password: State<String> = mPassword
+    val confirmedPassword: State<String> = mConfirmedPassword
+    val gender: State<String> = mGender
+    val enabled: State<Boolean> = mEnabled
     val icon:ImageVector
-        @Composable get() = if (_enabled.value) Icons.Filled.ArrowDropUp else Icons.Filled.ArrowDropDown
+        @Composable get() = if (mEnabled.value) Icons.Filled.ArrowDropUp else Icons.Filled.ArrowDropDown
 
     fun updateName(name: String) {
-        _name.value = name
+        mName.value = name
     }
 
     fun updateEmail(email: String) {
-        _email.value = email
+        mEmail.value = email
     }
 
     fun updatePassword(password: String) {
-        _password.value = password
+        mPassword.value = password
     }
 
     fun updateConfirmedPassword(confirmedPassword: String) {
-        _confirmedPassword.value = confirmedPassword
+        mConfirmedPassword.value = confirmedPassword
     }
 
     fun updateGender(gender: String) {
-        _gender.value = gender
+        mGender.value = gender
     }
 
     fun onEnabled(enabled: Boolean) {
-        _enabled.value = enabled
+        mEnabled.value = enabled
     }
 
     fun isValidEmail(email: String): Boolean {

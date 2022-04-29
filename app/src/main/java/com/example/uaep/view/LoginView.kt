@@ -2,43 +2,40 @@ package com.example.uaep.view
 
 import android.util.Log
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
+import androidx.compose.material.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.compose.rememberNavController
+import com.example.uaep.ui.theme.UaepTheme
 import com.example.uaep.ui.theme.md_theme_light_onPrimary
 import com.example.uaep.ui.theme.md_theme_light_primary
+import com.example.uaep.ui.theme.md_theme_light_secondary
 import com.example.uaep.viewmodel.LoginViewModel
 
 @Composable
-fun LoginView() {
-
-    val vm = viewModel<LoginViewModel>()
-    val navController = rememberNavController()
-
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(md_theme_light_onPrimary),
-    ) {
+fun LoginView(
+    vm: LoginViewModel
+) {
+    Box {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center,
@@ -57,29 +54,39 @@ fun LoginView() {
                 fontSize = 30.sp,
                 color = md_theme_light_primary
             )
-            Spacer(modifier = Modifier.padding(20.dp))
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                EmailOutlinedTextField(
-                    text = vm.email.value,
+            Spacer(
+                modifier = Modifier.padding(20.dp)
+            )
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                OutlinedTextField(
+                    value = vm.email.value,
                     onValueChange = { vm.updateEmail(it) },
-                    label = { Text("이메일을 입력하세요.")},
+                    label = { Text("이메일을 입력하세요.") },
                     placeholder = { Text("이메일을 입력하세요.")},
                     singleLine = true,
-                    color = md_theme_light_primary
+                    modifier = Modifier.fillMaxWidth(0.8f),
+                    colors = TextFieldDefaults.outlinedTextFieldColors(
+                        unfocusedBorderColor = md_theme_light_primary,
+                        unfocusedLabelColor = md_theme_light_primary,
+                        focusedLabelColor = md_theme_light_primary,
+                        focusedBorderColor = md_theme_light_primary
+                    ),
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
                 )
                 PasswordOutlinedTextField(
-                    text = vm.password.value,
+                    password = vm.password.value,
                     onValueChange = { vm.updatePassword(it) },
                     label = { Text(text = "비밀번호를 입력하세요.") },
                     placeholder = { Text(text = "비밀번호를 입력하세요.") },
                     color = md_theme_light_primary
                 )
-                Spacer(modifier = Modifier.padding(10.dp))
-                // 로그인 버튼
+                Spacer(modifier = Modifier.padding(7.dp))
                 Button(
                     onClick = {
-                        Log.i("Email value : ", vm.email.value)
-                        Log.i("Password value : ", vm.password.value)
+                        Log.i("Email", vm.email.value)
+                        Log.i("Password", vm.password.value)
                         // TODO: HTTP Request to Server
                     },
                     modifier = Modifier
@@ -92,15 +99,30 @@ fun LoginView() {
                 ) {
                     Text(text = "로그인", fontSize = 20.sp)
                 }
-                Spacer(modifier = Modifier.padding(10.dp))
-                Text(
-                    text = "회원가입",
-                    modifier = Modifier.clickable {
-                        Log.d("회원가입", "CLICK")
+                Spacer(modifier = Modifier.padding(5.dp))
+                Button(
+                    onClick = {
+                        // TODO: 이메일 인증 화면으로 전환하기
                     },
-                    fontSize = 20.sp
-                )
+                    modifier = Modifier
+                        .fillMaxWidth(0.8f)
+                        .height(50.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        backgroundColor = md_theme_light_secondary,
+                        contentColor = md_theme_light_onPrimary
+                    )
+                ) {
+                    Text(text = "회원가입", fontSize = 20.sp)
+                }
             }
         }
+    }
+}
+
+@Preview(showBackground = true, widthDp = 320)
+@Composable
+fun LoginScreenPreview() {
+    UaepTheme {
+        LoginView(LoginViewModel())
     }
 }
