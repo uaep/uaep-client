@@ -1,4 +1,4 @@
-package com.example.uaep.viewmodel
+package com.example.uaep.presentation.signup
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
@@ -15,14 +15,14 @@ class SignUpViewModel : ViewModel() {
     private val mName = mutableStateOf("")
     private val mEmail = mutableStateOf("")
     private val mPassword = mutableStateOf("")
-    private val mConfirmedPassword = mutableStateOf("")
+    private val mMatchingPassword = mutableStateOf("")
     private val mGender = mutableStateOf("")
     private val mEnabled = mutableStateOf(false)
 
     val name: State<String> = mName
     val email: State<String> = mEmail
     val password: State<String> = mPassword
-    val confirmedPassword: State<String> = mConfirmedPassword
+    val matchingPassword: State<String> = mMatchingPassword
     val gender: State<String> = mGender
     val enabled: State<Boolean> = mEnabled
     val icon:ImageVector
@@ -40,37 +40,20 @@ class SignUpViewModel : ViewModel() {
         mPassword.value = password
     }
 
-    fun updateConfirmedPassword(confirmedPassword: String) {
-        mConfirmedPassword.value = confirmedPassword
+    fun updateMatchingPassword(matchingPassword: String) {
+        mMatchingPassword.value = matchingPassword
     }
 
     fun updateGender(gender: String) {
         mGender.value = gender
     }
 
+
     fun onEnabled(enabled: Boolean) {
         mEnabled.value = enabled
     }
 
-    fun isValidEmail(email: String): Boolean {
-        return EMAIL_ADDRESS_PATTERN.matcher(email).matches();
+    fun isSamePassword(password: String, matchingPassword: String): Boolean {
+        return password == matchingPassword
     }
-
-    fun isSamePassword(password: String, confirmedPassword: String): Boolean {
-        return password == confirmedPassword
-    }
-
-    fun isMinLength(password: String, confirmedPassword: String): Boolean {
-        return password.length >= 8 && confirmedPassword.length >= 8
-    }
-
-    private val EMAIL_ADDRESS_PATTERN: Pattern = Pattern.compile(
-        "[a-zA-Z0-9\\+\\.\\_\\%\\-\\+]{1,256}" +
-                "\\@" +
-                "[a-zA-Z0-9][a-zA-Z0-9\\-]{0,64}" +
-                "(" +
-                "\\." +
-                "[a-zA-Z0-9][a-zA-Z0-9\\-]{0,25}" +
-                ")+"
-    )
 }

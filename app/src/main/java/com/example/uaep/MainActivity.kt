@@ -7,14 +7,15 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
+import com.example.uaep.navigation.SetupNavGraph
 import com.example.uaep.ui.theme.UaepTheme
-import com.example.uaep.view.CommonScreenView
-import com.example.uaep.view.LoginView
-import com.example.uaep.view.SignUpView
-import com.example.uaep.viewmodel.LoginViewModel
-import com.example.uaep.viewmodel.SignUpViewModel
 
 class MainActivity : ComponentActivity() {
+
+    lateinit var navController: NavHostController
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent { // to define layout
@@ -24,9 +25,11 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background,
                 ) {
-//                    LoginView(LoginViewModel())
-                    SignUpView(SignUpViewModel())
-//                    CommonScreenView()
+
+                    // TODO: 로그인 여부에 따라 시작 화면 다르게 하는 법 공부하기
+                    navController = rememberNavController()
+                    SetupNavGraph(navController = navController)
+
                 }
             }
         }

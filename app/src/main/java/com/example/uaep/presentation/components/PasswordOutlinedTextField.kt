@@ -1,4 +1,4 @@
-package com.example.uaep.view
+package com.example.uaep.presentation.components
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.KeyboardOptions

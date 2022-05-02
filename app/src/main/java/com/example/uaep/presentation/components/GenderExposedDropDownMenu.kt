@@ -1,6 +1,5 @@
-package com.example.uaep.view
+package com.example.uaep.presentation.components
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -18,7 +17,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.uaep.ui.theme.md_theme_light_primary
-import com.example.uaep.viewmodel.SignUpViewModel
+import com.example.uaep.presentation.signup.SignUpViewModel
 
 @Composable
 fun GenderExposedDropDownMenu(
@@ -67,7 +66,7 @@ fun GenderExposedDropDownMenu(
         ) {
             DropdownMenuItem(
                 onClick = {
-                    vm.updateGender("남성")
+                    vm.updateGender("male")
                     vm.onEnabled(false)
                 }
             ) {
@@ -79,7 +78,7 @@ fun GenderExposedDropDownMenu(
             }
             DropdownMenuItem(
                 onClick = {
-                    vm.updateGender("여성")
+                    vm.updateGender("female")
                     vm.onEnabled(false)
                 }
             ) {
