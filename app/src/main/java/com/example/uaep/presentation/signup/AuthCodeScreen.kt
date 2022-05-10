@@ -1,6 +1,8 @@
 package com.example.uaep.presentation.signup
 
+import android.content.Context
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -19,6 +21,7 @@ import androidx.compose.material.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -28,23 +31,30 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.uaep.R
-import com.example.uaep.navigation.Screen
 import com.example.uaep.dto.AuthCodeRequestDto
+import com.example.uaep.dto.ErrorResponse
 import com.example.uaep.dto.UrlResponseDto
+import com.example.uaep.navigation.Screen
 import com.example.uaep.network.UserApiService
 import com.example.uaep.ui.theme.UaepTheme
 import com.example.uaep.ui.theme.md_theme_light_onPrimary
 import com.example.uaep.ui.theme.md_theme_light_primary
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+
 
 @Composable
 fun AuthCodeScreen (
     vm: AuthCodeViewModel,
     navController: NavController,
-    email: String
+    email: String,
+    token: String
 ) {
+    val context = LocalContext.current
+
     Box {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -90,17 +100,25 @@ fun AuthCodeScreen (
                         Log.i("POST to the server", vm.authCode.value)
                         val authCodeRequestDto = AuthCodeRequestDto(code = vm.authCode.value)
                         val userApiService = UserApiService.getInstance()
-                        userApiService.verifyEmail(authCodeRequestDto = authCodeRequestDto).enqueue(object :
+                        userApiService.verifyEmail(
+                            authCodeRequestDto = authCodeRequestDto,
+                            token = token
+                        ).enqueue(object :
                             Callback<UrlResponseDto> {
                             override fun onResponse(
                                 call: Call<UrlResponseDto>,
                                 response: Response<UrlResponseDto>
                             ) {
-                                if(response.isSuccessful) {
-                                    Log.i("test", response.body().toString())
-                                    // TODO: Status Code에 따라 다르게 구현
-                                    var url = response.body() // GsonConverter를 사용해 데이터매핑
-                                    navController.navigate(Screen.SignUp.passEmail(email))
+                                if (response.body() != null && response.isSuccessful) {
+                                    navController.navigate(Screen.SignUp.passEmailAndToken(email, token))
+                                } else {
+                                    val errorResponse: ErrorResponse? =
+                                        Gson().fromJson(
+                                            response.errorBody()!!.charStream(),
+                                            object : TypeToken<ErrorResponse>() {}.type
+                                        )
+
+                                    mToast(context, errorResponse!!.message)
                                 }
                             }
 
@@ -127,6 +145,10 @@ fun AuthCodeScreen (
     }
 }
 
+private fun mToast(context: Context, msg: String){
+    Toast.makeText(context, msg, Toast.LENGTH_LONG).show()
+}
+
 @Preview(
     showBackground = true, 
     widthDp = 320
@@ -137,7 +159,8 @@ fun AuthCodePreview() {
         AuthCodeScreen(
             vm = AuthCodeViewModel(),
             navController = rememberNavController(),
-            email = "test@gmail.com"
+            email = "test@gmail.com",
+            token = "23lnlksnklfnsdl"
         )
     }
 }

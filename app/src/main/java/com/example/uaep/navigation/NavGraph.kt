@@ -41,26 +41,38 @@ fun SetupNavGraph(
         }
         composable(
             route = Screen.AuthCode.route,
-            arguments = listOf(navArgument(EMAIL) {
-                type = NavType.StringType
-            })
+            arguments = listOf(
+                navArgument(EMAIL) {
+                    type = NavType.StringType
+                },
+                navArgument(TOKEN) {
+                    type = NavType.StringType
+                }
+            )
         ) {
             AuthCodeScreen(
                 vm = AuthCodeViewModel(),
                 navController = navController,
-                email = it.arguments?.getString("email").toString()
+                email = it.arguments?.getString("email").toString(),
+                token = it.arguments?.getString("token").toString()
             )
         }
         composable(
             route = Screen.SignUp.route,
-            arguments = listOf(navArgument(EMAIL) {
-                type = NavType.StringType
-            })
+            arguments = listOf(
+                navArgument(EMAIL) {
+                    type = NavType.StringType
+                },
+                navArgument(TOKEN) {
+                    type = NavType.StringType
+                }
+            )
         ) {
             SignUpScreen(
                 vm = SignUpViewModel(),
                 navController = navController,
-                email = it.arguments?.getString("email").toString()
+                email = it.arguments?.getString("email").toString(),
+                token = it.arguments?.getString("token").toString()
             )
         }
     }

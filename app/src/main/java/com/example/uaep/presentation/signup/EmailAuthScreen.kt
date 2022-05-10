@@ -1,6 +1,8 @@
 package com.example.uaep.presentation.signup
 
+import android.content.Context
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -24,6 +26,7 @@ import androidx.compose.material.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -36,11 +39,14 @@ import com.example.uaep.enums.Domain
 import com.example.uaep.R
 import com.example.uaep.navigation.Screen
 import com.example.uaep.dto.EmailRequestDto
+import com.example.uaep.dto.ErrorResponse
 import com.example.uaep.dto.UrlResponseDto
 import com.example.uaep.network.UserApiService
 import com.example.uaep.ui.theme.UaepTheme
 import com.example.uaep.ui.theme.md_theme_light_onPrimary
 import com.example.uaep.ui.theme.md_theme_light_primary
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -50,6 +56,9 @@ fun EmailAuthScreen (
     vm: EmailAuthViewModel,
     navController: NavController
 ) {
+
+    val context = LocalContext.current
+
     Box {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -167,10 +176,16 @@ fun EmailAuthScreen (
                                 response: Response<UrlResponseDto>
                             ) {
                                 if(response.isSuccessful) {
-                                    Log.i("test", response.body().toString())
-                                    // TODO: Status Code에 따라 다르게 구현
-                                    var url = response.body() // GsonConverter를 사용해 데이터매핑
-                                    navController.navigate(route = Screen.AuthCode.passEmail(vm.email.value))
+                                    val token = response.body()?.url.toString().split("=")[1];
+                                    navController.navigate(route = Screen.AuthCode.passEmailAndToken(vm.email.value, token))
+                                } else {
+                                    val errorResponse: ErrorResponse? =
+                                        Gson().fromJson(
+                                            response.errorBody()!!.charStream(),
+                                            object : TypeToken<ErrorResponse>() {}.type
+                                        )
+
+                                    mToast(context, errorResponse!!.message)
                                 }
                             }
 
@@ -195,6 +210,10 @@ fun EmailAuthScreen (
             }
         }
     }
+}
+
+private fun mToast(context: Context, msg: String){
+    Toast.makeText(context, msg, Toast.LENGTH_LONG).show()
 }
 
 @Preview(

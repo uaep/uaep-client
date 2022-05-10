@@ -38,7 +38,7 @@ fun GenderExposedDropDownMenu(
                 modifier = Modifier
                     .fillMaxWidth(0.8f)
                     .clickable {
-                        vm.onEnabled(!vm.enabled.value)
+                        vm.onGenderEnabled(!vm.genderEnabled.value)
                     },
                 colors = outlinedTextFieldColors(
                     unfocusedBorderColor = color,
@@ -48,26 +48,26 @@ fun GenderExposedDropDownMenu(
                 ),
                 trailingIcon = {
                     Icon(
-                        imageVector = vm.icon,
+                        imageVector = vm.icon1,
                         contentDescription = null,
                         Modifier.clickable {
-                            vm.onEnabled(!vm.enabled.value)
+                            vm.onGenderEnabled(!vm.genderEnabled.value)
                         }
                     )
                 }
             )
         }
         DropdownMenu(
-            expanded = vm.enabled.value,
+            expanded = vm.genderEnabled.value,
             onDismissRequest = {
-                vm.onEnabled(false)
+                vm.onGenderEnabled(false)
             },
             modifier = Modifier.width(300.dp),
         ) {
             DropdownMenuItem(
                 onClick = {
                     vm.updateGender("male")
-                    vm.onEnabled(false)
+                    vm.onGenderEnabled(false)
                 }
             ) {
                 Text(
@@ -79,7 +79,7 @@ fun GenderExposedDropDownMenu(
             DropdownMenuItem(
                 onClick = {
                     vm.updateGender("female")
-                    vm.onEnabled(false)
+                    vm.onGenderEnabled(false)
                 }
             ) {
                 Text(

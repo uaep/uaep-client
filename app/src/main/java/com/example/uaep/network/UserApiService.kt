@@ -9,8 +9,12 @@ import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.Body
+import retrofit2.http.Field
+import retrofit2.http.FormUrlEncoded
 import retrofit2.http.Headers
+import retrofit2.http.Multipart
 import retrofit2.http.POST
+import retrofit2.http.Query
 
 interface UserApiService {
     @Headers("accept: application/json",
@@ -21,12 +25,18 @@ interface UserApiService {
     @Headers("accept: application/json",
         "content-type: application/json")
     @POST("email_verify")
-    fun verifyEmail(@Body authCodeRequestDto: AuthCodeRequestDto) : Call<UrlResponseDto>
+    fun verifyEmail(
+        @Body authCodeRequestDto: AuthCodeRequestDto,
+        @Query("signupVerifyToken") token: String
+    ) : Call<UrlResponseDto>
 
     @Headers("accept: application/json",
         "content-type: application/json")
     @POST(".")
-    fun signup(@Body signUpRequestDto: SignUpRequestDto) : Call<UrlResponseDto>
+    fun signup(
+        @Body signUpRequestDto: SignUpRequestDto,
+        @Query("signupVerifyToken") token: String
+    ) : Call<UrlResponseDto>
 
     // TODO: Login
 

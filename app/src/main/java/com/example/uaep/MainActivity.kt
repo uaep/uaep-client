@@ -10,6 +10,8 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.uaep.navigation.SetupNavGraph
+import com.example.uaep.presentation.signup.SignUpScreen
+import com.example.uaep.presentation.signup.SignUpViewModel
 import com.example.uaep.ui.theme.UaepTheme
 
 class MainActivity : ComponentActivity() {

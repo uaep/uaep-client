@@ -14,5 +14,7 @@
     <string name="name">이름</string>
     <string name="matching_password">비밀번호 확인</string>
     <string name="gender">성별</string>
+    <string name="address">주소</string>
+    <string name="position">포지션</string>
 </resources>
 

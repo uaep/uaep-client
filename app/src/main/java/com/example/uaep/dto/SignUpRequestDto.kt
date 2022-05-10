@@ -7,5 +7,7 @@ data class SignUpRequestDto(
     val password: String,
     @SerializedName("password_check")
     val matchingPassword: String,
-    val gender: String
+    val gender: String,
+    val address: String,
+    val position: String
 )

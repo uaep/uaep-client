@@ -1,3 +1,4 @@
 package com.example.uaep.dto
 
-data class EmailRequestDto(val email: String)
+data class
+EmailRequestDto(val email: String)
