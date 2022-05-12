@@ -14,6 +14,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.example.uaep.R
 import com.example.uaep.model.Gender
 import com.example.uaep.model.Rank
@@ -95,7 +97,12 @@ fun RoomCardSimple(
 ){
     Row(
         modifier = Modifier
-            .clickable(onClick = { navigateToArticle(room.id) })
+            .clickable(
+                onClick = {
+                //navigateToArticle(room.id)
+
+            }
+            )
             .border(
                 width = 2.dp,
                 color = md_theme_light_primary,

@@ -5,8 +5,13 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -14,6 +19,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.rememberNavController
 import com.example.uaep.model.Room
 import com.example.uaep.ui.components.UaepSnackbarHost
 import com.example.uaep.ui.rememberContentPaddingForScreen
@@ -22,9 +32,12 @@ import com.example.uaep.R
 import com.example.uaep.data.rooms
 import com.example.uaep.model.Gender
 import com.example.uaep.model.Rank
+import com.example.uaep.ui.Navi.BottomNavItem
+import com.example.uaep.ui.Navi.Screen
 import com.example.uaep.uitmp.UaepTheme
 import com.example.uaep.uitmp.md_theme_light_onPrimary
 import com.example.uaep.uitmp.md_theme_light_primary
+import com.example.uaep.uitmp.md_theme_light_primaryContainer
 import com.example.uaep.utils.isScrolled
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
@@ -40,6 +53,7 @@ fun HomeFeedScreen(
     homeListLazyListState: LazyListState,
     scaffoldState: ScaffoldState,
     modifier: Modifier = Modifier,
+    navController : NavHostController
 ) {
     HomeScreenWithList(
         uiState = uiState,
@@ -49,7 +63,8 @@ fun HomeFeedScreen(
         openDrawer = openDrawer,
         homeListLazyListState = homeListLazyListState,
         scaffoldState = scaffoldState,
-        modifier = modifier
+        modifier = modifier,
+        navController = navController
     ) { hasPostsUiState, contentModifier ->
         PostList(
             roomsFeed = hasPostsUiState.roomsFeed,
@@ -73,6 +88,7 @@ private fun HomeScreenWithList(
     homeListLazyListState: LazyListState,
     scaffoldState: ScaffoldState,
     modifier: Modifier = Modifier,
+    navController : NavHostController,
     hasPostsContent: @Composable (
         uiState: HomeUiState.HasPosts,
         modifier: Modifier
@@ -89,7 +105,10 @@ private fun HomeScreenWithList(
                 )
             }
         },
-        modifier = modifier
+        modifier = modifier,
+        bottomBar = {
+            BottomNavigation(navController = navController)
+        }
     ) { innerPadding ->
         val contentModifier = Modifier.padding(innerPadding)
 
@@ -106,7 +125,7 @@ private fun HomeScreenWithList(
                     is HomeUiState.HasPosts -> hasPostsContent(uiState, contentModifier)
                     is HomeUiState.NoPosts -> {
                         if (uiState.errorMessages.isEmpty()) {
-                            // if there are no posts, and no error, let the user refresh manually
+
                             TextButton(
                                 onClick = onRefreshPosts,
                                 modifier.fillMaxSize()
@@ -117,32 +136,26 @@ private fun HomeScreenWithList(
                                 )
                             }
                         } else {
-                            // there's currently an error showing, don't show any content
+
                             Box(contentModifier.fillMaxSize()) { /* empty screen */ }
                         }
                     }
                 }
             }
+
         )
     }
 
-    // Process one error message at a time and show them as Snackbars in the UI
     if (uiState.errorMessages.isNotEmpty()) {
-        // Remember the errorMessage to display on the screen
+
         val errorMessage = remember(uiState) { uiState.errorMessages[0] }
 
-        // Get the text to show on the message from resources
         val errorMessageText: String = stringResource(errorMessage.messageId)
         val retryMessageText = stringResource(id = R.string.retry)
 
-        // If onRefreshPosts or onErrorDismiss change while the LaunchedEffect is running,
-        // don't restart the effect and use the latest lambda values.
         val onRefreshPostsState by rememberUpdatedState(onRefreshPosts)
         val onErrorDismissState by rememberUpdatedState(onErrorDismiss)
 
-        // Effect running in a coroutine that displays the Snackbar on the screen
-        // If there's a change to errorMessageText, retryMessageText or scaffoldState,
-        // the previous effect will be cancelled and a new one will start with the new values
         LaunchedEffect(errorMessageText, retryMessageText, scaffoldState) {
             val snackbarResult = scaffoldState.snackbarHostState.showSnackbar(
                 message = errorMessageText,
@@ -151,8 +164,48 @@ private fun HomeScreenWithList(
             if (snackbarResult == SnackbarResult.ActionPerformed) {
                 onRefreshPostsState()
             }
-            // Once the message is displayed and dismissed, notify the ViewModel
+
             onErrorDismissState(errorMessage.id)
+        }
+    }
+}
+
+@Composable
+fun BottomNavigation(navController: NavController) {
+    val items = listOf(
+        BottomNavItem.Home,
+        BottomNavItem.MyNetwork,
+        BottomNavItem.AddPost,
+        BottomNavItem.Notification
+    )
+    BottomNavigation(
+        backgroundColor = md_theme_light_primary,
+        contentColor = md_theme_light_onPrimary
+    ) {
+        val navBackStackEntry by navController.currentBackStackEntryAsState()
+        val currentRoute = navBackStackEntry?.destination?.route
+        items.forEach { item ->
+            BottomNavigationItem(
+                icon = { Icon(painterResource(id = item.icon), contentDescription = item.title) },
+                label = { Text(text = item.title,
+                    fontSize = 9.sp) },
+                selectedContentColor = md_theme_light_onPrimary,
+                unselectedContentColor = md_theme_light_onPrimary.copy(0.4f),
+                alwaysShowLabel = true,
+                selected = currentRoute == item.screen_route,
+                onClick = {
+                    navController.navigate(item.screen_route) {
+
+                        navController.graph.startDestinationRoute?.let { screen_route ->
+                            popUpTo(screen_route) {
+                                saveState = true
+                            }
+                        }
+                        launchSingleTop = true
+                        restoreState = true
+                    }
+                }
+            )
         }
     }
 }
@@ -274,6 +327,13 @@ private fun HomeTopAppBar(
     )
 }
 
+@Composable
+private fun HomeBottomAppBar(
+
+) {
+
+}
+
 @Preview("Home list drawer screen")
 @Composable
 fun PreviewHomeListDrawerScreen() {
@@ -292,6 +352,7 @@ fun PreviewHomeListDrawerScreen() {
             openDrawer = {},
             homeListLazyListState = rememberLazyListState(),
             scaffoldState = rememberScaffoldState(),
+            navController = rememberNavController()
         )
     }
 }
