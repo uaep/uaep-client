@@ -5,13 +5,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -30,14 +25,11 @@ import com.example.uaep.ui.rememberContentPaddingForScreen
 import com.example.ueap.model.RoomsFeed
 import com.example.uaep.R
 import com.example.uaep.data.rooms
-import com.example.uaep.model.Gender
-import com.example.uaep.model.Rank
-import com.example.uaep.ui.Navi.BottomNavItem
-import com.example.uaep.ui.Navi.Screen
+import com.example.uaep.ui.navi.BottomNavItem
+import com.example.uaep.ui.navi.BottomNavigationBar
 import com.example.uaep.uitmp.UaepTheme
 import com.example.uaep.uitmp.md_theme_light_onPrimary
 import com.example.uaep.uitmp.md_theme_light_primary
-import com.example.uaep.uitmp.md_theme_light_primaryContainer
 import com.example.uaep.utils.isScrolled
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
@@ -107,7 +99,7 @@ private fun HomeScreenWithList(
         },
         modifier = modifier,
         bottomBar = {
-            BottomNavigation(navController = navController)
+            BottomNavigationBar(navController = navController)
         }
     ) { innerPadding ->
         val contentModifier = Modifier.padding(innerPadding)
@@ -166,46 +158,6 @@ private fun HomeScreenWithList(
             }
 
             onErrorDismissState(errorMessage.id)
-        }
-    }
-}
-
-@Composable
-fun BottomNavigation(navController: NavController) {
-    val items = listOf(
-        BottomNavItem.Home,
-        BottomNavItem.MyNetwork,
-        BottomNavItem.AddPost,
-        BottomNavItem.Notification
-    )
-    BottomNavigation(
-        backgroundColor = md_theme_light_primary,
-        contentColor = md_theme_light_onPrimary
-    ) {
-        val navBackStackEntry by navController.currentBackStackEntryAsState()
-        val currentRoute = navBackStackEntry?.destination?.route
-        items.forEach { item ->
-            BottomNavigationItem(
-                icon = { Icon(painterResource(id = item.icon), contentDescription = item.title) },
-                label = { Text(text = item.title,
-                    fontSize = 9.sp) },
-                selectedContentColor = md_theme_light_onPrimary,
-                unselectedContentColor = md_theme_light_onPrimary.copy(0.4f),
-                alwaysShowLabel = true,
-                selected = currentRoute == item.screen_route,
-                onClick = {
-                    navController.navigate(item.screen_route) {
-
-                        navController.graph.startDestinationRoute?.let { screen_route ->
-                            popUpTo(screen_route) {
-                                saveState = true
-                            }
-                        }
-                        launchSingleTop = true
-                        restoreState = true
-                    }
-                }
-            )
         }
     }
 }

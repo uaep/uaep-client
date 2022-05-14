@@ -1,4 +1,4 @@
-package com.example.uaep.ui.Navi
+package com.example.uaep.ui.navi
 
 const val EMAIL = "email"
 const val TOKEN = "token"

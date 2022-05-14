@@ -24,14 +24,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.example.uaep.R
-import com.example.uaep.ui.Navi.Screen
-import com.example.uaep.ui.Navi.UaepNavigationActions
+import com.example.uaep.ui.navi.Screen
 import com.example.uaep.ui.components.PasswordOutlinedTextField
 import com.example.uaep.uitmp.md_theme_light_onPrimary
 import com.example.uaep.uitmp.md_theme_light_primary

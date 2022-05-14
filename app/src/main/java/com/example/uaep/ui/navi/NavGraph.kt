@@ -1,7 +1,5 @@
-package com.example.uaep.ui.Navi
+package com.example.uaep.ui.navi
 
-import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -11,15 +9,10 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.example.uaep.data.room1
-import com.example.uaep.data.rooms
-import com.example.uaep.ui.home.HomeFeedScreen
 import com.example.uaep.ui.home.HomeRoute
-import com.example.uaep.ui.home.HomeUiState
 import com.example.uaep.ui.home.HomeViewModel
 import com.example.uaep.ui.login.LoginScreen
 import com.example.uaep.ui.login.LoginViewModel
-import com.example.uaep.ui.match.RoomContainer
 import com.example.uaep.ui.signup.*
 
 @Composable
