@@ -1,4 +1,4 @@
-package com.example.uaep.presentation.components
+package com.example.uaep.ui.match
 
 import android.util.Log
 import androidx.compose.foundation.background
@@ -23,12 +23,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.uaep.enums.Position
-import com.example.uaep.ui.theme.UaepTheme
-import com.example.uaep.ui.theme.md_theme_light_error
-import com.example.uaep.ui.theme.md_theme_light_onPrimary
-import com.example.uaep.ui.theme.md_theme_light_primary
-import com.example.uaep.ui.theme.md_theme_light_secondary
-import com.example.uaep.ui.theme.md_theme_light_tertiary
+import com.example.uaep.uitmp.*
 
 @Composable
 fun PositionButton(
