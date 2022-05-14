@@ -37,7 +37,10 @@ enum class FieldPosition{
 @Composable
 fun RoomContainer(
     room: Room,
-    modifier: Modifier = Modifier
+    isExpandedScreen: Boolean,
+    onBack: () -> Unit,
+    modifier: Modifier = Modifier,
+
 ) {
     val position = remember{ mutableStateOf(FieldPosition.GK)}
 
@@ -259,7 +262,7 @@ fun SimpleRoomPreview() {
 
     UaepTheme {
         Surface {
-            RoomContainer(room1)
+            RoomContainer(room1, false, {})
         }
     }
 }

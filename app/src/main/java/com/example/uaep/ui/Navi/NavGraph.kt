@@ -14,7 +14,9 @@ import androidx.navigation.navArgument
 import com.example.uaep.data.room1
 import com.example.uaep.data.rooms
 import com.example.uaep.ui.home.HomeFeedScreen
+import com.example.uaep.ui.home.HomeRoute
 import com.example.uaep.ui.home.HomeUiState
+import com.example.uaep.ui.home.HomeViewModel
 import com.example.uaep.ui.login.LoginScreen
 import com.example.uaep.ui.login.LoginViewModel
 import com.example.uaep.ui.match.RoomContainer
@@ -86,26 +88,19 @@ fun UaepNavGraph(
             )
         }
         composable(route = Screen.Home.route) {
-
-            HomeFeedScreen(
-                uiState = HomeUiState.HasPosts(
-                    roomsFeed = rooms,
-                    isLoading = false,
-                    errorMessages = emptyList(),
-                ),
-                showTopAppBar = true,
-                onSelectPost = {},
-                onRefreshPosts = {},
-                onErrorDismiss = {},
-                openDrawer = {},
-                homeListLazyListState = rememberLazyListState(),
-                scaffoldState = rememberScaffoldState(),
+            val homeViewModel: HomeViewModel = viewModel(
+                factory = HomeViewModel.provideFactory()
+            )
+            HomeRoute(
+                homeViewModel = homeViewModel,
+                isExpandedScreen = isExpandedScreen,
+                openDrawer = { /*TODO*/ },
                 navController = navController
             )
         }
-        composable(route = Screen.Room.route) {
-            RoomContainer(room1)
-        }
+//        composable(route = Screen.Room.route) {
+//            RoomContainer(room1)
+//        }
 
     }
 }

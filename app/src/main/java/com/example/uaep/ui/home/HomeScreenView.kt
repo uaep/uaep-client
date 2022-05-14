@@ -255,7 +255,7 @@ private fun PostList(
     ) {
         item {
             PostListSimpleSection(
-                roomsFeed.recommendedPosts,
+                roomsFeed.data,
                 onArticleTapped
             )
         }
@@ -344,6 +344,8 @@ fun PreviewHomeListDrawerScreen() {
                 roomsFeed = rooms,
                 isLoading = false,
                 errorMessages = emptyList(),
+                isArticleOpen = false,
+                selectedRoom = rooms.data[0]
             ),
             showTopAppBar = true,
             onSelectPost = {},

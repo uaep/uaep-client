@@ -20,9 +20,9 @@ import com.example.uaep.model.Room
 
 
 data class RoomsFeed(
-    val recommendedPosts: List<Room>
+    val data: List<Room>
 ) {
 
     val allPosts: List<Room> =
-        recommendedPosts
+        data
 }

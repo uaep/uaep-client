@@ -26,7 +26,7 @@ val room2 = Room(
     number = 5
 )
 val room3 = Room(
-    id = "ac552dcc1743",
+    id = "ac552dcc1747",
     title = "let's play football",
     rank = Rank.AMATEUR,
     gender = Gender.WOMEN,
@@ -37,5 +37,5 @@ val room3 = Room(
 )
 val rooms: RoomsFeed =
     RoomsFeed(
-        recommendedPosts = listOf(room1, room2, room3)
+        data = listOf(room1, room2, room3)
     )

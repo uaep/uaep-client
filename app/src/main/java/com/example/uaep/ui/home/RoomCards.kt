@@ -99,7 +99,7 @@ fun RoomCardSimple(
         modifier = Modifier
             .clickable(
                 onClick = {
-                //navigateToArticle(room.id)
+                navigateToArticle(room.id)
 
             }
             )

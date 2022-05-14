@@ -18,5 +18,5 @@ sealed class Screen(val route: String) {
         }
     }
     object Home: Screen(route = "home")
-    object Room: Screen(route = "room")
+    //object Room: Screen(route = "room")
 }
