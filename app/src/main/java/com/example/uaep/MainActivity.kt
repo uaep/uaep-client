@@ -3,16 +3,28 @@ package com.example.uaep
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
-import com.example.uaep.navigation.SetupNavGraph
-import com.example.uaep.presentation.signup.SignUpScreen
-import com.example.uaep.presentation.signup.SignUpViewModel
-import com.example.uaep.ui.theme.UaepTheme
+import androidx.compose.ui.unit.dp
+import com.example.uaep.data.rooms
+import com.example.uaep.ui.home.HomeFeedScreen
+import com.example.uaep.ui.home.HomeUiState
+import com.example.uaep.uitmp.UaepTheme
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
+import androidx.core.view.WindowCompat
+import com.example.uaep.ui.UaepApp
+import com.example.uaep.ui.match.RoomContainer
+import com.example.uaep.utils.rememberWindowSizeClass
+
 
 class MainActivity : ComponentActivity() {
 
@@ -20,20 +32,13 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContent { // to define layout
-            UaepTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colors.background,
-                ) {
+        WindowCompat.setDecorFitsSystemWindows(window, true)
 
-                    // TODO: 로그인 여부에 따라 시작 화면 다르게 하는 법 공부하기
-                    navController = rememberNavController()
-                    SetupNavGraph(navController = navController)
+        setContent {
 
-                }
-            }
+            val windowSizeClass = rememberWindowSizeClass()
+            UaepApp(windowSize = windowSizeClass)
+
         }
     }
 }

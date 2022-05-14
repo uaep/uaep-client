@@ -1,4 +1,4 @@
-package com.example.uaep.ui.theme
+package com.example.uaep.uitmp
 
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Shapes
