@@ -9,8 +9,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.example.uaep.uitmp.md_theme_light_onPrimary
-import com.example.uaep.uitmp.md_theme_light_primary
+import com.example.uaep.ui.theme.md_theme_light_onPrimary
+import com.example.uaep.ui.theme.md_theme_light_primary
+import com.example.uaep.ui.theme.md_theme_light_primary
 
 @Composable
 fun BottomNavigationBar(navController: NavController) {

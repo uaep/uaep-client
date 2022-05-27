@@ -17,7 +17,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.uaep.ui.signup.SignUpViewModel
-import com.example.uaep.uitmp.md_theme_light_primary
+import com.example.uaep.ui.theme.md_theme_light_primary
 
 @Composable
 fun GenderExposedDropDownMenu(

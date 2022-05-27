@@ -1,4 +1,4 @@
-package com.example.uaep.uitmp
+package com.example.uaep.ui.theme
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
@@ -7,7 +7,7 @@ import androidx.compose.ui.unit.sp
 //Replace with your font locations
 val Roboto = FontFamily.Default
 
-val AppTypography = Typography(
+val typography = Typography(
 	displayLarge = TextStyle(
 		fontFamily = Roboto,
 		fontWeight = FontWeight.W400,

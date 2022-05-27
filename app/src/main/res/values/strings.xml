@@ -27,4 +27,8 @@
     <string name="gender">성별</string>
     <string name="address">주소</string>
     <string name="position">포지션</string>
+    <string name="create_room">경기 생성하기</string>
+    <string name="title">경기 제목</string>
+    <string name="location">경기 장소</string>
+    <string name="num_player">경기 인원 수</string>
 </resources>

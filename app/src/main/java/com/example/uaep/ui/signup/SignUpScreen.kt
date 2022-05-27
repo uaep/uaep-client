@@ -43,8 +43,8 @@ import com.example.uaep.network.UserApiService
 import com.example.uaep.ui.navi.Screen
 import com.example.uaep.ui.components.GenderExposedDropDownMenu
 import com.example.uaep.ui.components.PasswordOutlinedTextField
-import com.example.uaep.uitmp.md_theme_light_onPrimary
-import com.example.uaep.uitmp.md_theme_light_primary
+import com.example.uaep.ui.theme.md_theme_light_onPrimary
+import com.example.uaep.ui.theme.md_theme_light_primary
 import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback

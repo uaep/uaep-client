@@ -30,9 +30,9 @@ import androidx.navigation.NavController
 import com.example.uaep.R
 import com.example.uaep.ui.navi.Screen
 import com.example.uaep.ui.components.PasswordOutlinedTextField
-import com.example.uaep.uitmp.md_theme_light_onPrimary
-import com.example.uaep.uitmp.md_theme_light_primary
-import com.example.uaep.uitmp.md_theme_light_secondary
+import com.example.uaep.ui.theme.md_theme_light_onPrimary
+import com.example.uaep.ui.theme.md_theme_light_primary
+import com.example.uaep.ui.theme.md_theme_light_secondary
 
 @Composable
 fun LoginScreen(

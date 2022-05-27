@@ -20,9 +20,9 @@ import com.example.uaep.R
 import com.example.uaep.model.Gender
 import com.example.uaep.model.Rank
 import com.example.uaep.model.Room
-import com.example.uaep.uitmp.UaepTheme
-import com.example.uaep.uitmp.md_theme_light_primary
-import com.example.uaep.uitmp.md_theme_light_secondary
+import com.example.uaep.ui.theme.UaepTheme
+import com.example.uaep.ui.theme.md_theme_light_primary
+import com.example.uaep.ui.theme.md_theme_light_secondary
 
 @Composable
 fun RoomTitle(room: Room){

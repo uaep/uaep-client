@@ -26,7 +26,7 @@ import com.example.uaep.R
 import com.example.uaep.model.Gender
 import com.example.uaep.model.Rank
 import com.example.uaep.model.Room
-import com.example.uaep.uitmp.*
+import com.example.uaep.ui.theme.*
 
 
 private val defaultSpacerSize = 16.dp

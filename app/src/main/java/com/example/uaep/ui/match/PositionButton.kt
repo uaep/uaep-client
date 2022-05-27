@@ -23,7 +23,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.uaep.enums.Position
-import com.example.uaep.uitmp.*
+import com.example.uaep.ui.theme.*
 
 @Composable
 fun PositionButton(

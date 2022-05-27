@@ -34,8 +34,8 @@ import com.example.uaep.dto.ErrorResponse
 import com.example.uaep.dto.UrlResponseDto
 import com.example.uaep.network.UserApiService
 import com.example.uaep.ui.navi.Screen
-import com.example.uaep.uitmp.md_theme_light_onPrimary
-import com.example.uaep.uitmp.md_theme_light_primary
+import com.example.uaep.ui.theme.md_theme_light_onPrimary
+import com.example.uaep.ui.theme.md_theme_light_primary
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import retrofit2.Call

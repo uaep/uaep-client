@@ -27,9 +27,9 @@ import com.example.uaep.R
 import com.example.uaep.data.rooms
 import com.example.uaep.ui.navi.BottomNavItem
 import com.example.uaep.ui.navi.BottomNavigationBar
-import com.example.uaep.uitmp.UaepTheme
-import com.example.uaep.uitmp.md_theme_light_onPrimary
-import com.example.uaep.uitmp.md_theme_light_primary
+import com.example.uaep.ui.theme.UaepTheme
+import com.example.uaep.ui.theme.md_theme_light_onPrimary
+import com.example.uaep.ui.theme.md_theme_light_primary
 import com.example.uaep.utils.isScrolled
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState

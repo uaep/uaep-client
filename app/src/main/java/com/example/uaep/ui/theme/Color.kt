@@ -1,4 +1,4 @@
-package com.example.uaep.uitmp
+package com.example.uaep.ui.theme
 import androidx.compose.ui.graphics.Color
 
 
@@ -10,7 +10,7 @@ val md_theme_light_secondary = Color(0xFF3660E0)
 val md_theme_light_onSecondary = Color(0xFFffffff)
 val md_theme_light_secondaryContainer = Color(0xFFdce1ff)
 val md_theme_light_onSecondaryContainer = Color(0xFF001258)
-val md_theme_light_tertiary = Color(0xFF616134)
+val md_theme_light_tertiary = Color(0xFF4CAF50)
 val md_theme_light_onTertiary = Color(0xFFffffff)
 val md_theme_light_tertiaryContainer = Color(0xFFe6e5ad)
 val md_theme_light_onTertiaryContainer = Color(0xFF1d1d00)

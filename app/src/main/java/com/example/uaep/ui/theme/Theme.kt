@@ -1,9 +1,9 @@
-package com.example.uaep.uitmp
+package com.example.uaep.ui.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.lightColorScheme
 import androidx.compose.material3.darkColorScheme
+import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 
 private val LightThemeColors = lightColorScheme(
@@ -79,7 +79,8 @@ fun UaepTheme(
 
 	MaterialTheme(
 		colorScheme = colors,
-		typography = AppTypography,
+		typography = typography,
+		shapes = shapes,
 		content = content
 	)
 }
