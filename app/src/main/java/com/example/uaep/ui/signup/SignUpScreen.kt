@@ -32,9 +32,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.uaep.R
 import com.example.uaep.dto.SignUpRequestDto
 import com.example.uaep.dto.UrlResponseDto
@@ -43,6 +45,7 @@ import com.example.uaep.network.UserApiService
 import com.example.uaep.ui.navi.Screen
 import com.example.uaep.ui.components.GenderExposedDropDownMenu
 import com.example.uaep.ui.components.PasswordOutlinedTextField
+import com.example.uaep.ui.theme.UaepTheme
 import com.example.uaep.ui.theme.md_theme_light_onPrimary
 import com.example.uaep.ui.theme.md_theme_light_primary
 import org.json.JSONObject
@@ -312,18 +315,18 @@ private fun mToast(context: Context, msg: String){
     Toast.makeText(context, msg, Toast.LENGTH_LONG).show()
 }
 
-//@Preview(
-//    showBackground = true,
-//    widthDp = 320
-//)
-//@Composable
-//fun SignUpScreenPreview() {
-//    UaepTheme {
-//        SignUpScreen(
-//            vm = SignUpViewModel(),
-//            navController = rememberNavController(),
-//            email = "test@gmail.com",
-//            token = "32904823904"
-//        )
-//    }
-//}
+@Preview(
+    showBackground = true,
+    widthDp = 320
+)
+@Composable
+fun SignUpScreenPreview() {
+    UaepTheme {
+        SignUpScreen(
+            vm = SignUpViewModel(),
+            navController = rememberNavController(),
+            email = "test@gmail.com",
+            token = "32904823904"
+        )
+    }
+}

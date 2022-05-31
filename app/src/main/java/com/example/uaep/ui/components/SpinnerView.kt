@@ -38,12 +38,12 @@ fun SpinnerView(
             .fillMaxWidth(0.8f),
         shape = MaterialTheme.shapes.medium,
         colors = ButtonDefaults.buttonColors(
-            backgroundColor = MaterialTheme.colorScheme.onPrimary,
+            backgroundColor = MaterialTheme.colorScheme.primary,
         )
     ) {
         Text(
             text = "경기 날짜 선택하기",
-            color = MaterialTheme.colorScheme.secondary,
+            color = MaterialTheme.colorScheme.onPrimary,
             fontSize = MaterialTheme.typography.bodyLarge.fontSize,
             fontWeight = FontWeight.Bold,
         )
@@ -52,7 +52,7 @@ fun SpinnerView(
         onClick = {},
         modifier = Modifier
             .fillMaxWidth(0.8f),
-    shape = MaterialTheme.shapes.medium,
+        shape = MaterialTheme.shapes.medium,
         colors = ButtonDefaults.buttonColors(
             backgroundColor = if (!viewModel.selected.value) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.tertiary,
         )

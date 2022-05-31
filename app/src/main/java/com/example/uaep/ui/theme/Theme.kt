@@ -34,7 +34,6 @@ private val LightThemeColors = lightColorScheme(
 	inverseOnSurface = md_theme_light_inverseOnSurface,
 	inverseSurface = md_theme_light_inverseSurface,
 	inversePrimary = md_theme_light_inversePrimary,
-//	shadow = md_theme_light_shadow,
 )
 private val DarkThemeColors = darkColorScheme(
 
@@ -64,23 +63,21 @@ private val DarkThemeColors = darkColorScheme(
 	inverseOnSurface = md_theme_dark_inverseOnSurface,
 	inverseSurface = md_theme_dark_inverseSurface,
 	inversePrimary = md_theme_dark_inversePrimary,
-//	shadow = md_theme_dark_shadow,
 )
 @Composable
 fun UaepTheme(
-	useDarkTheme: Boolean = isSystemInDarkTheme(),
-	content: @Composable() () -> Unit
+    useDarkTheme: Boolean = isSystemInDarkTheme(),
+    content: @Composable() () -> Unit
 ) {
-	val colors = if (!useDarkTheme) {
-		LightThemeColors
-	} else {
-		DarkThemeColors
-	}
+    val colors = if (!useDarkTheme) {
+        LightThemeColors
+    } else {
+        DarkThemeColors
+    }
 
-	MaterialTheme(
-		colorScheme = colors,
-		typography = typography,
-		shapes = shapes,
-		content = content
-	)
+    MaterialTheme(
+        colorScheme = colors,
+        typography = AppTypography,
+        content = content
+    )
 }
