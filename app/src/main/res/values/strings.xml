@@ -31,4 +31,9 @@
     <string name="title">경기 제목</string>
     <string name="location">경기 장소</string>
     <string name="num_player">경기 인원 수</string>
+    <string name="update_profile">프로필 수정하기</string>
+    <string name="update_name">수정할 이름을 입력하세요</string>
+    <string name="update_position">수정할 포지션을 입력하세요.</string>
+    <string name="update_address">수정할 주소를 입력하세요.</string>
+    <string name="update_gender">수정할 성별을 입력하세요.</string>
 </resources>

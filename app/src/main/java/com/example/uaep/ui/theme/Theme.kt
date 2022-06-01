@@ -78,6 +78,7 @@ fun UaepTheme(
     MaterialTheme(
         colorScheme = colors,
         typography = AppTypography,
+		shapes = shapes,
         content = content
     )
 }
