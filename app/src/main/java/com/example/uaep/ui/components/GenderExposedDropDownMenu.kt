@@ -11,13 +11,13 @@ import androidx.compose.material.Icon
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
 import androidx.compose.material.TextFieldDefaults.outlinedTextFieldColors
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.uaep.ui.signup.SignUpViewModel
-import com.example.uaep.uitmp.md_theme_light_primary
 
 @Composable
 fun GenderExposedDropDownMenu(
@@ -72,7 +72,7 @@ fun GenderExposedDropDownMenu(
             ) {
                 Text(
                     text = "남성",
-                    color = md_theme_light_primary,
+                    color = MaterialTheme.colorScheme.primary,
                     fontWeight = FontWeight(1000)
                 )
             }
@@ -84,7 +84,7 @@ fun GenderExposedDropDownMenu(
             ) {
                 Text(
                     text = "여성",
-                    color = md_theme_light_primary,
+                    color = MaterialTheme.colorScheme.primary,
                     fontWeight = FontWeight(1000)
                 )
             }

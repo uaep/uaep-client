@@ -2,9 +2,16 @@ package com.example.uaep.ui.home
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
+import androidx.compose.material.ContentAlpha
+import androidx.compose.material.LocalContentAlpha
+import androidx.compose.material.Surface
+import androidx.compose.material.Text
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
@@ -14,20 +21,16 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import com.example.uaep.R
 import com.example.uaep.model.Gender
 import com.example.uaep.model.Rank
 import com.example.uaep.model.Room
-import com.example.uaep.uitmp.UaepTheme
-import com.example.uaep.uitmp.md_theme_light_primary
-import com.example.uaep.uitmp.md_theme_light_secondary
+import com.example.uaep.ui.theme.UaepTheme
 
 @Composable
 fun RoomTitle(room: Room){
     Text(room.title,
-        style = MaterialTheme.typography.h6)
+        style = MaterialTheme.typography.titleLarge)
 }
 
 @Composable
@@ -40,10 +43,10 @@ fun ReadTime(room: Room) {
                 room.minute
             )
         ),
-        style = MaterialTheme.typography.h4,
+        style = MaterialTheme.typography.titleLarge,
         modifier = Modifier.width(120.dp),
         textAlign = TextAlign.Start,
-        color = md_theme_light_primary
+        color = MaterialTheme.colorScheme.primary
     )
 }
 
@@ -62,7 +65,7 @@ fun RoomPersonnel(
                         room.number
                     )
                 ),
-                style = MaterialTheme.typography.body2
+                style = MaterialTheme.typography.bodyLarge
             )
         }
     }
@@ -82,8 +85,8 @@ fun RoomRank(
                         room.rank.korean
                     )
                 ),
-                style = MaterialTheme.typography.body2,
-                color = md_theme_light_secondary,
+                style = MaterialTheme.typography.bodyLarge,
+                color = MaterialTheme.colorScheme.secondary,
                 fontWeight = FontWeight.Bold
             )
         }
@@ -105,7 +108,7 @@ fun RoomCardSimple(
             )
             .border(
                 width = 2.dp,
-                color = md_theme_light_primary,
+                color = MaterialTheme.colorScheme.primary,
                 shape = RoundedCornerShape(15)
             )
             .padding(16.dp),

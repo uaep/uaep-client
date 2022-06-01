@@ -3,14 +3,13 @@ package com.example.uaep.ui.navi
 import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.example.uaep.uitmp.md_theme_light_onPrimary
-import com.example.uaep.uitmp.md_theme_light_primary
 
 @Composable
 fun BottomNavigationBar(navController: NavController) {
@@ -21,8 +20,8 @@ fun BottomNavigationBar(navController: NavController) {
         BottomNavItem.Notification
     )
     androidx.compose.material.BottomNavigation(
-        backgroundColor = md_theme_light_primary,
-        contentColor = md_theme_light_onPrimary
+        backgroundColor = MaterialTheme.colorScheme.primary,
+        contentColor = MaterialTheme.colorScheme.onPrimary
     ) {
         val navBackStackEntry by navController.currentBackStackEntryAsState()
         val currentRoute = navBackStackEntry?.destination?.route
@@ -35,8 +34,8 @@ fun BottomNavigationBar(navController: NavController) {
                         fontSize = 9.sp
                     )
                 },
-                selectedContentColor = md_theme_light_onPrimary,
-                unselectedContentColor = md_theme_light_onPrimary.copy(0.4f),
+                selectedContentColor = MaterialTheme.colorScheme.onPrimary,
+                unselectedContentColor = MaterialTheme.colorScheme.onPrimary.copy(0.4f),
                 alwaysShowLabel = true,
                 selected = currentRoute == item.screen_route,
                 onClick = {

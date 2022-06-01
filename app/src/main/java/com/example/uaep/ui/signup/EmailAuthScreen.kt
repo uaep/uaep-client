@@ -19,10 +19,10 @@ import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.DropdownMenu
 import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
 import androidx.compose.material.TextFieldDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -33,15 +33,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.example.uaep.enums.Domain
 import com.example.uaep.R
 import com.example.uaep.dto.EmailRequestDto
 import com.example.uaep.dto.ErrorResponse
 import com.example.uaep.dto.UrlResponseDto
+import com.example.uaep.enums.Domain
 import com.example.uaep.network.UserApiService
 import com.example.uaep.ui.navigate.Screen
-import com.example.uaep.uitmp.md_theme_light_onPrimary
-import com.example.uaep.uitmp.md_theme_light_primary
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import retrofit2.Call
@@ -63,7 +61,7 @@ fun EmailAuthScreen (
             modifier = Modifier
                 .fillMaxWidth()
                 .fillMaxHeight(2f)
-                .background(md_theme_light_onPrimary)
+                .background(MaterialTheme.colorScheme.onBackground)
                 .padding(10.dp)
         ) {
             Text(
@@ -72,8 +70,7 @@ fun EmailAuthScreen (
                     fontWeight = FontWeight.Bold,
                     letterSpacing = 2.sp
                 ),
-                fontSize = MaterialTheme.typography.h4.fontSize,
-                color = md_theme_light_primary
+                color = MaterialTheme.colorScheme.primary
             )
             Spacer(
                 modifier = Modifier.padding(20.dp)
@@ -89,10 +86,10 @@ fun EmailAuthScreen (
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth(0.8f),
                     colors = TextFieldDefaults.outlinedTextFieldColors(
-                        unfocusedBorderColor = md_theme_light_primary,
-                        unfocusedLabelColor = md_theme_light_primary,
-                        focusedLabelColor = md_theme_light_primary,
-                        focusedBorderColor = md_theme_light_primary
+                        unfocusedBorderColor = MaterialTheme.colorScheme.primary,
+                        unfocusedLabelColor = MaterialTheme.colorScheme.primary,
+                        focusedLabelColor = MaterialTheme.colorScheme.primary,
+                        focusedBorderColor = MaterialTheme.colorScheme.primary
                     ),
                 )
                 Column {
@@ -109,10 +106,10 @@ fun EmailAuthScreen (
                                     vm.onEnabled(!vm.enabled.value)
                                 },
                             colors = TextFieldDefaults.outlinedTextFieldColors(
-                                unfocusedBorderColor = md_theme_light_primary,
-                                unfocusedLabelColor = md_theme_light_primary,
-                                focusedLabelColor = md_theme_light_primary,
-                                focusedBorderColor = md_theme_light_primary
+                                unfocusedBorderColor = MaterialTheme.colorScheme.primary,
+                                unfocusedLabelColor = MaterialTheme.colorScheme.primary,
+                                focusedLabelColor = MaterialTheme.colorScheme.primary,
+                                focusedBorderColor = MaterialTheme.colorScheme.primary
                             ),
                             trailingIcon = {
                                 Icon(
@@ -140,7 +137,7 @@ fun EmailAuthScreen (
                         ) {
                             Text(
                                 text = Domain.GMAIL.value,
-                                color = md_theme_light_primary,
+                                color = MaterialTheme.colorScheme.primary,
                                 fontWeight = FontWeight(1000)
                             )
                         }
@@ -152,7 +149,7 @@ fun EmailAuthScreen (
                         ) {
                             Text(
                                 text = Domain.NAVER.value,
-                                color = md_theme_light_primary,
+                                color = MaterialTheme.colorScheme.primary,
                                 fontWeight = FontWeight(1000)
                             )
                         }
@@ -195,13 +192,12 @@ fun EmailAuthScreen (
                         .fillMaxWidth(0.8f)
                         .height(50.dp),
                     colors = ButtonDefaults.buttonColors(
-                        backgroundColor = md_theme_light_primary,
-                        contentColor = md_theme_light_onPrimary
+                        backgroundColor = MaterialTheme.colorScheme.primary,
+                        contentColor = MaterialTheme.colorScheme.onPrimary
                     )
                 ) {
                     Text(
                         text = stringResource(R.string.send_auth_code),
-                        fontSize = MaterialTheme.typography.button.fontSize
                     )
                 }
             }

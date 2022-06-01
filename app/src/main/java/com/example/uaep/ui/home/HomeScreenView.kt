@@ -1,11 +1,31 @@
 package com.example.uaep.ui.home
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material.*
-import androidx.compose.runtime.*
+import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.Divider
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
+import androidx.compose.material.Scaffold
+import androidx.compose.material.ScaffoldState
+import androidx.compose.material.SnackbarResult
+import androidx.compose.material.Text
+import androidx.compose.material.TextButton
+import androidx.compose.material.TopAppBar
+import androidx.compose.material.rememberScaffoldState
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -16,17 +36,15 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import com.example.uaep.model.Room
-import com.example.uaep.ui.components.UaepSnackbarHost
-import com.example.uaep.ui.rememberContentPaddingForScreen
-import com.example.ueap.model.RoomsFeed
 import com.example.uaep.R
 import com.example.uaep.data.rooms
+import com.example.uaep.model.Room
+import com.example.uaep.ui.components.UaepSnackbarHost
 import com.example.uaep.ui.navigate.BottomNavigationBar
-import com.example.uaep.uitmp.UaepTheme
-import com.example.uaep.uitmp.md_theme_light_onPrimary
-import com.example.uaep.uitmp.md_theme_light_primary
+import com.example.uaep.ui.rememberContentPaddingForScreen
+import com.example.uaep.ui.theme.UaepTheme
 import com.example.uaep.utils.isScrolled
+import com.example.ueap.model.RoomsFeed
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 
@@ -233,7 +251,7 @@ private fun PostListSimpleSection(
 private fun PostListDivider() {
     Divider(
         modifier = Modifier.padding(horizontal = 14.dp),
-        color = MaterialTheme.colors.onSurface.copy(alpha = 0.08f)
+        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.08f)
     )
 }
 
@@ -248,7 +266,7 @@ private fun HomeTopAppBar(
             Icon(
                 painter = painterResource(R.drawable.ic_baseline_atm_24),
                 contentDescription = title,
-                tint = md_theme_light_onPrimary,
+                tint = MaterialTheme.colorScheme.onPrimary,
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(bottom = 4.dp, top = 10.dp)
@@ -259,7 +277,7 @@ private fun HomeTopAppBar(
                 Icon(
                     painter = painterResource(R.drawable.ic_baseline_list_24),
                     contentDescription = stringResource(R.string.cd_open_navigation_drawer),
-                    tint = md_theme_light_onPrimary
+                    tint = MaterialTheme.colorScheme.onPrimary
                 )
             }
         },
@@ -268,11 +286,11 @@ private fun HomeTopAppBar(
                 Icon(
                     painter = painterResource(R.drawable.ic_baseline_person_pin_24),
                     contentDescription = stringResource(R.string.cd_profile),
-                    tint = md_theme_light_onPrimary
+                    tint = MaterialTheme.colorScheme.onPrimary
                 )
             }
         },
-        backgroundColor = md_theme_light_primary,
+        backgroundColor = MaterialTheme.colorScheme.primary,
         elevation = elevation
     )
 }

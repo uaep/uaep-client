@@ -20,7 +20,7 @@ import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.DropdownMenu
 import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
 import androidx.compose.material.TextFieldDefaults
@@ -32,19 +32,20 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.uaep.R
 import com.example.uaep.dto.SignUpRequestDto
 import com.example.uaep.dto.UrlResponseDto
 import com.example.uaep.enums.Position
 import com.example.uaep.network.UserApiService
-import com.example.uaep.ui.navigate.Screen
 import com.example.uaep.ui.components.GenderExposedDropDownMenu
 import com.example.uaep.ui.components.PasswordOutlinedTextField
-import com.example.uaep.uitmp.md_theme_light_onPrimary
-import com.example.uaep.uitmp.md_theme_light_primary
+import com.example.uaep.ui.navigate.Screen
+import com.example.uaep.ui.theme.UaepTheme
 import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
@@ -67,7 +68,7 @@ fun SignUpScreen (
             modifier = Modifier
                 .fillMaxWidth()
                 .fillMaxHeight(2f)
-                .background(md_theme_light_onPrimary)
+                .background(MaterialTheme.colorScheme.onBackground)
                 .padding(10.dp)
         ) {
             Text(
@@ -76,8 +77,7 @@ fun SignUpScreen (
                     fontWeight = FontWeight.Bold,
                     letterSpacing = 2.sp
                 ),
-                fontSize = MaterialTheme.typography.h4.fontSize,
-                color = md_theme_light_primary
+                color = MaterialTheme.colorScheme.primary
             )
             Spacer(
                 modifier = Modifier.padding(20.dp)
@@ -93,10 +93,10 @@ fun SignUpScreen (
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth(0.8f),
                     colors = TextFieldDefaults.outlinedTextFieldColors(
-                        unfocusedBorderColor = md_theme_light_primary,
-                        unfocusedLabelColor = md_theme_light_primary,
-                        focusedLabelColor = md_theme_light_primary,
-                        focusedBorderColor = md_theme_light_primary
+                        unfocusedBorderColor = MaterialTheme.colorScheme.primary,
+                        unfocusedLabelColor = MaterialTheme.colorScheme.primary,
+                        focusedLabelColor = MaterialTheme.colorScheme.primary,
+                        focusedBorderColor = MaterialTheme.colorScheme.primary
                     ),
                 )
                 OutlinedTextField(
@@ -109,10 +109,10 @@ fun SignUpScreen (
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth(0.8f),
                     colors = TextFieldDefaults.outlinedTextFieldColors(
-                        unfocusedBorderColor = md_theme_light_primary,
-                        unfocusedLabelColor = md_theme_light_primary,
-                        focusedLabelColor = md_theme_light_primary,
-                        focusedBorderColor = md_theme_light_primary
+                        unfocusedBorderColor = MaterialTheme.colorScheme.primary,
+                        unfocusedLabelColor = MaterialTheme.colorScheme.primary,
+                        focusedLabelColor = MaterialTheme.colorScheme.primary,
+                        focusedBorderColor = MaterialTheme.colorScheme.primary
                     ),
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
                 )
@@ -121,14 +121,14 @@ fun SignUpScreen (
                     onValueChange = { vm.updatePassword(it) },
                     label = { Text(stringResource(R.string.password)) },
                     placeholder = { Text(stringResource(R.string.password)) },
-                    color = md_theme_light_primary
+                    color = MaterialTheme.colorScheme.primary
                 )
                 PasswordOutlinedTextField(
                     password = vm.matchingPassword.value,
                     onValueChange = { vm.updateMatchingPassword(it) },
                     label = { Text(stringResource(R.string.matching_password)) },
                     placeholder = { Text(stringResource(R.string.matching_password)) },
-                    color = md_theme_light_primary
+                    color = MaterialTheme.colorScheme.primary
                 )
                 OutlinedTextField(
                     value = vm.address.value,
@@ -138,17 +138,17 @@ fun SignUpScreen (
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth(0.8f),
                     colors = TextFieldDefaults.outlinedTextFieldColors(
-                        unfocusedBorderColor = md_theme_light_primary,
-                        unfocusedLabelColor = md_theme_light_primary,
-                        focusedLabelColor = md_theme_light_primary,
-                        focusedBorderColor = md_theme_light_primary
+                        unfocusedBorderColor = MaterialTheme.colorScheme.primary,
+                        unfocusedLabelColor = MaterialTheme.colorScheme.primary,
+                        focusedLabelColor = MaterialTheme.colorScheme.primary,
+                        focusedBorderColor = MaterialTheme.colorScheme.primary
                     ),
                 )
                 GenderExposedDropDownMenu(
                     gender = vm.gender.value,
                     label = { Text(stringResource(R.string.gender)) },
                     placeholder = { Text(stringResource(R.string.gender)) },
-                    color = md_theme_light_primary,
+                    color = MaterialTheme.colorScheme.primary,
                     vm = vm
                 )
                 Column {
@@ -165,10 +165,10 @@ fun SignUpScreen (
                                     vm.onPosEnabled(!vm.posEnabled.value)
                                 },
                             colors = TextFieldDefaults.outlinedTextFieldColors(
-                                unfocusedBorderColor = md_theme_light_primary,
-                                unfocusedLabelColor = md_theme_light_primary,
-                                focusedLabelColor = md_theme_light_primary,
-                                focusedBorderColor = md_theme_light_primary
+                                unfocusedBorderColor = MaterialTheme.colorScheme.primary,
+                                unfocusedLabelColor = MaterialTheme.colorScheme.primary,
+                                focusedLabelColor = MaterialTheme.colorScheme.primary,
+                                focusedBorderColor = MaterialTheme.colorScheme.primary
                             ),
                             trailingIcon = {
                                 Icon(
@@ -196,7 +196,7 @@ fun SignUpScreen (
                         ) {
                             Text(
                                 text = Position.GK.value,
-                                color = md_theme_light_primary,
+                                color = MaterialTheme.colorScheme.primary,
                                 fontWeight = FontWeight(1000)
                             )
                         }
@@ -208,7 +208,7 @@ fun SignUpScreen (
                         ) {
                             Text(
                                 text = Position.DF.value,
-                                color = md_theme_light_primary,
+                                color = MaterialTheme.colorScheme.primary,
                                 fontWeight = FontWeight(1000)
                             )
                         }
@@ -220,7 +220,7 @@ fun SignUpScreen (
                         ) {
                             Text(
                                 text = Position.MF.value,
-                                color = md_theme_light_primary,
+                                color = MaterialTheme.colorScheme.primary,
                                 fontWeight = FontWeight(1000)
                             )
                         }
@@ -232,7 +232,7 @@ fun SignUpScreen (
                         ) {
                             Text(
                                 text = Position.FW.value,
-                                color = md_theme_light_primary,
+                                color = MaterialTheme.colorScheme.primary,
                                 fontWeight = FontWeight(1000)
                             )
                         }
@@ -293,13 +293,12 @@ fun SignUpScreen (
                         .fillMaxWidth(0.8f)
                         .height(50.dp),
                     colors = ButtonDefaults.buttonColors(
-                        backgroundColor = md_theme_light_primary,
-                        contentColor = md_theme_light_onPrimary
+                        backgroundColor = MaterialTheme.colorScheme.primary,
+                        contentColor = MaterialTheme.colorScheme.onPrimary
                     )
                 ) {
                     Text(
                         text = stringResource(id = R.string.sign_up),
-                        fontSize = MaterialTheme.typography.button.fontSize
                     )
                 }
             }
@@ -312,18 +311,18 @@ private fun mToast(context: Context, msg: String){
     Toast.makeText(context, msg, Toast.LENGTH_LONG).show()
 }
 
-//@Preview(
-//    showBackground = true,
-//    widthDp = 320
-//)
-//@Composable
-//fun SignUpScreenPreview() {
-//    UaepTheme {
-//        SignUpScreen(
-//            vm = SignUpViewModel(),
-//            navController = rememberNavController(),
-//            email = "test@gmail.com",
-//            token = "32904823904"
-//        )
-//    }
-//}
+@Preview(
+    showBackground = true,
+    widthDp = 320
+)
+@Composable
+fun SignUpScreenPreview() {
+    UaepTheme {
+        SignUpScreen(
+            vm = SignUpViewModel(),
+            navController = rememberNavController(),
+            email = "test@gmail.com",
+            token = "32904823904"
+        )
+    }
+}

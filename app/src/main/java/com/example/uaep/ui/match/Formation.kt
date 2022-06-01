@@ -12,7 +12,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.uaep.enums.Position
-import com.example.uaep.uitmp.*
+import com.example.uaep.ui.theme.UaepTheme
+import com.example.uaep.ui.theme.md_theme_light_error
+import com.example.uaep.ui.theme.md_theme_light_primary
+import com.example.uaep.ui.theme.md_theme_light_secondary
+import com.example.uaep.ui.theme.md_theme_light_tertiary
 
 @Composable
 fun Formation(
