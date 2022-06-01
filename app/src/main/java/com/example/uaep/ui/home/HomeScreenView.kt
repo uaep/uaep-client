@@ -40,9 +40,9 @@ import com.example.uaep.R
 import com.example.uaep.data.rooms
 import com.example.uaep.model.Room
 import com.example.uaep.ui.components.UaepSnackbarHost
-import com.example.uaep.ui.navigate.BottomNavigationBar
 import com.example.uaep.ui.rememberContentPaddingForScreen
 import com.example.uaep.ui.theme.UaepTheme
+import com.example.uaep.ui.navigate.BottomNavigationBar
 import com.example.uaep.utils.isScrolled
 import com.example.ueap.model.RoomsFeed
 import com.google.accompanist.swiperefresh.SwipeRefresh

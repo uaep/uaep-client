@@ -59,7 +59,6 @@ import com.example.uaep.ui.theme.md_theme_light_primary
 import com.example.uaep.ui.theme.md_theme_light_secondary
 import com.example.uaep.utils.isScrolled
 
-
 private val defaultSpacerSize = 16.dp
 
 enum class FieldPosition{
