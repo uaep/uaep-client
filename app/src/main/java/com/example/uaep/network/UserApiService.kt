@@ -1,20 +1,16 @@
 package com.example.uaep.network
 
-import com.example.uaep.dto.AuthCodeRequestDto
-import com.example.uaep.dto.EmailRequestDto
-import com.example.uaep.dto.SignUpRequestDto
-import com.example.uaep.dto.SignUpResponseDto
-import com.example.uaep.dto.UrlResponseDto
+import com.example.uaep.dto.*
+import okhttp3.CookieJar
+import okhttp3.OkHttpClient
 import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.Body
-import retrofit2.http.Field
-import retrofit2.http.FormUrlEncoded
 import retrofit2.http.Headers
-import retrofit2.http.Multipart
 import retrofit2.http.POST
 import retrofit2.http.Query
+
 
 interface UserApiService {
     @Headers("accept: application/json",
@@ -39,6 +35,12 @@ interface UserApiService {
     ) : Call<UrlResponseDto>
 
     // TODO: Login
+    @Headers("accept: application/json",
+        "content-type: application/json")
+    @POST("auth/login")
+    fun login(
+        @Body longinRequestDto: LoginRequestDto
+    ) : Call<LoginResponseDto>
 
     // 싱글톤 객체로서, 인스턴스 생성 없이 사용할 수 있다.
     companion object{

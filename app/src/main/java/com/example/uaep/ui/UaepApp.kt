@@ -5,7 +5,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.rememberNavController
-import com.example.uaep.ui.navi.UaepNavGraph
+import com.example.uaep.ui.navigate.UaepNavGraph
 import com.example.uaep.uitmp.UaepTheme
 import com.example.uaep.utils.WindowSize
 

@@ -14,10 +14,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.uaep.model.Room
 import com.example.uaep.ui.components.UaepSnackbarHost
@@ -25,8 +22,7 @@ import com.example.uaep.ui.rememberContentPaddingForScreen
 import com.example.ueap.model.RoomsFeed
 import com.example.uaep.R
 import com.example.uaep.data.rooms
-import com.example.uaep.ui.navi.BottomNavItem
-import com.example.uaep.ui.navi.BottomNavigationBar
+import com.example.uaep.ui.navigate.BottomNavigationBar
 import com.example.uaep.uitmp.UaepTheme
 import com.example.uaep.uitmp.md_theme_light_onPrimary
 import com.example.uaep.uitmp.md_theme_light_primary
@@ -161,6 +157,8 @@ private fun HomeScreenWithList(
         }
     }
 }
+
+
 
 @Composable
 private fun LoadingContent(

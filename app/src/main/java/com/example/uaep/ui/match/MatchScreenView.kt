@@ -8,14 +8,18 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -27,6 +31,7 @@ import com.example.uaep.model.Gender
 import com.example.uaep.model.Rank
 import com.example.uaep.model.Room
 import com.example.uaep.uitmp.*
+import com.example.uaep.utils.isScrolled
 
 
 private val defaultSpacerSize = 16.dp
@@ -34,33 +39,163 @@ private val defaultSpacerSize = 16.dp
 enum class FieldPosition{
     GK, DF, MF, CF
 }
+
+
 @Composable
-fun RoomContainer(
+fun MatchScreen(
     room: Room,
     isExpandedScreen: Boolean,
     onBack: () -> Unit,
     modifier: Modifier = Modifier,
+    lazyListState: LazyListState = rememberLazyListState()
+) {
 
+        Row(modifier.fillMaxSize()) {
+            val context = LocalContext.current
+
+                MatchScreenContent(
+                    room = room,
+
+                    navigationIconContent = {
+                        IconButton(onClick = onBack) {
+                            Icon(
+                                imageVector = Icons.Filled.ArrowBack,
+                                contentDescription = stringResource(R.string.cd_navigate_up),
+                                tint = md_theme_light_secondary
+                            )
+                        }
+                    },
+
+                    bottomBarContent = {
+                        BottomBar(
+                            room = room
+                        )
+
+                    },
+                    lazyListState = lazyListState
+                )
+
+
+
+        }
+
+}
+
+@Composable
+fun MatchScreenContent(
+    room: Room,
+    navigationIconContent: @Composable (() -> Unit)? = null,
+    bottomBarContent: @Composable () -> Unit = { },
+    lazyListState: LazyListState = rememberLazyListState()
+){
+        Scaffold(
+            topBar = {
+                TopAppBar(
+                    title = {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .wrapContentWidth(align = Alignment.CenterHorizontally)
+                        ) {
+                            Text(
+                                text = stringResource(R.string.app_name),
+                                style = MaterialTheme.typography.h5,
+                                color = md_theme_light_outline,
+                                modifier = Modifier
+                                    .padding(start = 10.dp)
+                                    .weight(1.5f)
+                            )
+                        }
+                    },
+                    navigationIcon = navigationIconContent,
+                    elevation = if (!lazyListState.isScrolled) 0.dp else 4.dp,
+                    backgroundColor = MaterialTheme.colors.surface
+                )
+            },
+            bottomBar = bottomBarContent
+        ) { innerPadding ->
+
+
+            RoomContainer(
+                room = room,
+                modifier = Modifier
+                    // innerPadding takes into account the top and bottom bar
+                    .padding(innerPadding)
+            )
+
+
+        }
+
+}
+
+@Composable
+fun RoomContainer(
+    room: Room,
+    modifier: Modifier = Modifier
 ) {
     val position = remember{ mutableStateOf(FieldPosition.GK)}
+    Column() {
 
-    Column(
-        modifier = modifier.padding(horizontal = defaultSpacerSize)
-    ) {
-        Row {
-            Spacer(Modifier.height(defaultSpacerSize))
-            Image(painter = painterResource(id =R.drawable.football_stage), contentDescription = "")
-            ReadyButton(){
-                position.value = it
+        Scaffold(modifier = Modifier.weight(1f)) { innerPadding ->
+            Image(
+                painter = painterResource(id = R.drawable.football_background),
+                contentDescription = stringResource(id = R.string.foot_ball_back),
+                //alignment = Alignment.TopStart,
+                contentScale = ContentScale.FillBounds,
+                modifier = Modifier
+                    .padding(innerPadding)
+                    .fillMaxSize()
+
+            )
+            Column(
+                modifier = modifier.padding(innerPadding).fillMaxSize(),
+                verticalArrangement = Arrangement.SpaceBetween
+            ) {
+
+
+//            Image(painter = painterResource(id =R.drawable.football_stage), contentDescription = "")
+//            ReadyButton(){
+//                position.value = it
+//            }
+                    Spacer(Modifier.height(defaultSpacerSize))
+                    Formation(reverse = false, Modifier.fillMaxWidth())
+
+
+
+                    Formation(reverse = true, Modifier.fillMaxWidth())
+                    //Spacer(Modifier.height(8.dp))
+
             }
-            Spacer(Modifier.height(defaultSpacerSize))
         }
-        Row {
-            Text(text = position.value.name, style = MaterialTheme.typography.h4)
-            Spacer(Modifier.height(8.dp))
-        }
-        Row {
-            RoomDesc(room = room)
+        RoomDesc(room = room, modifier = Modifier.weight(1f))
+    }
+
+}
+
+@Composable
+private fun BottomBar(
+    room: Room,
+    modifier: Modifier = Modifier
+) {
+    Surface(elevation = 8.dp, modifier = modifier) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier
+                .windowInsetsPadding(WindowInsets.navigationBars.only(WindowInsetsSides.Vertical))
+                .height(56.dp)
+                .fillMaxWidth()
+        ) {
+            when(room.number){
+                6 -> {
+                    Button(
+                        onClick = { /*TODO*/ },
+                        modifier = Modifier.fillMaxSize(),
+                        colors = ButtonDefaults.buttonColors(backgroundColor = md_theme_light_primary)
+                    ) {
+                        Text(text = stringResource(R.string.match_ready), color = md_theme_light_onPrimary)
+                    }
+                }
+            }
         }
     }
 }
@@ -91,7 +226,8 @@ private fun PostListDivider() {
 
 @Composable
 fun RoomDesc(
-    room: Room
+    room: Room,
+    modifier: Modifier = Modifier
 ){
 
     Column(
@@ -158,7 +294,7 @@ fun RoomDesc(
 @Composable
 fun RoomTitle(room: Room){
     Text(room.title,
-        style = MaterialTheme.typography.h3)
+        style = MaterialTheme.typography.h4)
 }
 
 @Composable
@@ -262,7 +398,7 @@ fun SimpleRoomPreview() {
 
     UaepTheme {
         Surface {
-            RoomContainer(room1, false, {})
+            MatchScreen(room1, false, {})
         }
     }
 }

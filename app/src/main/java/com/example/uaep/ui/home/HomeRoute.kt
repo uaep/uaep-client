@@ -11,6 +11,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
+import com.example.uaep.ui.match.MatchScreen
 import com.example.uaep.ui.match.RoomContainer
 
 @Composable
@@ -75,7 +76,7 @@ fun HomeRoute(
             // Guaranteed by above condition for home screen type
             check(uiState is HomeUiState.HasPosts)
 
-            RoomContainer(
+            MatchScreen(
                 room = uiState.selectedRoom,
                 isExpandedScreen = isExpandedScreen,
                 onBack = onInteractWithFeed

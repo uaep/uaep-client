@@ -10,6 +10,10 @@
     <string name="home_room_rank">%1$s</string>
     <string name="home_tap_to_load_content">Tap to load content</string>
 
+    <!-- Match Screen -->
+    <string name="match_ready">준비 완료</string>
+    <string name="foot_ball_back">축구장 배경</string>
+
     <!-- signup, login -->
     <string name="sign_up">회원가입</string>
     <string name="login">로그인</string>
@@ -27,4 +31,8 @@
     <string name="gender">성별</string>
     <string name="address">주소</string>
     <string name="position">포지션</string>
+
+    <!-- Navigation actions -->
+    <string name="cd_navigate_up">Navigate up</string>
+
 </resources>

@@ -14,7 +14,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.example.uaep.enums.Position
 import com.example.uaep.uitmp.*
 
-
 @Composable
 fun Formation(
     reverse: Boolean,

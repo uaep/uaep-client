@@ -40,7 +40,7 @@ import com.example.uaep.dto.SignUpRequestDto
 import com.example.uaep.dto.UrlResponseDto
 import com.example.uaep.enums.Position
 import com.example.uaep.network.UserApiService
-import com.example.uaep.ui.navi.Screen
+import com.example.uaep.ui.navigate.Screen
 import com.example.uaep.ui.components.GenderExposedDropDownMenu
 import com.example.uaep.ui.components.PasswordOutlinedTextField
 import com.example.uaep.uitmp.md_theme_light_onPrimary

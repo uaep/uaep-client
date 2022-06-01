@@ -1,25 +1,15 @@
 package com.example.uaep.ui.login
 
+import android.content.Context
 import android.util.Log
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.Button
-import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.OutlinedTextField
-import androidx.compose.material.Text
-import androidx.compose.material.TextFieldDefaults
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -28,16 +18,28 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.uaep.R
-import com.example.uaep.ui.navi.Screen
+import com.example.uaep.dto.ErrorResponse
+import com.example.uaep.dto.LoginRequestDto
+import com.example.uaep.dto.LoginResponseDto
+import com.example.uaep.network.AuthService
+import com.example.uaep.network.CookieChanger
 import com.example.uaep.ui.components.PasswordOutlinedTextField
+import com.example.uaep.ui.navigate.Screen
 import com.example.uaep.uitmp.md_theme_light_onPrimary
 import com.example.uaep.uitmp.md_theme_light_primary
 import com.example.uaep.uitmp.md_theme_light_secondary
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
+import okhttp3.Cookie
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 @Composable
 fun LoginScreen(
     vm: LoginViewModel,
-    navController: NavController
+    navController: NavController,
+    context: Context = LocalContext.current
 ) {
     Box {
         Column(
@@ -93,10 +95,38 @@ fun LoginScreen(
                     onClick = {
                         Log.i("Email", vm.email.value)
                         Log.i("Password", vm.password.value)
-                        // TODO: HTTP Request to Server
-                        navController.navigate(route = Screen.Home.route)
+                        // HTTP Request to Server
+                        val loginRequestDto = LoginRequestDto(
+                            email=vm.email.value,
+                            password = vm.password.value
+                        )
+                        //vm.loginCallback(UserApiService.getInstance(), loginRequestDto, navController, context)
+                        AuthService.getInstance().login(loginRequestDto).enqueue(object :
+                            Callback<LoginResponseDto> {
+                            override fun onResponse(
+                                call: Call<LoginResponseDto>,
+                                response: Response<LoginResponseDto>
+                            ) {
+                                if (response.isSuccessful) {
+                                    val tokens = CookieChanger<LoginResponseDto>().change(response)
+                                    AuthService.getCookieJar().saveToken(tokens)
+                                    navController.navigate(Screen.Home.route)
 
-                    },
+                                    //navController.navigate(Screen.SignUp.passEmailAndToken(email, token))
+                                } else {
+                                    val errorResponse: ErrorResponse? =
+                                        Gson().fromJson(
+                                            response.errorBody()!!.charStream(),
+                                            object : TypeToken<ErrorResponse>() {}.type
+                                        )
+                                    //mToast(context, errorResponse!!.message)
+                                }
+                            }
+                            override fun onFailure(call: Call<LoginResponseDto>, t: Throwable) {
+                                Log.i("test", "실패$t")
+                            }
+                        })
+                        },
                     modifier = Modifier
                         .fillMaxWidth(0.8f)
                         .height(50.dp),

@@ -27,9 +27,6 @@ import com.example.uaep.utils.rememberWindowSizeClass
 
 
 class MainActivity : ComponentActivity() {
-
-    lateinit var navController: NavHostController
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         WindowCompat.setDecorFitsSystemWindows(window, true)
@@ -42,3 +39,26 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
+
+//@Composable
+//fun HelloScreen() {
+//    var name by rememberSaveable { mutableStateOf("") }
+//
+//    HelloContent(name = name, onNameChange = { name = it })
+//}
+//
+//@Composable
+//fun HelloContent(name: String, onNameChange: (String) -> Unit) {
+//    Column(modifier = Modifier.padding(16.dp)) {
+//        Text(
+//            text = "Hello, $name",
+//            modifier = Modifier.padding(bottom = 8.dp),
+//            style = MaterialTheme.typography.h5
+//        )
+//        OutlinedTextField(
+//            value = name,
+//            onValueChange = onNameChange,
+//            label = { Text("Name") }
+//        )
+//    }
+//}
