@@ -12,16 +12,22 @@ import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Divider
-import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.Scaffold
 import androidx.compose.material.ScaffoldState
 import androidx.compose.material.SnackbarResult
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
-import androidx.compose.material.TopAppBar
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material.icons.filled.AddCircle
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.rememberScaffoldState
+import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.ExtendedFloatingActionButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -29,11 +35,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
@@ -48,7 +53,6 @@ import com.example.uaep.ui.navigate.BottomNavigationBar
 import com.example.uaep.ui.navigate.Screen
 import com.example.uaep.ui.rememberContentPaddingForScreen
 import com.example.uaep.ui.theme.UaepTheme
-import com.example.uaep.utils.isScrolled
 import com.example.ueap.model.RoomsFeed
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
@@ -113,11 +117,25 @@ private fun HomeScreenWithList(
     Scaffold(
         scaffoldState = scaffoldState,
         snackbarHost = { UaepSnackbarHost(hostState = it) },
+        floatingActionButton = {
+            ExtendedFloatingActionButton(
+                text = {
+                    Text(
+                        text = stringResource(id = R.string.create_room),
+                        color = MaterialTheme.colorScheme.onBackground,
+                        fontWeight = FontWeight.ExtraBold
+                    )
+                },
+                icon = { Icon(Icons.Filled.AddCircle, stringResource(id = R.string.create_room)) },
+                onClick = { navController.navigate(Screen.MatchCreation.route) },
+                containerColor = MaterialTheme.colorScheme.primaryContainer,
+                contentColor = MaterialTheme.colorScheme.onBackground
+            )
+        },
         topBar = {
             if (showTopAppBar) {
                 HomeTopAppBar(
                     openDrawer = openDrawer,
-                    elevation = if (!homeListLazyListState.isScrolled) 0.dp else 4.dp,
                     navController = navController
                 )
             }
@@ -158,9 +176,7 @@ private fun HomeScreenWithList(
                         }
                     }
                 }
-
             }
-
         )
     }
 
@@ -269,28 +285,22 @@ private fun PostListDivider() {
 
 @Composable
 private fun HomeTopAppBar(
-    elevation: Dp,
     openDrawer: () -> Unit,
     navController: NavController
 ) {
-    val title = stringResource(id = R.string.app_name)
-    TopAppBar(
+    CenterAlignedTopAppBar(
         title = {
-            Icon(
-                painter = painterResource(R.drawable.ic_baseline_atm_24),
-                contentDescription = title,
-                tint = MaterialTheme.colorScheme.onPrimary,
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(bottom = 4.dp, top = 10.dp)
+            androidx.compose.material3.Text(
+                text = stringResource(id = R.string.app_name),
+                fontWeight = FontWeight.ExtraBold
             )
         },
         navigationIcon = {
             IconButton(onClick = openDrawer) {
                 Icon(
-                    painter = painterResource(R.drawable.ic_baseline_list_24),
+                    imageVector = Icons.Filled.Menu,
                     contentDescription = stringResource(R.string.cd_open_navigation_drawer),
-                    tint = MaterialTheme.colorScheme.onPrimary
+                    tint = MaterialTheme.colorScheme.onBackground
                 )
             }
         },
@@ -322,14 +332,19 @@ private fun HomeTopAppBar(
                 }
             ) {
                 Icon(
-                    painter = painterResource(R.drawable.ic_baseline_person_pin_24),
+                    imageVector = Icons.Filled.AccountCircle,
                     contentDescription = stringResource(R.string.cd_profile),
-                    tint = MaterialTheme.colorScheme.onPrimary
+                    tint = MaterialTheme.colorScheme.onBackground
                 )
             }
+
         },
-        backgroundColor = MaterialTheme.colorScheme.primary,
-        elevation = elevation
+        colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+            containerColor = MaterialTheme.colorScheme.primary,
+            navigationIconContentColor = MaterialTheme.colorScheme.onBackground,
+            titleContentColor = MaterialTheme.colorScheme.onBackground,
+            actionIconContentColor = MaterialTheme.colorScheme.onBackground
+        )
     )
 }
 

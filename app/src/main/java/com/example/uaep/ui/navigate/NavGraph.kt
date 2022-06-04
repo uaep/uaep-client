@@ -14,6 +14,7 @@ import com.example.uaep.ui.home.HomeRoute
 import com.example.uaep.ui.home.HomeViewModel
 import com.example.uaep.ui.login.LoginScreen
 import com.example.uaep.ui.login.LoginViewModel
+import com.example.uaep.ui.match.MatchCreationScreen
 import com.example.uaep.ui.profile.ProfileScreen
 import com.example.uaep.ui.signup.AuthCodeScreen
 import com.example.uaep.ui.signup.AuthCodeViewModel
@@ -107,6 +108,11 @@ fun UaepNavGraph(
                 userDto = userDto,
                 navController = navController
             )
+        }
+        composable(
+            route = Screen.MatchCreation.route,
+        ) {
+            MatchCreationScreen()
         }
 //        composable(route = Screen.Room.route) {
 //            RoomContainer(room1)

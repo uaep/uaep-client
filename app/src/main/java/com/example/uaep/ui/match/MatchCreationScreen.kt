@@ -36,7 +36,7 @@ import com.example.uaep.ui.theme.UaepTheme
 
 @Composable
 fun MatchCreationScreen (
-    vm: MatchCreationScreenViewModel,
+    vm: MatchCreationScreenViewModel = MatchCreationScreenViewModel(),
 ) {
     val spinnerViewModel = SpinnerViewModel()
 
