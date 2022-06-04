@@ -103,7 +103,10 @@ fun UaepNavGraph(
         ) {
             val userJson = it.arguments?.getString("user")
             val userDto = Gson().fromJson(userJson, UserDto::class.java)
-            ProfileScreen(userDto = userDto)
+            ProfileScreen(
+                userDto = userDto,
+                navController = navController
+            )
         }
 //        composable(route = Screen.Room.route) {
 //            RoomContainer(room1)
