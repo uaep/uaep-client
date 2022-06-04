@@ -112,7 +112,9 @@ fun UaepNavGraph(
         composable(
             route = Screen.MatchCreation.route,
         ) {
-            MatchCreationScreen()
+            MatchCreationScreen(
+                navController = navController
+            )
         }
 //        composable(route = Screen.Room.route) {
 //            RoomContainer(room1)

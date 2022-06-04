@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalMaterial3Api::class)
+
 package com.example.uaep.ui.match
 
 import android.content.res.Configuration
@@ -7,6 +9,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -17,10 +20,16 @@ import androidx.compose.material.DropdownMenu
 import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.Icon
 import androidx.compose.material.OutlinedTextField
-import androidx.compose.material.Surface
 import androidx.compose.material.TextFieldDefaults
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -28,186 +37,209 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.em
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.uaep.R
 import com.example.uaep.ui.components.SpinnerView
 import com.example.uaep.ui.components.SpinnerViewModel
+import com.example.uaep.ui.navigate.Screen
 import com.example.uaep.ui.theme.UaepTheme
 
 @Composable
 fun MatchCreationScreen (
     vm: MatchCreationScreenViewModel = MatchCreationScreenViewModel(),
+    navController: NavController
 ) {
     val spinnerViewModel = SpinnerViewModel()
 
-    Surface(
-        modifier = Modifier.fillMaxSize(),
-        color = MaterialTheme.colorScheme.background
-    ) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
+    Scaffold (
+        topBar = {
+            CenterAlignedTopAppBar(
+                title = {
+                    Text(
+                        text = stringResource(id = R.string.app_name),
+                        fontWeight = FontWeight.ExtraBold
+                    )
+                },
+                navigationIcon = {
+                    IconButton(onClick = { navController.navigate(route = Screen.Home.route) }) {
+                        androidx.compose.material3.Icon(
+                            imageVector = Icons.Filled.ArrowBack,
+                            contentDescription = "Back to Home"
+                        )
+                    }
+                },
+                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    navigationIconContentColor = MaterialTheme.colorScheme.onBackground,
+                    titleContentColor = MaterialTheme.colorScheme.onBackground
+                )
+            )
+        }
+    ){
+        Box (
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 10.dp, bottom = 10.dp, start = 5.dp, end = 5.dp)
-                .border(
-                    border = BorderStroke(
-                        width = 2.dp,
-                        color = MaterialTheme.colorScheme.primaryContainer
-                    ),
-                    shape = MaterialTheme.shapes.extraLarge
-                )
-                .background(
-                    color = MaterialTheme.colorScheme.onBackground,
-                    shape = MaterialTheme.shapes.extraLarge
-                ),
-            verticalArrangement = Arrangement.SpaceEvenly
+                .fillMaxSize()
+                .padding(it),
+//            color = MaterialTheme.colorScheme.background
         ) {
-            Text(
-                text = stringResource(id = R.string.app_name).uppercase(),
-                modifier = Modifier,
-                color = MaterialTheme.colorScheme.primary,
-                fontSize = MaterialTheme.typography.headlineLarge.fontSize,
-                fontWeight = FontWeight.Bold,
-                letterSpacing = 0.05.em
-            )
-            Text(
-                text = stringResource(id = R.string.create_room).uppercase(),
-                modifier = Modifier,
-                color = MaterialTheme.colorScheme.primary,
-                fontSize = MaterialTheme.typography.headlineLarge.fontSize,
-                fontWeight = FontWeight.Bold,
-            )
-            OutlinedTextField(
-                value = vm.title.value,
-                onValueChange = { vm.updateTitle(it) },
-                label = {
-                    Text(
-                        text = stringResource(R.string.title),
-                        color = MaterialTheme.colorScheme.primary,
-                        fontSize = MaterialTheme.typography.labelLarge.fontSize,
-                        fontWeight = FontWeight.Bold
-                    )
-                },
-                singleLine = true,
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
-                    .fillMaxWidth(0.8f),
-                shape = MaterialTheme.shapes.medium,
-                colors = TextFieldDefaults.outlinedTextFieldColors(
-                    textColor = MaterialTheme.colorScheme.primary,
-                    focusedBorderColor = MaterialTheme.colorScheme.primary,
-                    unfocusedBorderColor = MaterialTheme.colorScheme.primary,
-                )
-            )
-            OutlinedTextField(
-                value = vm.place.value,
-                onValueChange = { vm.updatePlace(it) },
-                label = {
-                    Text(
-                        text = stringResource(R.string.location),
-                        color = MaterialTheme.colorScheme.primary,
-                        fontSize = MaterialTheme.typography.labelLarge.fontSize,
-                        fontWeight = FontWeight.Bold
+                    .fillMaxSize()
+                    .padding(top = 10.dp, bottom = 10.dp, start = 5.dp, end = 5.dp)
+                    .border(
+                        border = BorderStroke(
+                            width = 2.dp,
+                            color = MaterialTheme.colorScheme.primaryContainer
+                        ),
+                        shape = MaterialTheme.shapes.extraLarge
                     )
-                },
-                singleLine = true,
-                modifier = Modifier
-                    .fillMaxWidth(0.8f),
-                shape = MaterialTheme.shapes.medium,
-                colors = TextFieldDefaults.outlinedTextFieldColors(
-                    textColor = MaterialTheme.colorScheme.primary,
-                    focusedBorderColor = MaterialTheme.colorScheme.primary,
-                    unfocusedBorderColor = MaterialTheme.colorScheme.primary,
+                    .background(
+                        color = MaterialTheme.colorScheme.onBackground,
+                        shape = MaterialTheme.shapes.extraLarge
+                    ),
+                verticalArrangement = Arrangement.SpaceEvenly
+            ) {
+                Text(
+                    text = stringResource(id = R.string.create_room).uppercase(),
+                    modifier = Modifier,
+                    color = MaterialTheme.colorScheme.primary,
+                    fontSize = MaterialTheme.typography.headlineLarge.fontSize,
+                    fontWeight = FontWeight.Bold,
                 )
-            )
-            Column {
                 OutlinedTextField(
-                    value = vm.numPlayer.value,
-                    readOnly = true,
-                    onValueChange = {},
+                    value = vm.title.value,
+                    onValueChange = { vm.updateTitle(it) },
                     label = {
                         Text(
-                            text = stringResource(R.string.num_player),
+                            text = stringResource(R.string.title),
                             color = MaterialTheme.colorScheme.primary,
                             fontSize = MaterialTheme.typography.labelLarge.fontSize,
                             fontWeight = FontWeight.Bold
                         )
                     },
+                    singleLine = true,
                     modifier = Modifier
-                        .fillMaxWidth(0.8f)
-                        .clickable {
-                            vm.onNumPlayerSelected()
-                        },
+                        .fillMaxWidth(0.8f),
                     shape = MaterialTheme.shapes.medium,
                     colors = TextFieldDefaults.outlinedTextFieldColors(
                         textColor = MaterialTheme.colorScheme.primary,
                         focusedBorderColor = MaterialTheme.colorScheme.primary,
                         unfocusedBorderColor = MaterialTheme.colorScheme.primary,
-                    ),
-                    trailingIcon = {
-                        Icon(
-                            imageVector = vm.icon,
-                            contentDescription = null,
-                            Modifier.clickable {
-                                vm.onNumPlayerSelected()
-                            },
-                            tint = MaterialTheme.colorScheme.primary
-                        )
-                    }
+                    )
                 )
-                DropdownMenu(
-                    expanded = vm.numPlayerSelected.value,
-                    onDismissRequest = {
-                        vm.onNumPlayerSelected()
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth(0.8f)
-                        .background(color = MaterialTheme.colorScheme.onBackground)
-                ) {
-                    DropdownMenuItem(
-                        onClick = {
-                            vm.updateNumPlayer("6vs6")
-                            vm.onNumPlayerSelected()
-                        }
-                    ) {
+                OutlinedTextField(
+                    value = vm.place.value,
+                    onValueChange = { vm.updatePlace(it) },
+                    label = {
                         Text(
-                            text = "6vs6",
+                            text = stringResource(R.string.location),
                             color = MaterialTheme.colorScheme.primary,
                             fontSize = MaterialTheme.typography.labelLarge.fontSize,
-                            fontWeight = FontWeight.ExtraBold
+                            fontWeight = FontWeight.Bold
                         )
-                    }
-                }
-            }
-            Column(
-                verticalArrangement = Arrangement.spacedBy(15.dp)
-            ) {
-                SpinnerView(viewModel = spinnerViewModel)
-                Button(
-                    onClick = {
-                        //                        navController.navigate(route = Screen.EmailAuth.route)
-                        Log.d("year : ", spinnerViewModel.year.value.toString())
-                        Log.d("month : ", spinnerViewModel.month.value.toString())
-                        Log.d("day : ", spinnerViewModel.day.value.toString())
-                        Log.d("hour : ", spinnerViewModel.hour.value.toString())
-                        Log.d("minute : ", spinnerViewModel.minute.value.toString())
-                        Log.d("title : ", vm.title.value)
-                        Log.d("place : ", vm.place.value)
-                        Log.d("num_of_users : ", vm.numPlayer.value)
-                        // TODO: HTTP Request, Navigating to the home screen
                     },
+                    singleLine = true,
                     modifier = Modifier
                         .fillMaxWidth(0.8f),
                     shape = MaterialTheme.shapes.medium,
-                    colors = ButtonDefaults.buttonColors(
-                        backgroundColor = MaterialTheme.colorScheme.secondary,
-                    ),
-                ) {
-                    Text(
-                        text = stringResource(id = R.string.create_room),
-                        color = MaterialTheme.colorScheme.onPrimary,
-                        fontSize = MaterialTheme.typography.bodyLarge.fontSize,
-                        fontWeight = FontWeight.ExtraBold
+                    colors = TextFieldDefaults.outlinedTextFieldColors(
+                        textColor = MaterialTheme.colorScheme.primary,
+                        focusedBorderColor = MaterialTheme.colorScheme.primary,
+                        unfocusedBorderColor = MaterialTheme.colorScheme.primary,
                     )
+                )
+                Column {
+                    OutlinedTextField(
+                        value = vm.numPlayer.value,
+                        readOnly = true,
+                        onValueChange = {},
+                        label = {
+                            Text(
+                                text = stringResource(R.string.num_player),
+                                color = MaterialTheme.colorScheme.primary,
+                                fontSize = MaterialTheme.typography.labelLarge.fontSize,
+                                fontWeight = FontWeight.Bold
+                            )
+                        },
+                        modifier = Modifier
+                            .fillMaxWidth(0.8f)
+                            .clickable {
+                                vm.onNumPlayerSelected()
+                            },
+                        shape = MaterialTheme.shapes.medium,
+                        colors = TextFieldDefaults.outlinedTextFieldColors(
+                            textColor = MaterialTheme.colorScheme.primary,
+                            focusedBorderColor = MaterialTheme.colorScheme.primary,
+                            unfocusedBorderColor = MaterialTheme.colorScheme.primary,
+                        ),
+                        trailingIcon = {
+                            Icon(
+                                imageVector = vm.icon,
+                                contentDescription = null,
+                                Modifier.clickable {
+                                    vm.onNumPlayerSelected()
+                                },
+                                tint = MaterialTheme.colorScheme.primary
+                            )
+                        }
+                    )
+                    DropdownMenu(
+                        expanded = vm.numPlayerSelected.value,
+                        onDismissRequest = {
+                            vm.onNumPlayerSelected()
+                        },
+                        modifier = Modifier
+                            .fillMaxWidth(0.8f)
+                            .background(color = MaterialTheme.colorScheme.onBackground)
+                    ) {
+                        DropdownMenuItem(
+                            onClick = {
+                                vm.updateNumPlayer("6vs6")
+                                vm.onNumPlayerSelected()
+                            }
+                        ) {
+                            Text(
+                                text = "6vs6",
+                                color = MaterialTheme.colorScheme.primary,
+                                fontSize = MaterialTheme.typography.labelLarge.fontSize,
+                                fontWeight = FontWeight.ExtraBold
+                            )
+                        }
+                    }
+                }
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(15.dp)
+                ) {
+                    SpinnerView(viewModel = spinnerViewModel)
+                    Button(
+                        onClick = {
+                            Log.d("year : ", spinnerViewModel.year.value.toString())
+                            Log.d("month : ", spinnerViewModel.month.value.toString())
+                            Log.d("day : ", spinnerViewModel.day.value.toString())
+                            Log.d("hour : ", spinnerViewModel.hour.value.toString())
+                            Log.d("minute : ", spinnerViewModel.minute.value.toString())
+                            Log.d("title : ", vm.title.value)
+                            Log.d("place : ", vm.place.value)
+                            Log.d("num_of_users : ", vm.numPlayer.value)
+                            // TODO: HTTP Request, Navigating to the home screen
+                            //                        navController.navigate(route = Screen.EmailAuth.route)
+                        },
+                        modifier = Modifier
+                            .fillMaxWidth(0.8f),
+                        shape = MaterialTheme.shapes.medium,
+                        colors = ButtonDefaults.buttonColors(
+                            backgroundColor = MaterialTheme.colorScheme.secondary,
+                        ),
+                    ) {
+                        Text(
+                            text = stringResource(id = R.string.create_room),
+                            color = MaterialTheme.colorScheme.onPrimary,
+                            fontSize = MaterialTheme.typography.bodyLarge.fontSize,
+                            fontWeight = FontWeight.ExtraBold
+                        )
+                    }
                 }
             }
         }
@@ -227,7 +259,8 @@ fun MatchCreationScreen (
 fun PreviewMatchCreation() {
     UaepTheme {
         MatchCreationScreen(
-            vm = MatchCreationScreenViewModel()
+            vm = MatchCreationScreenViewModel(),
+            navController = rememberNavController()
         )
     }
 }
