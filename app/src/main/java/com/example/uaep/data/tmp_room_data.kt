@@ -12,7 +12,8 @@ val room1 = Room(
     rank = Rank.BIGINNER,
     gender = "men",
     date = Date(2016,5,4,12,14),
-    number = "6vs6"
+    number = "6vs6",
+    host="sonny"
 )
 val room2 = Room(
     id = "ac552dcc1743",
@@ -20,7 +21,8 @@ val room2 = Room(
     rank = Rank.PRO,
     gender = "women",
     date = Date(2016,5,16,15,0),
-    number = "5vs5"
+    number = "5vs5",
+    host="sonny"
 )
 val room3 = Room(
     id = "ac552dcc1747",
@@ -28,7 +30,8 @@ val room3 = Room(
     rank = Rank.AMATEUR,
     gender = "male",
     date = Date(2016,5,20,20,15),
-    number = "5vs5"
+    number = "5vs5",
+    host="sonny"
 )
 val rooms: RoomsFeed =
     RoomsFeed(
