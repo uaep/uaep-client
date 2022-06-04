@@ -17,15 +17,19 @@
 package com.example.uaep.model
 
 import androidx.annotation.DrawableRes
+import com.google.gson.annotations.SerializedName
 import java.time.LocalDateTime
 import java.util.*
 
 data class Room(
     val id: String,
     val date: Date,
+    @SerializedName("place")
     val title: String,
+    @SerializedName("number_of_users")
     val number: String,
     val gender: String,
+    val host: String,
     val rank: Rank = Rank.BIGINNER,
 )
 

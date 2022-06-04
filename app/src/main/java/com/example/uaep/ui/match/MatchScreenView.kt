@@ -392,7 +392,8 @@ fun SimpleDescPreview() {
         rank = Rank.BIGINNER,
         gender = "male",
         date = Date(2016,5,4,12,14),
-        number = "6vs6"
+        number = "6vs6",
+        host="sonny"
     )
 
     UaepTheme {
@@ -411,7 +412,8 @@ fun SimpleRoomPreview() {
         rank = Rank.BIGINNER,
         gender = "male",
         date = Date(2016,5,4,12,14),
-        number = "6vs6"
+        number = "6vs6",
+        host="sonny"
     )
 
     UaepTheme {

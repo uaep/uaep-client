@@ -129,7 +129,8 @@ fun SimpleRoomPreview() {
         title = "let's play soccer",
         date = Date(2016,5,4,12,14),
         number = "6vs6",
-        gender = "male"
+        gender = "male",
+        host="sonny"
     )
 
     UaepTheme {
