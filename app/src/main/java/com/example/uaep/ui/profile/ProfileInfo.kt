@@ -25,7 +25,7 @@ data class ProfileDto(
 
 @Composable
 fun ProfileInfo(
-    profileInfoDto: ProfileDto
+    profileInfoDto: ProfileDto,
 ) {
     Column (modifier = Modifier.padding(vertical = 20.dp).padding(end = 60.dp)){
         Row (modifier = Modifier.padding(start = 4.dp)){

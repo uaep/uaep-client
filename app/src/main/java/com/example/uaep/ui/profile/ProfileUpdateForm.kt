@@ -1,7 +1,6 @@
 package com.example.uaep.ui.profile
 
 import android.content.res.Configuration
-import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
@@ -21,10 +20,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.uaep.R
+import com.example.uaep.dto.UserUpdateDto
 import com.example.uaep.ui.theme.UaepTheme
 
 @Composable
-fun ProfileUpdateForm() {
+fun ProfileUpdateForm(
+    onUpdateUserInfo: (UserUpdateDto) -> Unit
+) {
     var name by rememberSaveable { mutableStateOf("") }
     var position by rememberSaveable { mutableStateOf("") }
     var address by rememberSaveable { mutableStateOf("") }
@@ -110,10 +112,7 @@ fun ProfileUpdateForm() {
         )
         Button(
             onClick = {
-                // TODO: 프로필 수정 API에 HTTP 요청
-                Log.d("http", name)
-                Log.d("http", address)
-                Log.d("http", position)
+                onUpdateUserInfo(UserUpdateDto(name, position, address))
             }
         ) {
             Text(text = stringResource(id = R.string.update_profile))
@@ -133,6 +132,6 @@ fun ProfileUpdateForm() {
 @Composable
 fun PreviewProfileUpdateForm() {
     UaepTheme {
-        ProfileUpdateForm()
+        ProfileUpdateForm(onUpdateUserInfo = {})
     }
 }

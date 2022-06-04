@@ -15,8 +15,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.example.uaep.R
 import com.example.uaep.ui.signup.SignUpViewModel
 
 @Composable
@@ -66,24 +68,24 @@ fun GenderExposedDropDownMenu(
         ) {
             DropdownMenuItem(
                 onClick = {
-                    vm.updateGender("male")
+                    vm.updateGender("남성")
                     vm.onGenderEnabled(false)
                 }
             ) {
                 Text(
-                    text = "남성",
+                    text = stringResource(R.string.man),
                     color = MaterialTheme.colorScheme.primary,
                     fontWeight = FontWeight(1000)
                 )
             }
             DropdownMenuItem(
                 onClick = {
-                    vm.updateGender("female")
+                    vm.updateGender("여성")
                     vm.onGenderEnabled(false)
                 }
             ) {
                 Text(
-                    text = "여성",
+                    text = stringResource(R.string.woman),
                     color = MaterialTheme.colorScheme.primary,
                     fontWeight = FontWeight(1000)
                 )

@@ -8,8 +8,8 @@ import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
 import com.example.uaep.dto.LoginRequestDto
 import com.example.uaep.dto.LoginResponseDto
+import com.example.uaep.network.AuthService
 import com.example.uaep.network.SessionManager
-import com.example.uaep.network.UserApiService
 import com.example.uaep.ui.navigate.Screen
 import org.json.JSONObject
 import retrofit2.Call
@@ -36,12 +36,12 @@ class LoginViewModel : ViewModel() {
     }
 
     fun loginCallback(
-        userApiService: UserApiService,
+        authService: AuthService,
         loginRequestDto: LoginRequestDto,
         navController: NavController,
         context: Context
     ){
-        userApiService.login(
+        authService.login(
             longinRequestDto = loginRequestDto
         ).enqueue(object :
             Callback<LoginResponseDto> {

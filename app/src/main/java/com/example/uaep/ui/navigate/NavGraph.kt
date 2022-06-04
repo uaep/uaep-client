@@ -9,11 +9,19 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.example.uaep.dto.UserDto
 import com.example.uaep.ui.home.HomeRoute
 import com.example.uaep.ui.home.HomeViewModel
 import com.example.uaep.ui.login.LoginScreen
 import com.example.uaep.ui.login.LoginViewModel
-import com.example.uaep.ui.signup.*
+import com.example.uaep.ui.profile.ProfileScreen
+import com.example.uaep.ui.signup.AuthCodeScreen
+import com.example.uaep.ui.signup.AuthCodeViewModel
+import com.example.uaep.ui.signup.EmailAuthScreen
+import com.example.uaep.ui.signup.EmailAuthViewModel
+import com.example.uaep.ui.signup.SignUpScreen
+import com.example.uaep.ui.signup.SignUpViewModel
+import com.google.gson.Gson
 
 @Composable
 fun UaepNavGraph(
@@ -28,17 +36,13 @@ fun UaepNavGraph(
         startDestination = startDestination,
         modifier = modifier
     ) {
-        composable(
-            route = Screen.Login.route
-        ) {
+        composable(route = Screen.Login.route) {
             LoginScreen(
                 vm = LoginViewModel(),
                 navController = navController
             )
         }
-        composable(
-            route = Screen.EmailAuth.route
-        ) {
+        composable(route = Screen.EmailAuth.route) {
             EmailAuthScreen(
                 vm = EmailAuthViewModel(),
                 navController = navController
@@ -90,6 +94,16 @@ fun UaepNavGraph(
                 openDrawer = { /*TODO*/ },
                 navController = navController
             )
+        }
+        composable(
+            route = Screen.Profile.route,
+            arguments = listOf(navArgument("user"){
+                type = NavType.StringType
+            })
+        ) {
+            val userJson = it.arguments?.getString("user")
+            val userDto = Gson().fromJson(userJson, UserDto::class.java)
+            ProfileScreen(userDto = userDto)
         }
 //        composable(route = Screen.Room.route) {
 //            RoomContainer(room1)

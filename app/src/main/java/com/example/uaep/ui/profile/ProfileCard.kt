@@ -24,11 +24,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.uaep.dto.UserUpdateDto
 import com.example.uaep.ui.theme.UaepTheme
 
 @Composable
 fun ProfileCard(
-    profileDto: ProfileDto
+    profileDto: ProfileDto,
+    onUpdateUserInfo: (UserUpdateDto) -> Unit
 ) {
 
     var isExpanded by rememberSaveable { mutableStateOf(false) }
@@ -59,11 +61,9 @@ fun ProfileCard(
                     .clip(CircleShape)
                     .border(4.dp, MaterialTheme.colorScheme.primary, CircleShape)
             )
-            ProfileInfo(
-                profileInfoDto = profileDto
-            )
+            ProfileInfo(profileInfoDto = profileDto)
             AnimatedVisibility(visible = isExpanded) {
-                ProfileUpdateForm()
+                ProfileUpdateForm(onUpdateUserInfo)
             }
         }
     }
@@ -81,11 +81,14 @@ fun ProfileCard(
 @Composable
 fun PreviewProfileCard() {
     UaepTheme {
-        ProfileCard(ProfileDto(
-            name = "김광진",
-            position = "FK",
-            address = "경기도 수원시 00대로",
-            gender = "남자"
-        ))
+        ProfileCard(
+            ProfileDto(
+                name = "김광진",
+                position = "FK",
+                address = "경기도 수원시 00대로",
+                gender = "남자"
+            ),
+            onUpdateUserInfo = {}
+        )
     }
 }

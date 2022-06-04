@@ -6,11 +6,20 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.uaep.dto.UserDto
 import com.example.uaep.ui.theme.UaepTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ProfileScreen() {
+fun ProfileScreen(
+    userDto: UserDto,
+    viewModel: ProfileViewModel = ProfileViewModel()
+) {
+    viewModel.updateName(userDto.name)
+    viewModel.updatePosition(userDto.position)
+    viewModel.updateAddress(userDto.address)
+    viewModel.updateGender(userDto.gender)
+
     Scaffold(
         containerColor = MaterialTheme.colorScheme.onBackground,
         contentColor = MaterialTheme.colorScheme.onBackground,
@@ -21,11 +30,14 @@ fun ProfileScreen() {
     ) {
         ProfileCard(
             ProfileDto(
-                name = "김광진",
-                position = "FK",
-                address = "경기도 수원시 00대로",
-                gender = "남자"
-            )
+                name = viewModel.name.value,
+                position = viewModel.position.value,
+                address = viewModel.address.value,
+                gender = viewModel.gender.value
+            ),
+            onUpdateUserInfo = { userUpdateDto ->
+                viewModel.updateProfile(userUpdateDto)
+            }
         )
     }
 }
@@ -42,6 +54,6 @@ fun ProfileScreen() {
 @Composable
 fun PreviewProfileScreen() {
     UaepTheme {
-        ProfileScreen()
+//        ProfileScreen()
     }
 }

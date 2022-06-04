@@ -18,5 +18,6 @@ sealed class Screen(val route: String) {
         }
     }
     object Home: Screen(route = "home")
+    object Profile: Screen(route = "profile_screen/user={user}")
     //object Room: Screen(route = "room")
 }

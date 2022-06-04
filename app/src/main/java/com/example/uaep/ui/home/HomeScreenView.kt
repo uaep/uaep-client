@@ -1,5 +1,6 @@
 package com.example.uaep.ui.home
 
+import android.util.Log
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -34,19 +35,28 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
+import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.uaep.R
 import com.example.uaep.data.rooms
+import com.example.uaep.dto.ErrorResponse
+import com.example.uaep.dto.UserDto
 import com.example.uaep.model.Room
+import com.example.uaep.network.UserApiService
 import com.example.uaep.ui.components.UaepSnackbarHost
+import com.example.uaep.ui.navigate.BottomNavigationBar
+import com.example.uaep.ui.navigate.Screen
 import com.example.uaep.ui.rememberContentPaddingForScreen
 import com.example.uaep.ui.theme.UaepTheme
-import com.example.uaep.ui.navigate.BottomNavigationBar
 import com.example.uaep.utils.isScrolled
 import com.example.ueap.model.RoomsFeed
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 @Composable
 fun HomeFeedScreen(
@@ -59,7 +69,7 @@ fun HomeFeedScreen(
     homeListLazyListState: LazyListState,
     scaffoldState: ScaffoldState,
     modifier: Modifier = Modifier,
-    navController : NavHostController
+    navController : NavController
 ) {
     HomeScreenWithList(
         uiState = uiState,
@@ -94,7 +104,7 @@ private fun HomeScreenWithList(
     homeListLazyListState: LazyListState,
     scaffoldState: ScaffoldState,
     modifier: Modifier = Modifier,
-    navController : NavHostController,
+    navController : NavController,
     hasPostsContent: @Composable (
         uiState: HomeUiState.HasPosts,
         modifier: Modifier
@@ -107,7 +117,8 @@ private fun HomeScreenWithList(
             if (showTopAppBar) {
                 HomeTopAppBar(
                     openDrawer = openDrawer,
-                    elevation = if (!homeListLazyListState.isScrolled) 0.dp else 4.dp
+                    elevation = if (!homeListLazyListState.isScrolled) 0.dp else 4.dp,
+                    navController = navController
                 )
             }
         },
@@ -147,6 +158,7 @@ private fun HomeScreenWithList(
                         }
                     }
                 }
+
             }
 
         )
@@ -258,7 +270,8 @@ private fun PostListDivider() {
 @Composable
 private fun HomeTopAppBar(
     elevation: Dp,
-    openDrawer: () -> Unit
+    openDrawer: () -> Unit,
+    navController: NavController
 ) {
     val title = stringResource(id = R.string.app_name)
     TopAppBar(
@@ -282,7 +295,32 @@ private fun HomeTopAppBar(
             }
         },
         actions = {
-            IconButton(onClick = { /* TODO: Open search */ }) {
+            IconButton(
+                onClick = {
+                    // TODO: HTTP, Navigation
+                    UserApiService.getInstance().getUser().enqueue(object:
+                        Callback<UserDto> {
+                        override fun onResponse(
+                            call: Call<UserDto>,
+                            response: Response<UserDto>
+                        ) {
+                            if (response.isSuccessful) {
+                                val userJson = Gson().toJson(response.body())
+                                navController.navigate(Screen.Profile.route.replace("{user}", userJson))
+                            } else {
+                                val errorResponse: ErrorResponse? =
+                                    Gson().fromJson(
+                                        response.errorBody()!!.charStream(),
+                                        object : TypeToken<ErrorResponse>() {}.type
+                                    )
+                            }
+                        }
+                        override fun onFailure(call: Call<UserDto>, t: Throwable) {
+                            Log.i("test", "실패$t")
+                        }
+                    })
+                }
+            ) {
                 Icon(
                     painter = painterResource(R.drawable.ic_baseline_person_pin_24),
                     contentDescription = stringResource(R.string.cd_profile),
