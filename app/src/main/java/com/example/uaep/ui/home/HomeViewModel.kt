@@ -95,20 +95,20 @@ class HomeViewModel(
 
     init {
         refreshPosts()
-
+        refreshPosts()
     }
 
     /**
      * Refresh posts and update the UI state accordingly
      */
+    var room_list: List<Room>? = null
     fun refreshPosts() {
         // Ui state is refreshing
         viewModelState.update { it.copy(isLoading = true) }
 
-
-        viewModelScope.launch {
+        //viewModelScope.launch {
             var check = false
-            var room_list: List<Room> = emptyList()
+
             do {
 
                 AuthService.getInstance().rooms().enqueue(object :
@@ -121,6 +121,14 @@ class HomeViewModel(
                             check = false
                             room_list = response.body().orEmpty()
                             Log.i("rooms_response", response.body().toString())
+                            Log.i("room_list", (listOf(room1, room2, room3)+room_list.orEmpty()).toString())
+                            val result = RoomsFeed(
+                                data = listOf(room1, room2, room3)+room_list.orEmpty()
+                            )
+                            viewModelState.update {
+                                it.copy(roomsFeed = result, isLoading = false)
+                            }
+                            room_list = emptyList()
                         } else {
                             Log.i("rooms_fail_raw", response.raw().toString())
                             Log.i("rooms_fail_head", response.headers().toString())
@@ -160,13 +168,8 @@ class HomeViewModel(
                 })
             }while(check)
 
-            val result = RoomsFeed(
-                data = listOf(room1, room2, room3)+room_list
-            )
-            viewModelState.update {
-                it.copy(roomsFeed = result, isLoading = false)
-            }
-        }
+
+        //}
     }
 
 

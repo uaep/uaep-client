@@ -4,6 +4,7 @@ import com.example.uaep.dto.LoginRequestDto
 import com.example.uaep.dto.LoginResponseDto
 import com.example.uaep.dto.RoomsResponseDto
 import com.example.uaep.model.Room
+import com.google.gson.GsonBuilder
 import okhttp3.OkHttpClient
 import retrofit2.Call
 import retrofit2.Retrofit
@@ -44,7 +45,7 @@ interface AuthService {
                 authService = Retrofit.Builder()
                     .baseUrl("http://10.0.2.2:3000/")
                     .client(httpClient)
-                    .addConverterFactory(GsonConverterFactory.create())
+                    .addConverterFactory(GsonConverterFactory.create(GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss").create()))
                     .build().create(AuthService::class.java)
             }
             return authService!!

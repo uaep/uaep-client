@@ -8,6 +8,7 @@
     <string name="home_room_hour_min">%1$02d : %2$02d</string>
     <string name="home_room_personnel">%1$d vs %1$d</string>
     <string name="home_room_rank">%1$s</string>
+    <string name="home_room_date">%1$02d / %2$02d</string>
     <string name="home_tap_to_load_content">Tap to load content</string>
 
     <!-- Match Screen -->

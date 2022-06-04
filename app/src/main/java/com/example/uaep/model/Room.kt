@@ -29,8 +29,7 @@ data class Room(
     @SerializedName("number_of_users")
     val number: String,
     val gender: String,
-    val host: String,
-    val rank: Rank = Rank.BIGINNER,
+    val host: String
 )
 
 

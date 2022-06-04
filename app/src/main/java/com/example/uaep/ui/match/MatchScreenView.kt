@@ -369,9 +369,10 @@ fun RoomRank(
         CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
             Text(
                 text = stringResource(
-                    id = R.string.home_room_rank,
+                    id = R.string.home_room_date,
                     formatArgs = arrayOf(
-                        room.rank.korean
+                        room.date.month,
+                        room.date.date
                     )
                 ),
                 style = MaterialTheme.typography.h5,
@@ -389,7 +390,6 @@ fun SimpleDescPreview() {
     val room1 = Room(
         id = "ac552dcc1741",
         title = "let's play soccer",
-        rank = Rank.BIGINNER,
         gender = "male",
         date = Date(2016,5,4,12,14),
         number = "6vs6",
@@ -409,7 +409,6 @@ fun SimpleRoomPreview() {
     val room1 = Room(
         id = "ac552dcc1741",
         title = "let's play soccer",
-        rank = Rank.BIGINNER,
         gender = "male",
         date = Date(2016,5,4,12,14),
         number = "6vs6",

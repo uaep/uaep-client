@@ -75,9 +75,10 @@ fun RoomRank(
         CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
             Text(
                 text = stringResource(
-                    id = R.string.home_room_rank,
+                    id = R.string.home_room_date,
                     formatArgs = arrayOf(
-                        room.rank.korean
+                        room.date.month,
+                        room.date.date
                     )
                 ),
                 style = MaterialTheme.typography.bodyLarge,
