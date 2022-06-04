@@ -21,15 +21,10 @@ import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.Icon
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.TextFieldDefaults
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -40,9 +35,9 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.uaep.R
+import com.example.uaep.ui.components.BackToHomeTopAppBar
 import com.example.uaep.ui.components.SpinnerView
 import com.example.uaep.ui.components.SpinnerViewModel
-import com.example.uaep.ui.navigate.Screen
 import com.example.uaep.ui.theme.UaepTheme
 
 @Composable
@@ -54,26 +49,8 @@ fun MatchCreationScreen (
 
     Scaffold (
         topBar = {
-            CenterAlignedTopAppBar(
-                title = {
-                    Text(
-                        text = stringResource(id = R.string.app_name),
-                        fontWeight = FontWeight.ExtraBold
-                    )
-                },
-                navigationIcon = {
-                    IconButton(onClick = { navController.navigate(route = Screen.Home.route) }) {
-                        androidx.compose.material3.Icon(
-                            imageVector = Icons.Filled.ArrowBack,
-                            contentDescription = "Back to Home"
-                        )
-                    }
-                },
-                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.primary,
-                    navigationIconContentColor = MaterialTheme.colorScheme.onBackground,
-                    titleContentColor = MaterialTheme.colorScheme.onBackground
-                )
+            BackToHomeTopAppBar(
+                navController = navController
             )
         }
     ){
