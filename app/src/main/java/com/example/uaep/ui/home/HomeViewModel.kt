@@ -4,6 +4,9 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.example.uaep.data.room1
+import com.example.uaep.data.room2
+import com.example.uaep.data.room3
 import com.example.uaep.data.rooms
 import com.example.uaep.dto.DummyResponse
 import com.example.uaep.dto.ErrorResponse
@@ -105,16 +108,18 @@ class HomeViewModel(
 
         viewModelScope.launch {
             var check = false
+            var room_list: List<Room> = emptyList()
             do {
 
                 AuthService.getInstance().rooms().enqueue(object :
-                    Callback<RoomsResponseDto> {
+                    Callback<List<Room>> {
                     override fun onResponse(
-                        call: Call<RoomsResponseDto>,
-                        response: Response<RoomsResponseDto>
+                        call: Call<List<Room>>,
+                        response: Response<List<Room>>
                     ) {
                         if (response.isSuccessful) {
                             check = false
+                            room_list = response.body().orEmpty()
                             Log.i("rooms_response", response.body().toString())
                         } else {
                             Log.i("rooms_fail_raw", response.raw().toString())
@@ -148,14 +153,16 @@ class HomeViewModel(
                             }
                         }
                     }
-                    override fun onFailure(call: Call<RoomsResponseDto>, t: Throwable) {
+                    override fun onFailure(call: Call<List<Room>>, t: Throwable) {
                         Log.i("test", "실패$t")
                         check = true
                     }
                 })
             }while(check)
 
-            val result = rooms
+            val result = RoomsFeed(
+                data = listOf(room1, room2, room3)+room_list
+            )
             viewModelState.update {
                 it.copy(roomsFeed = result, isLoading = false)
             }

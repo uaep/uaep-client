@@ -58,6 +58,7 @@ import com.example.uaep.ui.theme.md_theme_light_outline
 import com.example.uaep.ui.theme.md_theme_light_primary
 import com.example.uaep.ui.theme.md_theme_light_secondary
 import com.example.uaep.utils.isScrolled
+import java.util.*
 
 private val defaultSpacerSize = 16.dp
 
@@ -75,34 +76,36 @@ fun MatchScreen(
     lazyListState: LazyListState = rememberLazyListState()
 ) {
 
-        Row(modifier.fillMaxSize()) {
-            val context = LocalContext.current
+    Row(modifier.fillMaxSize()) {
+        val context = LocalContext.current
 
-                MatchScreenContent(
-                    room = room,
+        MatchScreenContent(
+            room = room,
 
-                    navigationIconContent = {
-                        IconButton(onClick = onBack) {
-                            Icon(
-                                imageVector = Icons.Filled.ArrowBack,
-                                contentDescription = stringResource(R.string.cd_navigate_up),
-                                tint = md_theme_light_secondary
-                            )
-                        }
-                    },
+            navigationIconContent = {
+                IconButton(onClick = onBack) {
+                    Icon(
+                        imageVector = Icons.Filled.ArrowBack,
+                        contentDescription = stringResource(R.string.cd_navigate_up),
+                        tint = md_theme_light_secondary
+                    )
+                }
+            },
 
-                    bottomBarContent = {
-                        BottomBar(
-                            room = room
-                        )
-
-                    },
-                    lazyListState = lazyListState
+            bottomBarContent =
+            {
+                BottomBar(
+                    room = room
                 )
+            }
+
+            ,
+            lazyListState = lazyListState
+        )
 
 
 
-        }
+    }
 
 }
 
@@ -113,43 +116,43 @@ fun MatchScreenContent(
     bottomBarContent: @Composable () -> Unit = { },
     lazyListState: LazyListState = rememberLazyListState()
 ){
-        Scaffold(
-            topBar = {
-                TopAppBar(
-                    title = {
-                        Row(
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .wrapContentWidth(align = Alignment.CenterHorizontally)
+                    ) {
+                        Text(
+                            text = stringResource(R.string.app_name),
+                            style = MaterialTheme.typography.h5,
+                            color = md_theme_light_outline,
                             modifier = Modifier
-                                .fillMaxWidth()
-                                .wrapContentWidth(align = Alignment.CenterHorizontally)
-                        ) {
-                            Text(
-                                text = stringResource(R.string.app_name),
-                                style = MaterialTheme.typography.h5,
-                                color = md_theme_light_outline,
-                                modifier = Modifier
-                                    .padding(start = 10.dp)
-                                    .weight(1.5f)
-                            )
-                        }
-                    },
-                    navigationIcon = navigationIconContent,
-                    elevation = if (!lazyListState.isScrolled) 0.dp else 4.dp,
-                    backgroundColor = MaterialTheme.colors.surface
-                )
-            },
-            bottomBar = bottomBarContent
-        ) { innerPadding ->
-
-
-            RoomContainer(
-                room = room,
-                modifier = Modifier
-                    // innerPadding takes into account the top and bottom bar
-                    .padding(innerPadding)
+                                .padding(start = 10.dp)
+                                .weight(1.5f)
+                        )
+                    }
+                },
+                navigationIcon = navigationIconContent,
+                elevation = if (!lazyListState.isScrolled) 0.dp else 4.dp,
+                backgroundColor = MaterialTheme.colors.surface
             )
+        },
+        bottomBar = bottomBarContent
+    ) { innerPadding ->
 
 
-        }
+        RoomContainer(
+            room = room,
+            modifier = Modifier
+                // innerPadding takes into account the top and bottom bar
+                .padding(innerPadding)
+        )
+
+
+    }
 
 }
 
@@ -182,13 +185,13 @@ fun RoomContainer(
 //            ReadyButton(){
 //                position.value = it
 //            }
-                    Spacer(Modifier.height(defaultSpacerSize))
-                    Formation(reverse = false, Modifier.fillMaxWidth())
+                Spacer(Modifier.height(defaultSpacerSize))
+                Formation(reverse = false, Modifier.fillMaxWidth())
 
 
 
-                    Formation(reverse = true, Modifier.fillMaxWidth())
-                    //Spacer(Modifier.height(8.dp))
+                Formation(reverse = true, Modifier.fillMaxWidth())
+                //Spacer(Modifier.height(8.dp))
 
             }
         }
@@ -211,7 +214,7 @@ private fun BottomBar(
                 .fillMaxWidth()
         ) {
             when(room.number){
-                6 -> {
+                "6vs6" -> {
                     Button(
                         onClick = { /*TODO*/ },
                         modifier = Modifier.fillMaxSize(),
@@ -235,7 +238,7 @@ fun ReadyButton(
             FieldPosition.CF
         )},
 
-    ){
+        ){
         Text("CK")
     }
 }
@@ -328,8 +331,8 @@ fun ReadTime(room: Room, modifier: Modifier = Modifier) {
         text = stringResource(
             id = R.string.home_room_hour_min,
             formatArgs = arrayOf(
-                room.hour,
-                room.minute
+                room.date.hours,
+                room.date.minutes
             )
         ),
         style = MaterialTheme.typography.h5,
@@ -348,13 +351,7 @@ fun RoomPersonnel(
     Row(modifier) {
         CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
             Text(
-                text = stringResource(
-                    id = R.string.home_room_personnel,
-                    formatArgs = arrayOf(
-                        room.number,
-                        room.number
-                    )
-                ),
+                text = room.number,
                 style = MaterialTheme.typography.h5,
                 fontWeight = FontWeight.Bold,
                 color = md_theme_light_secondary
@@ -393,11 +390,9 @@ fun SimpleDescPreview() {
         id = "ac552dcc1741",
         title = "let's play soccer",
         rank = Rank.BIGINNER,
-        gender = Gender.MAN,
-        date = "July 9",
-        hour = 5,
-        minute = 5,
-        number = 6
+        gender = "male",
+        date = Date(2016,5,4,12,14),
+        number = "6vs6"
     )
 
     UaepTheme {
@@ -414,11 +409,9 @@ fun SimpleRoomPreview() {
         id = "ac552dcc1741",
         title = "let's play soccer",
         rank = Rank.BIGINNER,
-        gender = Gender.MAN,
-        date = "July 9",
-        hour = 5,
-        minute = 5,
-        number = 6
+        gender = "male",
+        date = Date(2016,5,4,12,14),
+        number = "6vs6"
     )
 
     UaepTheme {

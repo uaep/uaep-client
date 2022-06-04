@@ -26,6 +26,7 @@ import com.example.uaep.model.Gender
 import com.example.uaep.model.Rank
 import com.example.uaep.model.Room
 import com.example.uaep.ui.theme.UaepTheme
+import java.util.*
 
 @Composable
 fun RoomTitle(room: Room){
@@ -39,8 +40,8 @@ fun ReadTime(room: Room) {
         text = stringResource(
             id = R.string.home_room_hour_min,
             formatArgs = arrayOf(
-                room.hour,
-                room.minute
+                room.date.hours,
+                room.date.minutes
             )
         ),
         style = MaterialTheme.typography.titleLarge,
@@ -58,13 +59,7 @@ fun RoomPersonnel(
     Row(modifier) {
         CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
             Text(
-                text = stringResource(
-                    id = R.string.home_room_personnel,
-                    formatArgs = arrayOf(
-                        room.number,
-                        room.number
-                    )
-                ),
+                text = room.number,
                 style = MaterialTheme.typography.bodyLarge
             )
         }
@@ -102,9 +97,9 @@ fun RoomCardSimple(
         modifier = Modifier
             .clickable(
                 onClick = {
-                navigateToArticle(room.id)
+                    navigateToArticle(room.id)
 
-            }
+                }
             )
             .border(
                 width = 2.dp,
@@ -130,14 +125,11 @@ fun RoomCardSimple(
 @Composable
 fun SimpleRoomPreview() {
     val room1 = Room(
-    id = "ac552dcc1741",
-    title = "let's play soccer",
-    rank = Rank.BIGINNER,
-    gender = Gender.MAN,
-    date = "July 9",
-    hour = 5,
-    minute = 5,
-    number = 6
+        id = "ac552dcc1741",
+        title = "let's play soccer",
+        date = Date(2016,5,4,12,14),
+        number = "6vs6",
+        gender = "male"
     )
 
     UaepTheme {

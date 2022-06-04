@@ -3,6 +3,7 @@ package com.example.uaep.network
 import com.example.uaep.dto.LoginRequestDto
 import com.example.uaep.dto.LoginResponseDto
 import com.example.uaep.dto.RoomsResponseDto
+import com.example.uaep.model.Room
 import okhttp3.OkHttpClient
 import retrofit2.Call
 import retrofit2.Retrofit
@@ -26,7 +27,7 @@ interface AuthService {
         "content-type: application/json")
     @GET("games")
     fun rooms(
-    ) : Call<RoomsResponseDto>
+    ) : Call<List<Room>>
 
     // 싱글톤 객체로서, 인스턴스 생성 없이 사용할 수 있다.
     companion object{

@@ -4,36 +4,31 @@ import com.example.uaep.model.Gender
 import com.example.uaep.model.Rank
 import com.example.uaep.model.Room
 import com.example.ueap.model.RoomsFeed
+import java.util.*
 
 val room1 = Room(
     id = "ac552dcc1741",
     title = "let's play soccer",
     rank = Rank.BIGINNER,
-    gender = Gender.MAN,
-    date = "July 9",
-    hour = 5,
-    minute = 5,
-    number = 6
+    gender = "men",
+    date = Date(2016,5,4,12,14),
+    number = "6vs6"
 )
 val room2 = Room(
     id = "ac552dcc1743",
     title = "let's play football",
     rank = Rank.PRO,
-    gender = Gender.WOMEN,
-    date = "July 16",
-    hour = 20,
-    minute = 30,
-    number = 5
+    gender = "women",
+    date = Date(2016,5,16,15,0),
+    number = "5vs5"
 )
 val room3 = Room(
     id = "ac552dcc1747",
     title = "let's play football",
     rank = Rank.AMATEUR,
-    gender = Gender.WOMEN,
-    date = "July 20",
-    hour = 21,
-    minute = 0,
-    number = 5
+    gender = "male",
+    date = Date(2016,5,20,20,15),
+    number = "5vs5"
 )
 val rooms: RoomsFeed =
     RoomsFeed(

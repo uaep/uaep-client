@@ -18,16 +18,15 @@ package com.example.uaep.model
 
 import androidx.annotation.DrawableRes
 import java.time.LocalDateTime
+import java.util.*
 
 data class Room(
     val id: String,
+    val date: Date,
     val title: String,
-    val rank: Rank,
-    val gender: Gender,
-    val date: String,
-    val hour: Int,
-    val minute: Int,
-    val number: Int
+    val number: String,
+    val gender: String,
+    val rank: Rank = Rank.BIGINNER,
 )
 
 
