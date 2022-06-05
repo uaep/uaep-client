@@ -86,7 +86,9 @@ fun PreviewProfileCard() {
                 name = "김광진",
                 position = "FK",
                 address = "경기도 수원시 00대로",
-                gender = "남자"
+                gender = "남자",
+                levelPoint = 1,
+                positionChangePoint = 1000
             ),
             onUpdateUserInfo = {}
         )

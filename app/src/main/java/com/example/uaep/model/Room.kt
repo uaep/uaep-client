@@ -16,9 +16,7 @@
 
 package com.example.uaep.model
 
-import androidx.annotation.DrawableRes
 import com.google.gson.annotations.SerializedName
-import java.time.LocalDateTime
 import java.util.*
 
 data class Room(
@@ -39,9 +37,4 @@ enum class Rank(val korean: String) {
     AMATEUR("아마추어"),
     SEMI_PRO("세미프로"),
     PRO("프로")
-}
-
-enum class Gender(val korean: String) {
-    MAN("남성"),
-    WOMEN("여성")
 }

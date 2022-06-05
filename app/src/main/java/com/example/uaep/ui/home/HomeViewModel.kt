@@ -9,6 +9,8 @@ import com.example.uaep.data.room2
 import com.example.uaep.data.room3
 import com.example.uaep.data.rooms
 import com.example.uaep.dto.*
+import com.example.uaep.dto.DummyResponse
+import com.example.uaep.dto.ErrorResponse
 import com.example.uaep.model.Room
 import com.example.uaep.network.AuthService
 import com.example.uaep.network.CookieChanger
@@ -17,7 +19,11 @@ import com.example.uaep.utils.ErrorMessage
 import com.example.ueap.model.RoomsFeed
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
@@ -125,7 +131,7 @@ class HomeViewModel(
                             }
                             room_list = emptyList()
                         } else {
-                            Log.i("rooms_fail_raw", response.raw().toString())
+                            Log.i("rooms_fail_body", response.errorBody().toString())
                             Log.i("rooms_fail_head", response.headers().toString())
                             check = true
                             val errorResponse: ErrorResponse? =

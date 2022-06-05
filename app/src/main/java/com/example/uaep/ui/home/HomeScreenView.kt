@@ -36,6 +36,8 @@ import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -125,13 +127,14 @@ private fun HomeScreenWithList(
                     Text(
                         text = stringResource(id = R.string.create_room),
                         color = MaterialTheme.colorScheme.onBackground,
+                        fontFamily = FontFamily(Font(R.font.jua_regular)),
                         fontWeight = FontWeight.ExtraBold
                     )
                 },
                 icon = { Icon(Icons.Filled.AddCircle, stringResource(id = R.string.create_room)) },
                 onClick = { navController.navigate(Screen.MatchCreation.route) },
-                containerColor = MaterialTheme.colorScheme.primaryContainer,
-                contentColor = MaterialTheme.colorScheme.onBackground
+                containerColor = MaterialTheme.colorScheme.primary,
+                contentColor = MaterialTheme.colorScheme.onPrimary
             )
         },
         topBar = {

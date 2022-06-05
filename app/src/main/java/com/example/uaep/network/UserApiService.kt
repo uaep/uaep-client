@@ -62,7 +62,7 @@ interface UserApiService {
     // 싱글톤 객체로서, 인스턴스 생성 없이 사용할 수 있다.
     companion object{
         private var userApiService:UserApiService? = null
-        private val myCookieJar = MyCookieJar()
+        private val myCookieJar = AuthService.getCookieJar()
 
         fun getInstance() : UserApiService {
             if (userApiService == null) {
