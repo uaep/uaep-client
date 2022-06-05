@@ -21,6 +21,7 @@ import androidx.compose.ui.layout.layout
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.uaep.dto.Player
 import com.example.uaep.enums.Position
 import com.example.uaep.ui.theme.UaepTheme
 import com.example.uaep.ui.theme.md_theme_light_error
@@ -33,9 +34,10 @@ import com.example.uaep.ui.theme.md_theme_light_tertiary
 fun PositionButton(
     color: Color,
     position: Position,
+    player: Player?
 ) {
     var enabled by remember { mutableStateOf(true) }
-    var pos by remember { mutableStateOf(position.value) }
+    var pos = player?.position
 
     Column {
         Box(contentAlignment= Alignment.Center,
@@ -58,7 +60,7 @@ fun PositionButton(
                     }
                 }) {
             Text(
-                text = pos,
+                text = pos ?: "empty",
                 modifier = Modifier
                     .padding(10.dp)
                     .defaultMinSize(30.dp)
@@ -87,7 +89,7 @@ fun PositionButton(
             )
         }
         Text(
-            text = "gwangjin"
+            text = player?.name ?: "empty"
         )
     }
 }
@@ -102,6 +104,14 @@ fun PositionButtonPreview() {
         PositionButton(
             color = md_theme_light_primary,
             position = Position.FW,
+            player = Player(
+                email = "test@gmail.com",
+                name = "name",
+                gender = "남성",
+                address = "address",
+                position = "FW",
+                levelPoint = 0
+            )
         )
     }
 }

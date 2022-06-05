@@ -22,7 +22,7 @@ import java.time.LocalDateTime
 import java.util.*
 
 data class Room(
-    val id: String,
+    val id: Int,
     val date: Date,
     @SerializedName("place")
     val title: String,

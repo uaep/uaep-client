@@ -33,10 +33,7 @@ import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -48,6 +45,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.uaep.R
+import com.example.uaep.dto.Player
+import com.example.uaep.dto.RoomDto
+import com.example.uaep.dto.Team
 import com.example.uaep.model.Gender
 import com.example.uaep.model.Rank
 import com.example.uaep.model.Room
@@ -69,7 +69,7 @@ enum class FieldPosition{
 
 @Composable
 fun MatchScreen(
-    room: Room,
+    room: RoomDto,
     isExpandedScreen: Boolean,
     onBack: () -> Unit,
     modifier: Modifier = Modifier,
@@ -111,7 +111,7 @@ fun MatchScreen(
 
 @Composable
 fun MatchScreenContent(
-    room: Room,
+    room: RoomDto,
     navigationIconContent: @Composable (() -> Unit)? = null,
     bottomBarContent: @Composable () -> Unit = { },
     lazyListState: LazyListState = rememberLazyListState()
@@ -158,13 +158,18 @@ fun MatchScreenContent(
 
 @Composable
 fun RoomContainer(
-    room: Room,
+    room: RoomDto,
     modifier: Modifier = Modifier
 ) {
-    val position = remember{ mutableStateOf(FieldPosition.GK)}
+    var position by remember{ mutableStateOf<String?>(null)}
+    var team by remember{ mutableStateOf<Boolean?>(false)}
+    var enabled by remember { mutableStateOf(false) }
+
     Column() {
 
         Scaffold(modifier = Modifier.weight(1f)) { innerPadding ->
+            Text(position ?: "none")
+            Text(team.toString() ?: "none", textAlign = TextAlign.Right)
             Image(
                 painter = painterResource(id = R.drawable.football_background),
                 contentDescription = stringResource(id = R.string.foot_ball_back),
@@ -186,11 +191,11 @@ fun RoomContainer(
 //                position.value = it
 //            }
                 Spacer(Modifier.height(defaultSpacerSize))
-                Formation(reverse = false, Modifier.fillMaxWidth())
+                Formation(reverse = false, Modifier.fillMaxWidth(), room.teamA)
 
+                Spacer(Modifier.height(defaultSpacerSize*2))
 
-
-                Formation(reverse = true, Modifier.fillMaxWidth())
+                Formation(reverse = true, Modifier.fillMaxWidth(), room.teamB)
                 //Spacer(Modifier.height(8.dp))
 
             }
@@ -202,7 +207,7 @@ fun RoomContainer(
 
 @Composable
 private fun BottomBar(
-    room: Room,
+    room: RoomDto,
     modifier: Modifier = Modifier
 ) {
     Surface(elevation = 8.dp, modifier = modifier) {
@@ -254,7 +259,7 @@ private fun PostListDivider() {
 
 @Composable
 fun RoomDesc(
-    room: Room,
+    room: RoomDto,
     modifier: Modifier = Modifier
 ){
 
@@ -320,13 +325,13 @@ fun RoomDesc(
 }
 
 @Composable
-fun RoomTitle(room: Room){
+fun RoomTitle(room: RoomDto){
     Text(room.title,
         style = MaterialTheme.typography.h4)
 }
 
 @Composable
-fun ReadTime(room: Room, modifier: Modifier = Modifier) {
+fun ReadTime(room: RoomDto, modifier: Modifier = Modifier) {
     Text(
         text = stringResource(
             id = R.string.home_room_hour_min,
@@ -345,7 +350,7 @@ fun ReadTime(room: Room, modifier: Modifier = Modifier) {
 
 @Composable
 fun RoomPersonnel(
-    room: Room,
+    room: RoomDto,
     modifier: Modifier = Modifier
 ) {
     Row(modifier) {
@@ -362,7 +367,7 @@ fun RoomPersonnel(
 
 @Composable
 fun RoomRank(
-    room: Room,
+    room: RoomDto,
     modifier: Modifier = Modifier
 ) {
     Row(modifier) {
@@ -387,13 +392,15 @@ fun RoomRank(
 @Preview("Simple Room Card")
 @Composable
 fun SimpleDescPreview() {
-    val room1 = Room(
-        id = "ac552dcc1741",
+    val room1 = RoomDto(
+        id = 2001,
         title = "let's play soccer",
         gender = "male",
         date = Date(2016,5,4,12,14),
         number = "6vs6",
-        host="sonny"
+        host="sonny",
+        teamA = null,
+        teamB = null
     )
 
     UaepTheme {
@@ -406,13 +413,59 @@ fun SimpleDescPreview() {
 @Preview("Simple Room Match")
 @Composable
 fun SimpleRoomPreview() {
-    val room1 = Room(
-        id = "ac552dcc1741",
+    val room1 = RoomDto(
+        id = 2001,
         title = "let's play soccer",
         gender = "male",
         date = Date(2016,5,4,12,14),
         number = "6vs6",
-        host="sonny"
+        host="sonny",
+        teamA = Team(
+            fw1 = Player(
+                email = "test@gmail.com",
+                name = "name",
+                gender = "남성",
+                address = "address",
+                position = "FW",
+                levelPoint = 0
+            ),
+            fw2 = null,
+            mf = null,
+            df1 = null,
+            df2 = null,
+            gk = null,
+            captain = Player(
+                email = "test@gmail.com",
+                name = "name",
+                gender = "남성",
+                address = "address",
+                position = "FW",
+                levelPoint = 0
+            )
+        ),
+        teamB = Team(
+            fw1 = Player(
+                email = "test@gmail.com",
+                name = "name",
+                gender = "남성",
+                address = "address",
+                position = "FW",
+                levelPoint = 0
+            ),
+            fw2 = null,
+            mf = null,
+            df1 = null,
+            df2 = null,
+            gk = null,
+            captain = Player(
+                email = "test@gmail.com",
+                name = "name",
+                gender = "남성",
+                address = "address",
+                position = "FW",
+                levelPoint = 0
+            )
+        )
     )
 
     UaepTheme {

@@ -8,10 +8,7 @@ import com.example.uaep.data.room1
 import com.example.uaep.data.room2
 import com.example.uaep.data.room3
 import com.example.uaep.data.rooms
-import com.example.uaep.dto.DummyResponse
-import com.example.uaep.dto.ErrorResponse
-import com.example.uaep.dto.RoomsResponseDto
-import com.example.uaep.dto.UrlResponseDto
+import com.example.uaep.dto.*
 import com.example.uaep.model.Room
 import com.example.uaep.network.AuthService
 import com.example.uaep.network.CookieChanger
@@ -25,6 +22,7 @@ import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.util.*
 
 sealed interface HomeUiState {
 
@@ -38,7 +36,7 @@ sealed interface HomeUiState {
 
     data class HasPosts(
         val roomsFeed: RoomsFeed,
-        val selectedRoom: Room,
+        val selectedRoom: RoomDto,
         override val isLoading: Boolean,
         override val errorMessages: List<ErrorMessage>,
         val isArticleOpen: Boolean
@@ -47,10 +45,10 @@ sealed interface HomeUiState {
 
 private data class HomeViewModelState(
     val roomsFeed: RoomsFeed? = null,
-    val selectedRoomId: String? = null,
+    val selectedRoomId: RoomDto? = null,
     val isArticleOpen: Boolean = false,
     val isLoading: Boolean = false,
-    val errorMessages: List<ErrorMessage> = emptyList(),
+    val errorMessages: List<ErrorMessage> = emptyList()
 ) {
 
     /**
@@ -72,9 +70,8 @@ private data class HomeViewModelState(
                 isArticleOpen = isArticleOpen,
                 isLoading = isLoading,
                 errorMessages = errorMessages,
-                selectedRoom = roomsFeed.allPosts.find {
-                    it.id == selectedRoomId
-                } ?: roomsFeed.data[0]
+                selectedRoom = selectedRoomId
+                    ?: RoomDto(-1, Date(0,0,0,0,0),"Wrong Page","6vs6","-", "-", null, null)
             )
         }
 }
@@ -108,9 +105,7 @@ class HomeViewModel(
 
         //viewModelScope.launch {
             var check = false
-
             do {
-
                 AuthService.getInstance().rooms().enqueue(object :
                     Callback<List<Room>> {
                     override fun onResponse(
@@ -138,7 +133,7 @@ class HomeViewModel(
                                     response.errorBody()!!.charStream(),
                                     object : TypeToken<ErrorResponse>() {}.type
                                 )
-                            if (errorResponse!!.message != null && (errorResponse!!.message == "Expired access or refresh token")) {
+                            if (errorResponse!!.message != null && (errorResponse!!.message == "Expired access token")) {
                                 ReAuthService.getInstance().reauth().enqueue(object :
                                     Callback<DummyResponse> {
 
@@ -176,14 +171,64 @@ class HomeViewModel(
     /**
      * Selects the given article to view more information about it.
      */
-    fun selectArticle(postId: String) {
+    fun selectArticle(postId: Int) {
         // Treat selecting a detail as simply interacting with it
-        viewModelState.update {
-            it.copy(
-                selectedRoomId = postId,
-                isArticleOpen = true
-            )
-        }
+        var check = false
+
+        do {
+
+            AuthService.getInstance().select(postId).enqueue(object :
+                Callback<RoomDto> {
+                override fun onResponse(
+                    call: Call<RoomDto>,
+                    response: Response<RoomDto>
+                ) {
+                    if (response.isSuccessful) {
+                        viewModelState.update {
+                            it.copy(
+                                selectedRoomId = response.body(),
+                                isArticleOpen = true,
+                            )
+                        }
+                    } else {
+                        Log.i("rooms_fail_raw", response.raw().toString())
+                        Log.i("rooms_fail_head", response.headers().toString())
+                        check = true
+                        val errorResponse: ErrorResponse? =
+                            Gson().fromJson(
+                                response.errorBody()!!.charStream(),
+                                object : TypeToken<ErrorResponse>() {}.type
+                            )
+                        if (errorResponse!!.message != null && (errorResponse!!.message == "Expired access")) {
+                            ReAuthService.getInstance().reauth().enqueue(object :
+                                Callback<DummyResponse> {
+
+                                override fun onResponse(
+                                    call: Call<DummyResponse>,
+                                    response: Response<DummyResponse>
+                                ) {
+                                    if (response.isSuccessful) {
+                                        val tokens = CookieChanger<DummyResponse>().change(response)
+                                        AuthService.getCookieJar().saveToken(tokens)
+                                    }
+                                }
+                                override fun onFailure(
+                                    call: Call<DummyResponse>,
+                                    t: Throwable
+                                ) {
+                                    Log.i("test", "실패$t")
+                                }
+                            })
+                        }
+                    }
+                }
+                override fun onFailure(call: Call<RoomDto>, t: Throwable) {
+                    Log.i("test", "실패$t")
+                    check = true
+                }
+            })
+        }while(check)
+
     }
 
 

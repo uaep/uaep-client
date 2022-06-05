@@ -23,6 +23,5 @@ data class RoomsFeed(
     val data: List<Room>
 ) {
 
-    val allPosts: List<Room> =
-        data
+    val allPosts: List<Room> = data
 }

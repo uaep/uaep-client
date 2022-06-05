@@ -43,7 +43,7 @@ fun HomeRoute(
 fun HomeRoute(
     uiState: HomeUiState,
     isExpandedScreen: Boolean,
-    onSelectRoom: (String) -> Unit,
+    onSelectRoom: (Int) -> Unit,
     onRefreshPosts: () -> Unit,
     onErrorDismiss: (Long) -> Unit,
     onInteractWithFeed: () -> Unit,

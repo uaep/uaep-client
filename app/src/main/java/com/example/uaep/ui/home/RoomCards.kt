@@ -92,14 +92,13 @@ fun RoomRank(
 @Composable
 fun RoomCardSimple(
     room: Room,
-    navigateToArticle: (String) -> Unit
+    navigateToArticle: (Int) -> Unit
 ){
     Row(
         modifier = Modifier
             .clickable(
                 onClick = {
                     navigateToArticle(room.id)
-
                 }
             )
             .border(
@@ -126,7 +125,7 @@ fun RoomCardSimple(
 @Composable
 fun SimpleRoomPreview() {
     val room1 = Room(
-        id = "ac552dcc1741",
+        id = 1234,
         title = "let's play soccer",
         date = Date(2016,5,4,12,14),
         number = "6vs6",

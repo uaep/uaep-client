@@ -2,6 +2,7 @@ package com.example.uaep.network
 
 import com.example.uaep.dto.LoginRequestDto
 import com.example.uaep.dto.LoginResponseDto
+import com.example.uaep.dto.RoomDto
 import com.example.uaep.dto.RoomsResponseDto
 import com.example.uaep.model.Room
 import com.google.gson.GsonBuilder
@@ -9,10 +10,7 @@ import okhttp3.OkHttpClient
 import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.http.Body
-import retrofit2.http.GET
-import retrofit2.http.Headers
-import retrofit2.http.POST
+import retrofit2.http.*
 
 interface AuthService {
 
@@ -29,6 +27,13 @@ interface AuthService {
     @GET("games")
     fun rooms(
     ) : Call<List<Room>>
+
+    @Headers("accept: application/json",
+        "content-type: application/json")
+    @GET("games/{id}")
+    fun select(
+        @Path("id") id: Int
+    ) : Call<RoomDto>
 
     // 싱글톤 객체로서, 인스턴스 생성 없이 사용할 수 있다.
     companion object{

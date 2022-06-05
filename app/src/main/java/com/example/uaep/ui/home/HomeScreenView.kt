@@ -45,6 +45,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.uaep.R
 import com.example.uaep.data.rooms
 import com.example.uaep.dto.ErrorResponse
+import com.example.uaep.dto.RoomDto
 import com.example.uaep.dto.UserDto
 import com.example.uaep.model.Room
 import com.example.uaep.network.UserApiService
@@ -61,12 +62,13 @@ import com.google.gson.reflect.TypeToken
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.util.*
 
 @Composable
 fun HomeFeedScreen(
     uiState: HomeUiState,
     showTopAppBar: Boolean,
-    onSelectPost: (String) -> Unit,
+    onSelectPost: (Int) -> Unit,
     onRefreshPosts: () -> Unit,
     onErrorDismiss: (Long) -> Unit,
     openDrawer: () -> Unit,
@@ -239,7 +241,7 @@ private fun FullScreenLoading() {
 @Composable
 private fun PostList(
     roomsFeed: RoomsFeed,
-    onArticleTapped: (postId: String) -> Unit,
+    onArticleTapped: (postId: Int) -> Unit,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(0.dp),
     state: LazyListState = rememberLazyListState(),
@@ -262,7 +264,7 @@ private fun PostList(
 @Composable
 private fun PostListSimpleSection(
     rooms: List<Room>,
-    navigateToArticle: (String) -> Unit
+    navigateToArticle: (Int) -> Unit
 ) {
     Column {
         rooms.forEach { room ->
@@ -366,7 +368,7 @@ fun PreviewHomeListDrawerScreen() {
                 isLoading = false,
                 errorMessages = emptyList(),
                 isArticleOpen = false,
-                selectedRoom = rooms.data[0]
+                selectedRoom = RoomDto(-1, Date(0,0,0,0,0),"Wrong Page","6vs6","-", "-", null, null)
             ),
             showTopAppBar = true,
             onSelectPost = {},
