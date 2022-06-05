@@ -33,7 +33,12 @@ import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -48,9 +53,6 @@ import com.example.uaep.R
 import com.example.uaep.dto.Player
 import com.example.uaep.dto.RoomDto
 import com.example.uaep.dto.Team
-import com.example.uaep.model.Gender
-import com.example.uaep.model.Rank
-import com.example.uaep.model.Room
 import com.example.uaep.ui.theme.UaepTheme
 import com.example.uaep.ui.theme.md_theme_light_inversePrimary
 import com.example.uaep.ui.theme.md_theme_light_onPrimary

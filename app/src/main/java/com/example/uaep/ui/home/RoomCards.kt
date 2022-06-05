@@ -22,8 +22,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.uaep.R
-
-import com.example.uaep.model.Rank
 import com.example.uaep.model.Room
 import com.example.uaep.ui.theme.UaepTheme
 import java.util.*
@@ -36,11 +34,18 @@ fun RoomTitle(room: Room){
 
 @Composable
 fun ReadTime(room: Room) {
+    var hour = 0;
+    if (room.date.hours < 15) {
+        hour = room.date.hours + 9
+    } else {
+        hour = room.date.hours + 9 - 24
+    }
+
     Text(
         text = stringResource(
             id = R.string.home_room_hour_min,
             formatArgs = arrayOf(
-                room.date.hours,
+                hour,
                 room.date.minutes
             )
         ),
@@ -71,14 +76,18 @@ fun RoomRank(
     room: Room,
     modifier: Modifier = Modifier
 ) {
+    var date = room.date.date;
+    if (room.date.hours >= 15) {
+        date += 1
+    }
     Row(modifier) {
         CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
             Text(
                 text = stringResource(
                     id = R.string.home_room_date,
                     formatArgs = arrayOf(
-                        room.date.month,
-                        room.date.date
+                        room.date.month + 1,
+                        date
                     )
                 ),
                 style = MaterialTheme.typography.bodyLarge,
