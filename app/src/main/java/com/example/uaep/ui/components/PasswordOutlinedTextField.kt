@@ -46,6 +46,7 @@ fun PasswordOutlinedTextField(
             focusedLabelColor = color,
             focusedBorderColor = color
         ),
+        textStyle = MaterialTheme.typography.bodyLarge,
         visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
         trailingIcon = {

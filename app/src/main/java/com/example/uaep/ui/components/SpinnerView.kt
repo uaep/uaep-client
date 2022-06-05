@@ -2,10 +2,8 @@ package com.example.uaep.ui.components
 
 import android.annotation.SuppressLint
 import androidx.compose.animation.core.MutableTransitionState
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.MaterialTheme.colors
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.material3.MaterialTheme
@@ -16,7 +14,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import com.example.uaep.R
 
 @SuppressLint("UnusedTransitionTargetStateParameter")
 @Composable
@@ -44,6 +45,7 @@ fun SpinnerView(
         Text(
             text = "경기 날짜 선택하기",
             color = MaterialTheme.colorScheme.onPrimary,
+            fontFamily = FontFamily(Font(R.font.jua_regular)),
             fontSize = MaterialTheme.typography.bodyLarge.fontSize,
             fontWeight = FontWeight.Bold,
         )
@@ -60,6 +62,7 @@ fun SpinnerView(
         Text (
             text = dateTime.value ?: "경기 일정 없음",
             color = MaterialTheme.colorScheme.onPrimary,
+            fontFamily = FontFamily(Font(R.font.jua_regular)),
             fontSize = MaterialTheme.typography.bodyLarge.fontSize,
             fontWeight = FontWeight.Bold,
         )

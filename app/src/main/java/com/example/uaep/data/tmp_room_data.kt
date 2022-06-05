@@ -1,6 +1,5 @@
 package com.example.uaep.data
 
-import com.example.uaep.model.Gender
 import com.example.uaep.model.Rank
 import com.example.uaep.model.Room
 import com.example.ueap.model.RoomsFeed

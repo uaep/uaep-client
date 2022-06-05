@@ -93,6 +93,7 @@ fun SignUpScreen (
                     placeholder = { Text(stringResource(R.string.email)) },
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth(0.8f),
+                    textStyle = MaterialTheme.typography.bodyLarge,
                     colors = TextFieldDefaults.outlinedTextFieldColors(
                         textColor = MaterialTheme.colorScheme.primary,
                         unfocusedBorderColor = MaterialTheme.colorScheme.primary,
@@ -195,6 +196,7 @@ fun SignUpScreen (
                                 .clickable {
                                     vm.onPosEnabled(!vm.posEnabled.value)
                                 },
+                            textStyle = MaterialTheme.typography.bodyLarge,
                             colors = TextFieldDefaults.outlinedTextFieldColors(
                                 textColor = MaterialTheme.colorScheme.primary,
                                 unfocusedBorderColor = MaterialTheme.colorScheme.primary,

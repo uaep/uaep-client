@@ -39,6 +39,7 @@ fun CustomOutlinedTextField(
         },
         singleLine = true,
         modifier = Modifier.fillMaxWidth(0.8f),
+        textStyle = MaterialTheme.typography.bodyLarge,
         colors = TextFieldDefaults.outlinedTextFieldColors(
             textColor = color,
             unfocusedBorderColor = color,

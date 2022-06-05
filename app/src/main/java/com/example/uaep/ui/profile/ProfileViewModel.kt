@@ -65,7 +65,6 @@ class ProfileViewModel(
                     mAddress.value = response.body()!!.address
                 } else {
                     Log.d("debug2", (response.errorBody()?.charStream()).toString())
-//                    Gson().fromJson(response.errorBody()!!.charStream(), ErrorResponse::class.java)
                 }
             }
             override fun onFailure(call: Call<UserUpdateDto>, t: Throwable) {

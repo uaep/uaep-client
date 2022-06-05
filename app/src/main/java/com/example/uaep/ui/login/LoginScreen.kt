@@ -90,6 +90,7 @@ fun LoginScreen(
                     },
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth(0.8f),
+                    textStyle = MaterialTheme.typography.bodyLarge,
                     colors = TextFieldDefaults.outlinedTextFieldColors(
                         textColor = MaterialTheme.colorScheme.primary,
                         unfocusedBorderColor = MaterialTheme.colorScheme.primary,

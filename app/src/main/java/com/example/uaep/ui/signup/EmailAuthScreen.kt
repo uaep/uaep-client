@@ -96,6 +96,7 @@ fun EmailAuthScreen (
                         )
                     },
                     singleLine = true,
+                    textStyle = MaterialTheme.typography.bodyLarge,
                     modifier = Modifier.fillMaxWidth(0.8f),
                     colors = TextFieldDefaults.outlinedTextFieldColors(
                         textColor = MaterialTheme.colorScheme.primary,
@@ -132,6 +133,7 @@ fun EmailAuthScreen (
                                 .clickable {
                                     vm.onEnabled(!vm.enabled.value)
                                 },
+                            textStyle = MaterialTheme.typography.bodyLarge,
                             colors = TextFieldDefaults.outlinedTextFieldColors(
                                 textColor = MaterialTheme.colorScheme.primary,
                                 unfocusedBorderColor = MaterialTheme.colorScheme.primary,
