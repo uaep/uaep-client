@@ -18,11 +18,15 @@ class ProfileViewModel(
     private val mPosition = mutableStateOf("")
     private val mAddress = mutableStateOf("")
     private val mGender = mutableStateOf("")
+    private val mLevelPoint = mutableStateOf(0)
+    private val mPositionChangePoint = mutableStateOf(0)
 
     val name: State<String> = mName
     val position: State<String> = mPosition
     val address: State<String> = mAddress
     val gender: State<String> = mGender
+    val levelPoint: State<Int> = mLevelPoint
+    val positionChangePoint: State<Int> = mPositionChangePoint
 
     fun updateName(name: String) {
         mName.value = name
@@ -38,6 +42,14 @@ class ProfileViewModel(
 
     fun updateGender(gender: String) {
         mGender.value = gender
+    }
+
+    fun updateLevelPoint(level: Int) {
+        mLevelPoint.value = level
+    }
+
+    fun updatePositionChangePoint(positionChangePoint: Int) {
+        mPositionChangePoint.value = positionChangePoint
     }
 
     fun updateProfile(userUpdateDto: UserUpdateDto) {
