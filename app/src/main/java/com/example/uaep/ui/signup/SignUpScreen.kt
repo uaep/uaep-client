@@ -1,6 +1,7 @@
 package com.example.uaep.ui.signup
 
 import android.content.Context
+import android.content.res.Configuration
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.background
@@ -9,32 +10,28 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.DropdownMenu
 import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material.OutlinedTextField
-import androidx.compose.material.Text
 import androidx.compose.material.TextFieldDefaults
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.uaep.R
@@ -42,6 +39,7 @@ import com.example.uaep.dto.SignUpRequestDto
 import com.example.uaep.dto.UrlResponseDto
 import com.example.uaep.enums.Position
 import com.example.uaep.network.UserApiService
+import com.example.uaep.ui.components.CustomOutlinedTextField
 import com.example.uaep.ui.components.GenderExposedDropDownMenu
 import com.example.uaep.ui.components.PasswordOutlinedTextField
 import com.example.uaep.ui.navigate.Screen
@@ -66,18 +64,14 @@ fun SignUpScreen (
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center,
             modifier = Modifier
-                .fillMaxWidth()
-                .fillMaxHeight(2f)
+                .fillMaxSize()
                 .background(MaterialTheme.colorScheme.onBackground)
-                .padding(10.dp)
         ) {
             Text(
                 text = stringResource(id = R.string.sign_up),
-                style = TextStyle(
-                    fontWeight = FontWeight.Bold,
-                    letterSpacing = 2.sp
-                ),
-                color = MaterialTheme.colorScheme.primary
+                color = MaterialTheme.colorScheme.primary,
+                fontSize = MaterialTheme.typography.headlineLarge.fontSize,
+                fontWeight = FontWeight.ExtraBold
             )
             Spacer(
                 modifier = Modifier.padding(20.dp)
@@ -85,69 +79,92 @@ fun SignUpScreen (
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                OutlinedTextField(
+                CustomOutlinedTextField(
                     value = vm.name.value,
                     onValueChange = { vm.updateName(it) },
-                    label = { Text(stringResource(R.string.name)) },
-                    placeholder = { Text(stringResource(R.string.name))},
-                    singleLine = true,
-                    modifier = Modifier.fillMaxWidth(0.8f),
-                    colors = TextFieldDefaults.outlinedTextFieldColors(
-                        unfocusedBorderColor = MaterialTheme.colorScheme.primary,
-                        unfocusedLabelColor = MaterialTheme.colorScheme.primary,
-                        focusedLabelColor = MaterialTheme.colorScheme.primary,
-                        focusedBorderColor = MaterialTheme.colorScheme.primary
-                    ),
+                    labelText = stringResource(id = R.string.name),
+                    placeholderText = stringResource(id = R.string.name)
                 )
                 OutlinedTextField(
                     value = email,
                     onValueChange = { vm.updateEmail(it) },
                     enabled = false,
                     readOnly = true,
-                    label = { Text(stringResource(R.string.email)) },
                     placeholder = { Text(stringResource(R.string.email)) },
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth(0.8f),
                     colors = TextFieldDefaults.outlinedTextFieldColors(
+                        textColor = MaterialTheme.colorScheme.primary,
                         unfocusedBorderColor = MaterialTheme.colorScheme.primary,
                         unfocusedLabelColor = MaterialTheme.colorScheme.primary,
-                        focusedLabelColor = MaterialTheme.colorScheme.primary,
-                        focusedBorderColor = MaterialTheme.colorScheme.primary
                     ),
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
                 )
                 PasswordOutlinedTextField(
                     password = vm.password.value,
                     onValueChange = { vm.updatePassword(it) },
-                    label = { Text(stringResource(R.string.password)) },
-                    placeholder = { Text(stringResource(R.string.password)) },
+                    label = {
+                        Text(
+                            text = stringResource(id = R.string.password),
+                            color = MaterialTheme.colorScheme.primary,
+                            fontSize = MaterialTheme.typography.labelLarge.fontSize,
+                            fontWeight = FontWeight.Bold
+                        )
+                    },
+                    placeholder = {
+                        Text(
+                            text = stringResource(id = R.string.password),
+                            color = MaterialTheme.colorScheme.primary,
+                            fontSize = MaterialTheme.typography.labelLarge.fontSize,
+                            fontWeight = FontWeight.Bold
+                        )
+                    },
                     color = MaterialTheme.colorScheme.primary
                 )
                 PasswordOutlinedTextField(
                     password = vm.matchingPassword.value,
                     onValueChange = { vm.updateMatchingPassword(it) },
-                    label = { Text(stringResource(R.string.matching_password)) },
-                    placeholder = { Text(stringResource(R.string.matching_password)) },
+                    label = {
+                        Text(
+                            text = stringResource(id = R.string.matching_password),
+                            color = MaterialTheme.colorScheme.primary,
+                            fontSize = MaterialTheme.typography.labelLarge.fontSize,
+                            fontWeight = FontWeight.Bold
+                        )
+                    },
+                    placeholder = {
+                        Text(
+                            text = stringResource(id = R.string.matching_password),
+                            color = MaterialTheme.colorScheme.primary,
+                            fontSize = MaterialTheme.typography.labelLarge.fontSize,
+                            fontWeight = FontWeight.Bold
+                        )
+                    },
                     color = MaterialTheme.colorScheme.primary
                 )
-                OutlinedTextField(
+                CustomOutlinedTextField(
                     value = vm.address.value,
                     onValueChange = { vm.updateAddress(it) },
-                    label = { Text(stringResource(R.string.address)) },
-                    placeholder = { Text(stringResource(R.string.address))},
-                    singleLine = true,
-                    modifier = Modifier.fillMaxWidth(0.8f),
-                    colors = TextFieldDefaults.outlinedTextFieldColors(
-                        unfocusedBorderColor = MaterialTheme.colorScheme.primary,
-                        unfocusedLabelColor = MaterialTheme.colorScheme.primary,
-                        focusedLabelColor = MaterialTheme.colorScheme.primary,
-                        focusedBorderColor = MaterialTheme.colorScheme.primary
-                    ),
+                    labelText = stringResource(id = R.string.address),
+                    placeholderText = stringResource(id = R.string.address)
                 )
                 GenderExposedDropDownMenu(
                     gender = vm.gender.value,
-                    label = { Text(stringResource(R.string.gender)) },
-                    placeholder = { Text(stringResource(R.string.gender)) },
+                    label = {
+                        Text(
+                            text = stringResource(id = R.string.gender),
+                            color = MaterialTheme.colorScheme.primary,
+                            fontSize = MaterialTheme.typography.labelLarge.fontSize,
+                            fontWeight = FontWeight.Bold
+                        )
+                    },
+                    placeholder = {
+                        Text(
+                            text = stringResource(id = R.string.gender),
+                            color = MaterialTheme.colorScheme.primary,
+                            fontSize = MaterialTheme.typography.labelLarge.fontSize,
+                            fontWeight = FontWeight.Bold
+                        )
+                    },
                     color = MaterialTheme.colorScheme.primary,
                     vm = vm
                 )
@@ -157,14 +174,29 @@ fun SignUpScreen (
                             value = vm.position.value,
                             readOnly = true,
                             onValueChange = {},
-                            label = { Text(stringResource(R.string.position))},
-                            placeholder = { Text(stringResource(R.string.position))},
+                            label = {
+                                Text(
+                                    text = stringResource(id = R.string.position),
+                                    color = MaterialTheme.colorScheme.primary,
+                                    fontSize = MaterialTheme.typography.labelLarge.fontSize,
+                                    fontWeight = FontWeight.Bold
+                                )
+                            },
+                            placeholder = {
+                                Text(
+                                    text = stringResource(id = R.string.position),
+                                    color = MaterialTheme.colorScheme.primary,
+                                    fontSize = MaterialTheme.typography.labelLarge.fontSize,
+                                    fontWeight = FontWeight.Bold
+                                )
+                            },
                             modifier = Modifier
                                 .fillMaxWidth(0.8f)
                                 .clickable {
                                     vm.onPosEnabled(!vm.posEnabled.value)
                                 },
                             colors = TextFieldDefaults.outlinedTextFieldColors(
+                                textColor = MaterialTheme.colorScheme.primary,
                                 unfocusedBorderColor = MaterialTheme.colorScheme.primary,
                                 unfocusedLabelColor = MaterialTheme.colorScheme.primary,
                                 focusedLabelColor = MaterialTheme.colorScheme.primary,
@@ -176,7 +208,8 @@ fun SignUpScreen (
                                     contentDescription = null,
                                     Modifier.clickable {
                                         vm.onPosEnabled(!vm.posEnabled.value)
-                                    }
+                                    },
+                                    tint = MaterialTheme.colorScheme.primary
                                 )
                             }
                         )
@@ -186,13 +219,14 @@ fun SignUpScreen (
                         onDismissRequest = {
                             vm.onPosEnabled(false)
                         },
-                        modifier = Modifier.width(300.dp),
+                        modifier = Modifier.width(300.dp).background(MaterialTheme.colorScheme.onBackground),
                     ) {
                         DropdownMenuItem(
                             onClick = {
                                 vm.updatePosition(Position.GK)
                                 vm.onPosEnabled(false)
-                            }
+                            },
+                            modifier = Modifier.background(MaterialTheme.colorScheme.onBackground)
                         ) {
                             Text(
                                 text = Position.GK.value,
@@ -204,7 +238,8 @@ fun SignUpScreen (
                             onClick = {
                                 vm.updatePosition(Position.DF)
                                 vm.onPosEnabled(false)
-                            }
+                            },
+                            modifier = Modifier.background(MaterialTheme.colorScheme.onBackground)
                         ) {
                             Text(
                                 text = Position.DF.value,
@@ -216,7 +251,8 @@ fun SignUpScreen (
                             onClick = {
                                 vm.updatePosition(Position.MF)
                                 vm.onPosEnabled(false)
-                            }
+                            },
+                            modifier = Modifier.background(MaterialTheme.colorScheme.onBackground)
                         ) {
                             Text(
                                 text = Position.MF.value,
@@ -228,7 +264,8 @@ fun SignUpScreen (
                             onClick = {
                                 vm.updatePosition(Position.FW)
                                 vm.onPosEnabled(false)
-                            }
+                            },
+                            modifier = Modifier.background(MaterialTheme.colorScheme.onBackground)
                         ) {
                             Text(
                                 text = Position.FW.value,
@@ -294,11 +331,11 @@ fun SignUpScreen (
                         .height(50.dp),
                     colors = ButtonDefaults.buttonColors(
                         backgroundColor = MaterialTheme.colorScheme.primary,
-                        contentColor = MaterialTheme.colorScheme.onPrimary
                     )
                 ) {
                     Text(
                         text = stringResource(id = R.string.sign_up),
+                        color = MaterialTheme.colorScheme.onBackground
                     )
                 }
             }
@@ -312,8 +349,13 @@ private fun mToast(context: Context, msg: String){
 }
 
 @Preview(
+    name = "Light Mode",
+    showBackground = true
+)
+@Preview(
+    name = "Dark Mode",
     showBackground = true,
-    widthDp = 320
+    uiMode = Configuration.UI_MODE_NIGHT_YES
 )
 @Composable
 fun SignUpScreenPreview() {

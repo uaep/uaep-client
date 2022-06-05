@@ -9,6 +9,7 @@ import androidx.compose.material.TextFieldDefaults.outlinedTextFieldColors
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -39,6 +40,7 @@ fun PasswordOutlinedTextField(
         singleLine = true,
         modifier = modifier.fillMaxWidth(0.8f),
         colors = outlinedTextFieldColors(
+            textColor = MaterialTheme.colorScheme.primary,
             unfocusedBorderColor = color,
             unfocusedLabelColor = color,
             focusedLabelColor = color,
@@ -54,7 +56,10 @@ fun PasswordOutlinedTextField(
             val description = if (passwordVisible) "비밀번호 숨기기" else "비밀번호 보기"
 
             IconButton(onClick = {passwordVisible = !passwordVisible}){
-                Icon(imageVector  = image, description)
+                Icon(
+                    imageVector  = image, description,
+                    tint = MaterialTheme.colorScheme.primary
+                )
             }
         }
     )

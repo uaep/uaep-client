@@ -46,4 +46,7 @@
     <string name="update_gender">수정할 성별을 입력하세요.</string>
     <string name="man">남성</string>
     <string name="woman">여성</string>
+    <string name="enter_login_email">로그인 이메일을 입력하세요</string>
+    <string name="enter_login_password">비밀번호를 입력하세요</string>
+    <string name="email_verify">이메일인증</string>
 </resources>
