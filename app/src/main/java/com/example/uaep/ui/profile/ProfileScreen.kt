@@ -24,6 +24,8 @@ fun ProfileScreen(
     viewModel.updatePosition(userDto.position)
     viewModel.updateAddress(userDto.address)
     viewModel.updateGender(userDto.gender)
+    viewModel.updateLevelPoint(userDto.levelPoint)
+    viewModel.updatePositionChangePoint(userDto.positionChangePoint)
 
     Scaffold(
         containerColor = MaterialTheme.colorScheme.onBackground,
@@ -39,7 +41,9 @@ fun ProfileScreen(
                 name = viewModel.name.value,
                 position = viewModel.position.value,
                 address = viewModel.address.value,
-                gender = viewModel.gender.value
+                gender = viewModel.gender.value,
+                levelPoint = viewModel.levelPoint.value,
+                positionChangePoint = viewModel.positionChangePoint.value
             ),
             onUpdateUserInfo = { userUpdateDto ->
                 viewModel.updateProfile(userUpdateDto)

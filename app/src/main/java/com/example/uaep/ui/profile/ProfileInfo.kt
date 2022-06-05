@@ -20,7 +20,9 @@ data class ProfileDto(
     val name: String,
     val position: String,
     val address: String,
-    val gender: String
+    val gender: String,
+    val levelPoint: Int,
+    val positionChangePoint: Int
 )
 
 @Composable
@@ -57,6 +59,20 @@ fun ProfileInfo(
             style = MaterialTheme.typography.bodyLarge,
             fontWeight = FontWeight.ExtraBold
         )
+        Text(
+            text = stringResource(id = R.string.level) + " : " + profileInfoDto.levelPoint,
+            modifier = Modifier.padding(all = 4.dp),
+            maxLines = Int.MAX_VALUE,
+            style = MaterialTheme.typography.bodyLarge,
+            fontWeight = FontWeight.ExtraBold
+        )
+        Text(
+            text = stringResource(id = R.string.position_change_point) + " : " + profileInfoDto.positionChangePoint,
+            modifier = Modifier.padding(all = 4.dp),
+            maxLines = Int.MAX_VALUE,
+            style = MaterialTheme.typography.bodyLarge,
+            fontWeight = FontWeight.ExtraBold
+        )
     }
 }
 
@@ -77,7 +93,9 @@ fun PreviewProfileInfo() {
                 name = "김광진",
                 position = "FK",
                 address = "경기도 수원시 어디로 가야하죠 아저씨 119",
-                gender = "남자"
+                gender = "남자",
+                levelPoint = 1,
+                positionChangePoint = 1000
             )
         )
     }
