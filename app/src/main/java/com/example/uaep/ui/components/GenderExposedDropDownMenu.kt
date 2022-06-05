@@ -1,5 +1,6 @@
 package com.example.uaep.ui.components
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -43,6 +44,7 @@ fun GenderExposedDropDownMenu(
                         vm.onGenderEnabled(!vm.genderEnabled.value)
                     },
                 colors = outlinedTextFieldColors(
+                    textColor = color,
                     unfocusedBorderColor = color,
                     unfocusedLabelColor = color,
                     focusedLabelColor = color,
@@ -54,7 +56,8 @@ fun GenderExposedDropDownMenu(
                         contentDescription = null,
                         Modifier.clickable {
                             vm.onGenderEnabled(!vm.genderEnabled.value)
-                        }
+                        },
+                        tint = color
                     )
                 }
             )
@@ -64,13 +67,14 @@ fun GenderExposedDropDownMenu(
             onDismissRequest = {
                 vm.onGenderEnabled(false)
             },
-            modifier = Modifier.width(300.dp),
+            modifier = Modifier.width(300.dp).background(MaterialTheme.colorScheme.onBackground),
         ) {
             DropdownMenuItem(
                 onClick = {
                     vm.updateGender("남성")
                     vm.onGenderEnabled(false)
-                }
+                },
+                modifier = Modifier.background(MaterialTheme.colorScheme.onBackground)
             ) {
                 Text(
                     text = stringResource(R.string.man),
@@ -82,7 +86,8 @@ fun GenderExposedDropDownMenu(
                 onClick = {
                     vm.updateGender("여성")
                     vm.onGenderEnabled(false)
-                }
+                },
+                modifier = Modifier.background(MaterialTheme.colorScheme.onBackground)
             ) {
                 Text(
                     text = stringResource(R.string.woman),

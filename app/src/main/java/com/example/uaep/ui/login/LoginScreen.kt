@@ -1,13 +1,13 @@
 package com.example.uaep.ui.login
 
-import android.content.Context
+import android.content.res.Configuration
 import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -15,20 +15,20 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.OutlinedTextField
-import androidx.compose.material.Text
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.uaep.R
 import com.example.uaep.dto.ErrorResponse
 import com.example.uaep.dto.LoginRequestDto
@@ -37,6 +37,7 @@ import com.example.uaep.network.AuthService
 import com.example.uaep.network.CookieChanger
 import com.example.uaep.ui.components.PasswordOutlinedTextField
 import com.example.uaep.ui.navigate.Screen
+import com.example.uaep.ui.theme.UaepTheme
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import retrofit2.Call
@@ -45,27 +46,22 @@ import retrofit2.Response
 
 @Composable
 fun LoginScreen(
-    vm: LoginViewModel,
+    vm: LoginViewModel = viewModel(),
     navController: NavController,
-    context: Context = LocalContext.current
 ) {
     Box {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center,
             modifier = Modifier
-                .fillMaxWidth()
-                .fillMaxHeight(2f)
+                .fillMaxSize()
                 .background(MaterialTheme.colorScheme.onBackground)
-                .padding(10.dp)
         ) {
             Text(
                 text = stringResource(id = R.string.login),
-                style = TextStyle(
-                    fontWeight = FontWeight.Bold,
-                    letterSpacing = 2.sp
-                ),
-                color = MaterialTheme.colorScheme.primary
+                color = MaterialTheme.colorScheme.primary,
+                fontSize = MaterialTheme.typography.headlineLarge.fontSize,
+                fontWeight = FontWeight.ExtraBold
             )
             Spacer(
                 modifier = Modifier.padding(20.dp)
@@ -76,11 +72,26 @@ fun LoginScreen(
                 OutlinedTextField(
                     value = vm.email.value,
                     onValueChange = { vm.updateEmail(it) },
-                    label = { Text(stringResource(R.string.email)) },
-                    placeholder = { Text(stringResource(R.string.email))},
+                    label = {
+                        Text(
+                            text = stringResource(id = R.string.email),
+                            color = MaterialTheme.colorScheme.primary,
+                            fontSize = MaterialTheme.typography.labelLarge.fontSize,
+                            fontWeight = FontWeight.Bold
+                        )
+                    },
+                    placeholder = {
+                        Text(
+                            text = stringResource(id = R.string.enter_login_email),
+                            color = MaterialTheme.colorScheme.primary,
+                            fontSize = MaterialTheme.typography.labelLarge.fontSize,
+                            fontWeight = FontWeight.Bold
+                        )
+                    },
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth(0.8f),
                     colors = TextFieldDefaults.outlinedTextFieldColors(
+                        textColor = MaterialTheme.colorScheme.primary,
                         unfocusedBorderColor = MaterialTheme.colorScheme.primary,
                         unfocusedLabelColor = MaterialTheme.colorScheme.primary,
                         focusedLabelColor = MaterialTheme.colorScheme.primary,
@@ -91,8 +102,22 @@ fun LoginScreen(
                 PasswordOutlinedTextField(
                     password = vm.password.value,
                     onValueChange = { vm.updatePassword(it) },
-                    label = { Text(text = stringResource(R.string.password)) },
-                    placeholder = { Text(text = stringResource(R.string.password)) },
+                    label = {
+                        Text(
+                            text = stringResource(id = R.string.password),
+                            color = MaterialTheme.colorScheme.primary,
+                            fontSize = MaterialTheme.typography.labelLarge.fontSize,
+                            fontWeight = FontWeight.Bold
+                        )
+                    },
+                    placeholder = {
+                        Text(
+                            text = stringResource(id = R.string.enter_login_password),
+                            color = MaterialTheme.colorScheme.primary,
+                            fontSize = MaterialTheme.typography.labelLarge.fontSize,
+                            fontWeight = FontWeight.Bold
+                        )
+                    },
                     color = MaterialTheme.colorScheme.primary
                 )
                 Spacer(
@@ -107,7 +132,6 @@ fun LoginScreen(
                             email=vm.email.value,
                             password = vm.password.value
                         )
-                        //vm.loginCallback(UserApiService.getInstance(), loginRequestDto, navController, context)
                         AuthService.getInstance().login(loginRequestDto).enqueue(object :
                             Callback<LoginResponseDto> {
                             override fun onResponse(
@@ -118,15 +142,12 @@ fun LoginScreen(
                                     val tokens = CookieChanger<LoginResponseDto>().change(response)
                                     AuthService.getCookieJar().saveToken(tokens)
                                     navController.navigate(Screen.Home.route)
-
-                                    //navController.navigate(Screen.SignUp.passEmailAndToken(email, token))
                                 } else {
                                     val errorResponse: ErrorResponse? =
                                         Gson().fromJson(
                                             response.errorBody()!!.charStream(),
                                             object : TypeToken<ErrorResponse>() {}.type
                                         )
-                                    //mToast(context, errorResponse!!.message)
                                 }
                             }
                             override fun onFailure(call: Call<LoginResponseDto>, t: Throwable) {
@@ -144,6 +165,9 @@ fun LoginScreen(
                 ) {
                     Text(
                         text = stringResource(id = R.string.login),
+                        color = MaterialTheme.colorScheme.onBackground,
+                        fontSize = MaterialTheme.typography.bodyLarge.fontSize,
+                        fontWeight = FontWeight.ExtraBold
                     )
                 }
                 Spacer(
@@ -163,9 +187,28 @@ fun LoginScreen(
                 ) {
                     Text(
                         text = stringResource(id = R.string.sign_up),
+                        color = MaterialTheme.colorScheme.onBackground,
+                        fontSize = MaterialTheme.typography.bodyLarge.fontSize,
+                        fontWeight = FontWeight.ExtraBold
                     )
                 }
             }
         }
+    }
+}
+
+@Preview(
+    name = "Light Mode",
+    showBackground = true
+)
+@Preview(
+    name = "Dark Mode",
+    showBackground = true,
+    uiMode = Configuration.UI_MODE_NIGHT_YES
+)
+@Composable
+fun PreviewLoginScreen() {
+    UaepTheme {
+        LoginScreen(navController = rememberNavController())
     }
 }
