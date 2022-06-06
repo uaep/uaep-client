@@ -34,7 +34,12 @@ import com.example.uaep.ui.theme.md_theme_light_tertiary
 fun PositionButton(
     color: Color,
     position: Position,
-    player: Player?
+    player: Player?,
+    playerSelect: (Player?) -> Unit,
+    teamSelect: (Boolean?) -> Unit,
+    posSelect: (String?) -> Unit,
+    pos_name: String,
+    reverse: Boolean
 ) {
     var enabled by remember { mutableStateOf(true) }
     var pos = player?.position
@@ -60,21 +65,23 @@ fun PositionButton(
                     }
                 }) {
             Text(
-                text = pos ?: "empty",
+                text = position.value,
                 modifier = Modifier
                     .padding(10.dp)
-                    .defaultMinSize(30.dp)
+                    .defaultMinSize(20.dp)
                     .clip(CircleShape)
                     .clickable() {
                         // TODO : 유저가 없으면 내가 들어가고
                         // TODO : 유저가 있으면 그 유저 프로필 본다.
-                        if (pos == Position.GK.value
-                            || pos == Position.DF.value
-                            || pos == Position.MF.value
-                            || pos == Position.FW.value
+                        if (position.value == Position.GK.value
+                            || position.value == Position.DF.value
+                            || position.value == Position.MF.value
+                            || position.value == Position.FW.value
                         ) {
                             //TODO: 유저 이름으로 변경되게하기
-                            pos = "gwangjin"
+                            playerSelect(player)
+                            teamSelect(reverse)
+                            posSelect(pos_name)
                         } else {
                             when (color) {
                                 md_theme_light_primary -> pos = Position.GK.value
@@ -111,7 +118,12 @@ fun PositionButtonPreview() {
                 address = "address",
                 position = "FW",
                 levelPoint = 0
-            )
+            ),
+            posSelect = {  },
+            teamSelect = {},
+            playerSelect = {},
+            pos_name = "mf2",
+            reverse = true
         )
     }
 }

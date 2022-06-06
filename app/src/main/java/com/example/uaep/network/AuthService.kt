@@ -1,9 +1,6 @@
 package com.example.uaep.network
 
-import com.example.uaep.dto.LoginRequestDto
-import com.example.uaep.dto.LoginResponseDto
-import com.example.uaep.dto.RoomDto
-import com.example.uaep.dto.RoomsResponseDto
+import com.example.uaep.dto.*
 import com.example.uaep.model.Room
 import com.google.gson.GsonBuilder
 import okhttp3.OkHttpClient
@@ -34,6 +31,32 @@ interface AuthService {
     fun select(
         @Path("id") id: Int
     ) : Call<RoomDto>
+
+    @Headers("accept: application/json",
+        "content-type: application/json")
+    @PATCH("games/{id}/{teamType}")
+    fun createFormation(
+        @Path("id") id: Int,
+        @Path("teamType") type: String,
+        @Body formationRequestDto: FormationRequestDto
+    ) : Call<RoomDto>
+
+    @Headers("accept: application/json",
+        "content-type: application/json")
+    @PATCH("games/{id}/{teamType}/{position}")
+    fun setPosition(
+        @Path("id") id: Int,
+        @Path("teamType") type: String,
+        @Path("position") position: String
+    ) : Call<RoomDto>
+
+    @Headers("accept: application/json",
+        "content-type: application/json")
+    @DELETE("games/{id}/{teamType}")
+    fun deleteTeam(
+        @Path("id") id: Int,
+        @Path("teamType") type: String
+    ) : Call<DummyResponse>
 
     // 싱글톤 객체로서, 인스턴스 생성 없이 사용할 수 있다.
     companion object{

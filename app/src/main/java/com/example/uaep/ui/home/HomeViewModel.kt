@@ -139,7 +139,7 @@ class HomeViewModel(
                                     response.errorBody()!!.charStream(),
                                     object : TypeToken<ErrorResponse>() {}.type
                                 )
-                            if (errorResponse!!.message != null && (errorResponse!!.message == "Expired access token")) {
+                            if (errorResponse!!.message != null && (errorResponse!!.statusCode == 401)) {
                                 ReAuthService.getInstance().reauth().enqueue(object :
                                     Callback<DummyResponse> {
 
@@ -190,10 +190,11 @@ class HomeViewModel(
                     response: Response<RoomDto>
                 ) {
                     if (response.isSuccessful) {
+                        Log.i("room_enter", response.body().toString())
                         viewModelState.update {
                             it.copy(
                                 selectedRoomId = response.body(),
-                                isArticleOpen = true,
+                                isArticleOpen = true
                             )
                         }
                     } else {
@@ -205,7 +206,7 @@ class HomeViewModel(
                                 response.errorBody()!!.charStream(),
                                 object : TypeToken<ErrorResponse>() {}.type
                             )
-                        if (errorResponse!!.message != null && (errorResponse!!.message == "Expired access")) {
+                        if (errorResponse!!.message != null && (errorResponse!!.statusCode == 401)) {
                             ReAuthService.getInstance().reauth().enqueue(object :
                                 Callback<DummyResponse> {
 

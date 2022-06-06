@@ -142,6 +142,7 @@ fun LoginScreen(
                                 if (response.isSuccessful) {
                                     val tokens = CookieChanger<LoginResponseDto>().change(response)
                                     AuthService.getCookieJar().saveToken(tokens)
+                                    AuthService.getCookieJar().saveEmail(vm.email.value)
                                     navController.navigate(Screen.Home.route)
                                 } else {
                                     val errorResponse: ErrorResponse? =

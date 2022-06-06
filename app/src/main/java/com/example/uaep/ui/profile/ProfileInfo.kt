@@ -22,7 +22,7 @@ data class ProfileDto(
     val address: String,
     val gender: String,
     val levelPoint: Int,
-    val positionChangePoint: Int
+    val positionChangePoint: Int?
 )
 
 @Composable
@@ -66,13 +66,15 @@ fun ProfileInfo(
             style = MaterialTheme.typography.bodyLarge,
             fontWeight = FontWeight.ExtraBold
         )
-        Text(
-            text = stringResource(id = R.string.position_change_point) + " : " + profileInfoDto.positionChangePoint,
-            modifier = Modifier.padding(all = 4.dp),
-            maxLines = Int.MAX_VALUE,
-            style = MaterialTheme.typography.bodyLarge,
-            fontWeight = FontWeight.ExtraBold
-        )
+        if(profileInfoDto.positionChangePoint !=null) {
+            Text(
+                text = stringResource(id = R.string.position_change_point) + " : " + profileInfoDto.positionChangePoint,
+                modifier = Modifier.padding(all = 4.dp),
+                maxLines = Int.MAX_VALUE,
+                style = MaterialTheme.typography.bodyLarge,
+                fontWeight = FontWeight.ExtraBold
+            )
+        }
     }
 }
 

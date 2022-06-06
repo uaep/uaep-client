@@ -17,12 +17,12 @@ data class RoomDto(
 )
 
 data class Team(
-    @SerializedName("FW1")
-    val fw1: Player?,
-    @SerializedName("FW2")
-    val fw2: Player?,
-    @SerializedName("MF")
-    val mf: Player?,
+    @SerializedName("FW")
+    val fw: Player?,
+    @SerializedName("MF1")
+    val mf1: Player?,
+    @SerializedName("MF2")
+    val mf2: Player?,
     @SerializedName("DF1")
     val df1: Player?,
     @SerializedName("DF2")

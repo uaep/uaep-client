@@ -1,16 +1,12 @@
 package com.example.uaep.ui.match
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.example.uaep.dto.Player
 import com.example.uaep.dto.Team
 import com.example.uaep.enums.Position
@@ -24,7 +20,10 @@ import com.example.uaep.ui.theme.md_theme_light_tertiary
 fun Formation(
     reverse: Boolean,
     modifier: Modifier,
-    team: Team?
+    team: Team?,
+    playerSelect: (Player?) -> Unit,
+    teamSelect: (Boolean?) -> Unit,
+    posSelect: (String?) -> Unit
 //    vm: FormationViewModel
 ) {
     if(team != null) {
@@ -40,7 +39,12 @@ fun Formation(
                 PositionButton(
                     color = if (!reverse) md_theme_light_primary else md_theme_light_error,
                     position = if (!reverse) Position.GK else Position.FW,
-                    player = if (!reverse) team.gk else team.fw1
+                    player = if (!reverse) team.gk else team.fw,
+                    playerSelect = playerSelect,
+                    teamSelect = teamSelect,
+                    posSelect = posSelect,
+                    pos_name = if (!reverse) "gk" else "fw",
+                    reverse = reverse
                 )
             }
             Row(
@@ -50,12 +54,22 @@ fun Formation(
                 PositionButton(
                     color = if (!reverse) md_theme_light_tertiary else md_theme_light_secondary,
                     position = if (!reverse) Position.DF else Position.MF,
-                    player = if (!reverse) team.df1 else team.fw2
+                    player = if (!reverse) team.df1 else team.mf1,
+                    playerSelect = playerSelect,
+                    teamSelect = teamSelect,
+                    posSelect = posSelect,
+                    pos_name = if (!reverse) "df1" else "mf1",
+                    reverse = reverse
                 )
                 PositionButton(
                     color = if (!reverse) md_theme_light_tertiary else md_theme_light_secondary,
                     position = if (!reverse) Position.DF else Position.MF,
-                    player = if (!reverse) team.df2 else team.mf
+                    player = if (!reverse) team.df2 else team.mf2,
+                    playerSelect = playerSelect,
+                    teamSelect = teamSelect,
+                    posSelect = posSelect,
+                    pos_name = if (!reverse) "df2" else "mf2",
+                    reverse = reverse
                 )
             }
             Row(
@@ -66,12 +80,22 @@ fun Formation(
                 PositionButton(
                     color = if (!reverse) md_theme_light_secondary else md_theme_light_tertiary,
                     position = if (!reverse) Position.MF else Position.DF,
-                    player = if (!reverse) team.mf else team.df2
+                    player = if (!reverse) team.mf2 else team.df2,
+                    playerSelect = playerSelect,
+                    teamSelect = teamSelect,
+                    posSelect = posSelect,
+                    pos_name = if (!reverse) "mf2" else "df2",
+                    reverse = reverse
                 )
                 PositionButton(
                     color = if (!reverse) md_theme_light_secondary else md_theme_light_tertiary,
                     position = if (!reverse) Position.MF else Position.DF,
-                    player = if (!reverse) team.fw2 else team.df1
+                    player = if (!reverse) team.mf1 else team.df1,
+                    playerSelect = playerSelect,
+                    teamSelect = teamSelect,
+                    posSelect = posSelect,
+                    pos_name = if (!reverse) "mf1" else "df1",
+                    reverse = reverse
                 )
             }
             Row(
@@ -81,10 +105,17 @@ fun Formation(
                 PositionButton(
                     color = if (!reverse) md_theme_light_error else md_theme_light_primary,
                     position = if (!reverse) Position.FW else Position.GK,
-                    player = if (!reverse) team.fw1 else team.gk
+                    player = if (!reverse) team.fw else team.gk,
+                    playerSelect = playerSelect,
+                    teamSelect = teamSelect,
+                    posSelect = posSelect,
+                    pos_name = if (!reverse) "fw" else "gk",
+                    reverse = reverse
                 )
             }
         }
+    }else{
+        Spacer(modifier = Modifier.height(200.dp))
     }
 }
 
@@ -104,7 +135,7 @@ fun FormationPreview() {
                     .fillMaxWidth()
                     .fillMaxHeight(),
                 team = Team(
-                        fw1 = Player(
+                        fw = Player(
                             email = "test@gmail.com",
                             name = "name",
                             gender = "남성",
@@ -112,8 +143,8 @@ fun FormationPreview() {
                             position = "FW",
                             levelPoint = 0
                         ),
-                        fw2 = null,
-                        mf = null,
+                        mf1 = null,
+                        mf2 = null,
                         df1 = null,
                         df2 = null,
                         gk = null,
@@ -125,7 +156,10 @@ fun FormationPreview() {
                             position = "FW",
                             levelPoint = 0
                         )
-                )
+                ),
+                posSelect = {},
+                teamSelect = {},
+                playerSelect = {}
             )
         }
     }

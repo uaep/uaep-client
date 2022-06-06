@@ -8,6 +8,7 @@ import okhttp3.HttpUrl
 class MyCookieJar : CookieJar {
     private var accessCookie: Cookie? = null
     private var refreshCookie: Cookie? = null
+    private var email: String? = null
 
     override fun saveFromResponse(url: HttpUrl?, cookies: List<Cookie>?) {
         Log.i("save-cookies", cookies.toString())
@@ -57,9 +58,15 @@ class MyCookieJar : CookieJar {
 
     fun loadAllToken(): List<Cookie>{
 
-
         return listOf(accessCookie!!, refreshCookie!!)
     }
 
+    fun saveEmail(mailaddress: String?){
+        email = mailaddress
+    }
+
+    fun loadEmail(): String?{
+        return email
+    }
 
 }

@@ -13,6 +13,9 @@
 
     <!-- Match Screen -->
     <string name="match_ready">준비 완료</string>
+    <string name="match_clear_ready">준비 해제</string>
+    <string name="match_finish">경기 종료</string>
+    <string name="match_not_ready">포지션 선택 중</string>
     <string name="foot_ball_back">축구장 배경</string>
 
     <!-- signup, login -->

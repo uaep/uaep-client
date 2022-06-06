@@ -1,21 +1,10 @@
 package com.example.uaep.ui.match
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.WindowInsetsSides
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.navigationBars
-import androidx.compose.foundation.layout.only
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.windowInsetsPadding
-import androidx.compose.foundation.layout.wrapContentWidth
+import android.content.Context
+import android.util.Log
+import android.widget.Toast
+import androidx.compose.foundation.*
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -36,6 +25,8 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -44,20 +35,23 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import com.example.uaep.R
-import com.example.uaep.dto.Player
-import com.example.uaep.dto.RoomDto
-import com.example.uaep.dto.Team
-import com.example.uaep.model.Gender
-import com.example.uaep.model.Rank
-import com.example.uaep.model.Room
-import com.example.uaep.ui.theme.UaepTheme
-import com.example.uaep.ui.theme.md_theme_light_inversePrimary
-import com.example.uaep.ui.theme.md_theme_light_onPrimary
-import com.example.uaep.ui.theme.md_theme_light_outline
-import com.example.uaep.ui.theme.md_theme_light_primary
-import com.example.uaep.ui.theme.md_theme_light_secondary
+import com.example.uaep.dto.*
+import com.example.uaep.network.AuthService
+import com.example.uaep.network.CookieChanger
+import com.example.uaep.network.ReAuthService
+import com.example.uaep.ui.profile.ProfileCard
+import com.example.uaep.ui.profile.ProfileDto
+import com.example.uaep.ui.theme.*
 import com.example.uaep.utils.isScrolled
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
+import kotlinx.coroutines.flow.update
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import java.util.*
 
 private val defaultSpacerSize = 16.dp
@@ -72,16 +66,26 @@ fun MatchScreen(
     room: RoomDto,
     isExpandedScreen: Boolean,
     onBack: () -> Unit,
+    onRefresh: (Int) -> Unit,
     modifier: Modifier = Modifier,
     lazyListState: LazyListState = rememberLazyListState()
 ) {
+    Log.i("room_enter_2", room.toString())
 
+    val pos = remember{ mutableStateOf<String?>(null)}
+    val team = remember{ mutableStateOf<Boolean?>(false)}
+    val player = remember{ mutableStateOf<Player?>(null)}
+    val profile = getProfileDto(player.value)
+    val userEmail = player.value?.email ?: null
+
+    Log.i("player", player.value.toString())
+    Log.i("pos", pos.value.toString())
+    Log.i("team", team.value.toString())
+    val context = LocalContext.current
     Row(modifier.fillMaxSize()) {
-        val context = LocalContext.current
 
         MatchScreenContent(
             room = room,
-
             navigationIconContent = {
                 IconButton(onClick = onBack) {
                     Icon(
@@ -95,16 +99,23 @@ fun MatchScreen(
             bottomBarContent =
             {
                 BottomBar(
-                    room = room
+                    room = room,
+                    pos = pos.value,
+                    team = team.value,
+                    onRefresh = onRefresh,
+                    context = context,
+                    player = player.value
                 )
-            }
-
-            ,
-            lazyListState = lazyListState
+            },
+            lazyListState = lazyListState,
+            onRefresh = onRefresh,
+            teamSelect = {team.value = it},
+            posSelect = {pos.value = it},
+            playerSelect = {player.value = it},
+            playerNotSelect ={player.value = null},
+            profile = profile,
+            userEmail = userEmail
         )
-
-
-
     }
 
 }
@@ -114,7 +125,14 @@ fun MatchScreenContent(
     room: RoomDto,
     navigationIconContent: @Composable (() -> Unit)? = null,
     bottomBarContent: @Composable () -> Unit = { },
-    lazyListState: LazyListState = rememberLazyListState()
+    lazyListState: LazyListState = rememberLazyListState(),
+    onRefresh: (Int) -> Unit,
+    teamSelect: (Boolean?) -> Unit,
+    posSelect: (String?) -> Unit,
+    playerSelect: (Player?) -> Unit,
+    playerNotSelect: () -> Unit,
+    profile: ProfileDto?,
+    userEmail: String?
 ){
     Scaffold(
         topBar = {
@@ -142,15 +160,23 @@ fun MatchScreenContent(
         },
         bottomBar = bottomBarContent
     ) { innerPadding ->
+        Column() {
 
-
-        RoomContainer(
-            room = room,
-            modifier = Modifier
-                // innerPadding takes into account the top and bottom bar
-                .padding(innerPadding)
-        )
-
+            RoomContainer(
+                room = room,
+                onRefresh = onRefresh,
+                modifier = Modifier
+                    // innerPadding takes into account the top and bottom bar
+                    .fillMaxSize()
+                    .padding(innerPadding),
+                teamSelect = teamSelect,
+                posSelect = posSelect,
+                playerSelect = playerSelect,
+                playerNotSelect = playerNotSelect,
+                profile = profile,
+                userEmail = userEmail
+            )
+        }
 
     }
 
@@ -159,17 +185,23 @@ fun MatchScreenContent(
 @Composable
 fun RoomContainer(
     room: RoomDto,
-    modifier: Modifier = Modifier
+    onRefresh: (Int) -> Unit,
+    modifier: Modifier = Modifier,
+    teamSelect: (Boolean?) -> Unit,
+    posSelect: (String?) -> Unit,
+    playerSelect: (Player?) -> Unit,
+    playerNotSelect: () -> Unit,
+    profile: ProfileDto?,
+    userEmail: String?
 ) {
-    var position by remember{ mutableStateOf<String?>(null)}
-    var team by remember{ mutableStateOf<Boolean?>(false)}
-    var enabled by remember { mutableStateOf(false) }
+    Column(modifier.verticalScroll(rememberScrollState())) {
 
-    Column() {
+        Scaffold(
+            modifier = Modifier
+            //.weight(1f)
+                .height(500.dp)
+        ) { innerPadding ->
 
-        Scaffold(modifier = Modifier.weight(1f)) { innerPadding ->
-            Text(position ?: "none")
-            Text(team.toString() ?: "none", textAlign = TextAlign.Right)
             Image(
                 painter = painterResource(id = R.drawable.football_background),
                 contentDescription = stringResource(id = R.string.foot_ball_back),
@@ -180,8 +212,21 @@ fun RoomContainer(
                     .fillMaxSize()
 
             )
+
+            Column(verticalArrangement = Arrangement.SpaceBetween) {
+                if (room.teamA == null)
+                    positionButton(room = room, teamA = true, onRefresh = onRefresh)
+                else
+                    Spacer(Modifier.height(250.dp))
+                if (room.teamB == null)
+                    positionButton(room = room, teamA = false, onRefresh = onRefresh)
+            }
+            if (profile != null && userEmail != AuthService.getCookieJar().loadEmail())
+                ProfileDialog(visible = true, playerNotSelect, profile!!)
             Column(
-                modifier = modifier.padding(innerPadding).fillMaxSize(),
+                modifier = modifier
+                    //.padding(innerPadding)
+                    .fillMaxSize(),
                 verticalArrangement = Arrangement.SpaceBetween
             ) {
 
@@ -191,16 +236,21 @@ fun RoomContainer(
 //                position.value = it
 //            }
                 Spacer(Modifier.height(defaultSpacerSize))
-                Formation(reverse = false, Modifier.fillMaxWidth(), room.teamA)
+                Formation(reverse = false, Modifier.fillMaxWidth(), room.teamA, playerSelect ,teamSelect, posSelect)
 
-                Spacer(Modifier.height(defaultSpacerSize*2))
+                Spacer(Modifier.height(defaultSpacerSize))
 
-                Formation(reverse = true, Modifier.fillMaxWidth(), room.teamB)
-                //Spacer(Modifier.height(8.dp))
-
+                Formation(reverse = true, Modifier.fillMaxWidth(), room.teamB, playerSelect,teamSelect, posSelect)
+                Spacer(Modifier.height(50.dp))
             }
         }
-        RoomDesc(room = room, modifier = Modifier.weight(1f))
+        Log.i("flag", "flag1")
+        RoomDesc(room = room,
+            modifier = Modifier
+                //.weight(1f)
+            //.height(200.dp)
+        )
+        //Spacer(Modifier.height(defaultSpacerSize*3))
     }
 
 }
@@ -208,24 +258,208 @@ fun RoomContainer(
 @Composable
 private fun BottomBar(
     room: RoomDto,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    pos: String?,
+    team: Boolean?,
+    onRefresh: (Int) -> Unit,
+    context: Context,
+    player: Player?
 ) {
-    Surface(elevation = 8.dp, modifier = modifier) {
+    Surface(elevation = 0.dp, modifier = modifier) {
+
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
-                .windowInsetsPadding(WindowInsets.navigationBars.only(WindowInsetsSides.Vertical))
+                //.windowInsetsPadding(WindowInsets.navigationBars.only(WindowInsetsSides.Vertical))
                 .height(56.dp)
                 .fillMaxWidth()
         ) {
-            when(room.number){
-                "6vs6" -> {
-                    Button(
-                        onClick = { /*TODO*/ },
-                        modifier = Modifier.fillMaxSize(),
-                        colors = ButtonDefaults.buttonColors(backgroundColor = md_theme_light_primary)
-                    ) {
-                        Text(text = stringResource(R.string.match_ready), color = md_theme_light_onPrimary)
+            Log.i("bottom_bar", room.number)
+            when(room.date < Date()){
+                true -> {
+                    if (pos !=null && team !=null) {
+                        Button(
+                            onClick =
+                            {
+                                val type = if (team) "B" else "A"
+                                    Log.i("pos", pos.uppercase())
+                                    AuthService.getInstance()
+                                        .setPosition(room.id, type, pos.uppercase())
+                                        .enqueue(object :
+                                            Callback<RoomDto> {
+                                            override fun onResponse(
+                                                call: Call<RoomDto>,
+                                                response: Response<RoomDto>
+                                            ) {
+                                                if (response.isSuccessful) {
+                                                    Log.i("position_success", response.body().toString())
+                                                } else {
+                                                    Log.i("position_fail_raw", response.raw().toString())
+                                                    Log.i("position_fail_head", response.headers().toString())
+                                                    val errorResponse: ErrorResponse? =
+                                                        Gson().fromJson(
+                                                            response.errorBody()!!.charStream(),
+                                                            object :
+                                                                TypeToken<ErrorResponse>() {}.type
+                                                        )
+                                                    if (errorResponse!!.message != null && (errorResponse!!.statusCode == 401)) {
+                                                        ReAuthService.getInstance().reauth()
+                                                            .enqueue(object :
+                                                                Callback<DummyResponse> {
+
+                                                                override fun onResponse(
+                                                                    call: Call<DummyResponse>,
+                                                                    response: Response<DummyResponse>
+                                                                ) {
+                                                                    if (response.isSuccessful) {
+                                                                        val tokens =
+                                                                            CookieChanger<DummyResponse>().change(
+                                                                                response
+                                                                            )
+                                                                        AuthService.getCookieJar()
+                                                                            .saveToken(tokens)
+                                                                    }
+                                                                }
+
+                                                                override fun onFailure(
+                                                                    call: Call<DummyResponse>,
+                                                                    t: Throwable
+                                                                ) {
+                                                                    Log.i("test", "실패$t")
+                                                                }
+                                                            })
+                                                    }
+                                                }
+                                            }
+
+                                            override fun onFailure(
+                                                call: Call<RoomDto>,
+                                                t: Throwable
+                                            ) {
+                                                Log.i("test", "실패$t")
+                                            }
+                                        })
+                                onRefresh(room.id)
+                            },
+                            modifier = Modifier.fillMaxSize(),
+                            colors = ButtonDefaults.buttonColors(backgroundColor = md_theme_light_primary)
+                        ) {
+                            if(player!=null&&AuthService.getCookieJar().loadEmail()==player.email){
+                                Text(
+                                    text = stringResource(R.string.match_clear_ready),
+                                    color = md_theme_light_onPrimary
+                                )
+                            }else {
+                                Text(
+                                    text = stringResource(R.string.match_ready),
+                                    color = md_theme_light_onPrimary
+                                )
+                            }
+                        }
+                    }else{
+                        Button(
+                            onClick = { /*TODO*/ },
+                            modifier = Modifier.fillMaxSize(),
+                            colors = ButtonDefaults.buttonColors(backgroundColor = md_theme_light_errorContainer)
+                        ) {
+                            Text(
+                                text = stringResource(R.string.match_not_ready),
+                                color = md_theme_light_primary
+                            )
+                        }
+                    }
+                }
+                false -> {
+                    if (room.teamA !=null && room.teamB !=null) {
+                        var teamA: Boolean? = null
+                        if(room.teamA.captain!!.email==AuthService.getCookieJar().loadEmail())
+                            teamA = true
+                        else if(room.teamB.captain!!.email==AuthService.getCookieJar().loadEmail())
+                            teamA = false
+                        if(teamA != null) {
+                            Button(
+                                onClick =
+                                {
+                                    val type = if (teamA) "A" else "B"
+                                    AuthService.getInstance()
+                                        .deleteTeam(room.id, type)
+                                        .enqueue(object :
+                                            Callback<DummyResponse> {
+                                            override fun onResponse(
+                                                call: Call<DummyResponse>,
+                                                response: Response<DummyResponse>
+                                            ) {
+                                                if (response.isSuccessful) {
+                                                    Log.i(
+                                                        "position_success",
+                                                        response.body().toString()
+                                                    )
+                                                } else {
+                                                    Log.i(
+                                                        "position_fail_raw",
+                                                        response.raw().toString()
+                                                    )
+                                                    Log.i(
+                                                        "position_fail_head",
+                                                        response.headers().toString()
+                                                    )
+                                                    val errorResponse: ErrorResponse? =
+                                                        Gson().fromJson(
+                                                            response.errorBody()!!.charStream(),
+                                                            object :
+                                                                TypeToken<ErrorResponse>() {}.type
+                                                        )
+                                                    if(errorResponse!!.statusCode == 403){
+                                                        Toast.makeText(context, errorResponse.message, Toast.LENGTH_LONG).show()
+                                                    }
+                                                    if (errorResponse!!.message != null && (errorResponse!!.statusCode == 401)) {
+                                                        ReAuthService.getInstance().reauth()
+                                                            .enqueue(object :
+                                                                Callback<DummyResponse> {
+
+                                                                override fun onResponse(
+                                                                    call: Call<DummyResponse>,
+                                                                    response: Response<DummyResponse>
+                                                                ) {
+                                                                    if (response.isSuccessful) {
+                                                                        val tokens =
+                                                                            CookieChanger<DummyResponse>().change(
+                                                                                response
+                                                                            )
+                                                                        AuthService.getCookieJar()
+                                                                            .saveToken(tokens)
+                                                                    }
+                                                                }
+
+                                                                override fun onFailure(
+                                                                    call: Call<DummyResponse>,
+                                                                    t: Throwable
+                                                                ) {
+                                                                    Log.i("test", "실패$t")
+                                                                }
+                                                            })
+                                                    }
+                                                }
+                                            }
+
+                                            override fun onFailure(
+                                                call: Call<DummyResponse>,
+                                                t: Throwable
+                                            ) {
+                                                Log.i("test", "실패$t")
+                                            }
+                                        })
+                                    onRefresh(room.id)
+                                },
+                                colors = ButtonDefaults.buttonColors(backgroundColor = md_theme_light_secondary)
+                            ) {
+                                Text(
+                                    modifier = Modifier.fillMaxSize(),
+                                    text = stringResource(R.string.match_finish),
+                                    color = md_theme_light_onPrimary
+                                )
+                            }
+                        }
                     }
                 }
             }
@@ -234,17 +468,123 @@ private fun BottomBar(
 }
 
 @Composable
-fun ReadyButton(
+fun positionButton(
     modifier: Modifier = Modifier,
-    updatePosition: (FieldPosition) -> Unit
+    room: RoomDto,
+    teamA: Boolean,
+    onRefresh: (Int) -> Unit
 ){
     Button(
-        onClick = {updatePosition(
-            FieldPosition.CF
-        )},
+        colors = ButtonDefaults.buttonColors(backgroundColor = md_theme_light_secondary),
+        onClick = {
+            var check = false
+            val type = if(teamA)"A" else "B"
 
-        ){
-        Text("CK")
+            do {
+
+                AuthService.getInstance().createFormation(room.id, type, FormationRequestDto("F221")).enqueue(object :
+                    Callback<RoomDto> {
+                    override fun onResponse(
+                        call: Call<RoomDto>,
+                        response: Response<RoomDto>
+                    ) {
+                        if (response.isSuccessful) {
+                            Log.i("room_enter", response.body().toString())
+
+                        } else {
+                            Log.i("rooms_fail_raw", response.raw().toString())
+                            Log.i("rooms_fail_head", response.headers().toString())
+
+                            val errorResponse: ErrorResponse? =
+                                Gson().fromJson(
+                                    response.errorBody()!!.charStream(),
+                                    object : TypeToken<ErrorResponse>() {}.type
+                                )
+                            if (errorResponse!!.message != null && (errorResponse!!.statusCode == 401)) {
+                                ReAuthService.getInstance().reauth().enqueue(object :
+                                    Callback<DummyResponse> {
+
+                                    override fun onResponse(
+                                        call: Call<DummyResponse>,
+                                        response: Response<DummyResponse>
+                                    ) {
+                                        if (response.isSuccessful) {
+                                            check = true
+                                            val tokens = CookieChanger<DummyResponse>().change(response)
+                                            AuthService.getCookieJar().saveToken(tokens)
+                                        }
+                                    }
+                                    override fun onFailure(
+                                        call: Call<DummyResponse>,
+                                        t: Throwable
+                                    ) {
+                                        Log.i("test", "실패$t")
+                                    }
+                                })
+                            }
+                        }
+                    }
+                    override fun onFailure(call: Call<RoomDto>, t: Throwable) {
+                        Log.i("test", "실패$t")
+                    }
+                })
+            }while(check)
+            onRefresh(room.id)
+        }
+    ){
+        if(teamA)
+            Text("TeamA formation create")
+        else
+            Text("TeamB formation create")
+    }
+}
+
+fun getProfileDto(player: Player?): ProfileDto?{
+    if(player != null){
+        return ProfileDto(
+            player.name,
+            player.position,
+            player.address,
+            player.gender,
+            player.levelPoint,
+            null
+        )
+    }
+    return null
+}
+
+@Composable
+fun CustomAlertDialog(
+    onDismissRequest: () -> Unit,
+    properties: DialogProperties = DialogProperties(),
+    content: @Composable () -> Unit,
+) {
+    Dialog(
+        onDismissRequest = onDismissRequest,
+        properties = properties
+    ) {
+        content()
+    }
+}
+
+@Composable
+private fun ProfileDialog(
+    visible: Boolean,
+    onDismissRequest: () -> Unit,
+    profileDto: ProfileDto
+) {
+    if (visible) {
+        CustomAlertDialog(onDismissRequest = { onDismissRequest() }) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .wrapContentHeight()
+                    .clip(RoundedCornerShape(12.dp))
+                    .background(color = Color.Gray)
+            ) {
+                ProfileCard(profileDto = profileDto, onUpdateUserInfo = {})
+            }
+        }
     }
 }
 
@@ -326,6 +666,7 @@ fun RoomDesc(
 
 @Composable
 fun RoomTitle(room: RoomDto){
+    Log.i("TEXT", room.title)
     Text(room.title,
         style = MaterialTheme.typography.h4)
 }
@@ -395,9 +736,9 @@ fun SimpleDescPreview() {
     val room1 = RoomDto(
         id = 2001,
         title = "let's play soccer",
-        gender = "male",
+        gender = "남성",
         date = Date(2016,5,4,12,14),
-        number = "6vs6",
+        number = "6v6",
         host="sonny",
         teamA = null,
         teamB = null
@@ -416,12 +757,12 @@ fun SimpleRoomPreview() {
     val room1 = RoomDto(
         id = 2001,
         title = "let's play soccer",
-        gender = "male",
+        gender = "남성",
         date = Date(2016,5,4,12,14),
-        number = "6vs6",
+        number = "6v6",
         host="sonny",
         teamA = Team(
-            fw1 = Player(
+            fw = Player(
                 email = "test@gmail.com",
                 name = "name",
                 gender = "남성",
@@ -429,8 +770,8 @@ fun SimpleRoomPreview() {
                 position = "FW",
                 levelPoint = 0
             ),
-            fw2 = null,
-            mf = null,
+            mf1 = null,
+            mf2 = null,
             df1 = null,
             df2 = null,
             gk = null,
@@ -444,7 +785,7 @@ fun SimpleRoomPreview() {
             )
         ),
         teamB = Team(
-            fw1 = Player(
+            fw = Player(
                 email = "test@gmail.com",
                 name = "name",
                 gender = "남성",
@@ -452,8 +793,8 @@ fun SimpleRoomPreview() {
                 position = "FW",
                 levelPoint = 0
             ),
-            fw2 = null,
-            mf = null,
+            mf1 = null,
+            mf2 = null,
             df1 = null,
             df2 = null,
             gk = null,
@@ -470,7 +811,7 @@ fun SimpleRoomPreview() {
 
     UaepTheme {
         Surface {
-            MatchScreen(room1, false, {})
+            MatchScreen(room1, false, {}, {})
         }
     }
 }
