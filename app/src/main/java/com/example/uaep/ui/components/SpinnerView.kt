@@ -2,7 +2,9 @@ package com.example.uaep.ui.components
 
 import android.annotation.SuppressLint
 import androidx.compose.animation.core.MutableTransitionState
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
@@ -17,11 +19,13 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
 import com.example.uaep.R
 
 @SuppressLint("UnusedTransitionTargetStateParameter")
 @Composable
-fun SpinnerView(
+fun
+        SpinnerView(
     viewModel: SpinnerViewModel
 ) {
     val expanded by remember { mutableStateOf(false) }
@@ -50,6 +54,7 @@ fun SpinnerView(
             fontWeight = FontWeight.Bold,
         )
     }
+    Spacer(modifier = Modifier.padding(vertical = 10.dp))
     TextButton(
         onClick = {},
         modifier = Modifier
