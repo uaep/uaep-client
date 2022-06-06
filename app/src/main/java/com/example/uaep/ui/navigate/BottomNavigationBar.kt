@@ -30,6 +30,7 @@ fun BottomNavigationBar(navController: NavController) {
         BottomNavItem.Match
     )
 
+
     NavigationBar(
         containerColor = MaterialTheme.colorScheme.primary,
         contentColor = MaterialTheme.colorScheme.surface

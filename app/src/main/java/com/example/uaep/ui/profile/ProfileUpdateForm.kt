@@ -1,11 +1,23 @@
 package com.example.uaep.ui.profile
 
 import android.content.res.Configuration
+import android.util.Log
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.Icon
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material.icons.filled.ArrowDropUp
+import androidx.compose.material.icons.filled.SportsSoccer
 import androidx.compose.material3.Button
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MenuDefaults
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
@@ -21,6 +33,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.uaep.R
 import com.example.uaep.dto.UserUpdateDto
+import com.example.uaep.enums.Position
 import com.example.uaep.ui.theme.UaepTheme
 
 @Composable
@@ -30,6 +43,13 @@ fun ProfileUpdateForm(
     var name by rememberSaveable { mutableStateOf("") }
     var position by rememberSaveable { mutableStateOf("") }
     var address by rememberSaveable { mutableStateOf("") }
+    var enabled by rememberSaveable { mutableStateOf(false) }
+    val positionList = listOf(
+        Position.GK,
+        Position.DF,
+        Position.MF,
+        Position.FW,
+    )
 
     Column(
         modifier = Modifier.padding(start = 30.dp),
@@ -60,31 +80,70 @@ fun ProfileUpdateForm(
                 unfocusedBorderColor = MaterialTheme.colorScheme.primary,
             )
         )
-        OutlinedTextField(
-            value = position,
-            onValueChange = { position = it },
-            label = {
-                Text(
-                    text = stringResource(id = R.string.position),
-                    color = MaterialTheme.colorScheme.primary,
-                    fontSize = MaterialTheme.typography.labelLarge.fontSize,
-                    fontWeight = FontWeight.Bold
-                )
-            },
-            placeholder = {
-                Text(
-                    text = stringResource(id = R.string.update_position),
-                    color = MaterialTheme.colorScheme.primary,
-                    fontSize = MaterialTheme.typography.labelLarge.fontSize,
-                    fontWeight = FontWeight.Bold
-                )
-            },
-            colors = TextFieldDefaults.outlinedTextFieldColors(
-                textColor = MaterialTheme.colorScheme.primary,
-                focusedBorderColor = MaterialTheme.colorScheme.primary,
-                unfocusedBorderColor = MaterialTheme.colorScheme.primary,
+        Column {
+            OutlinedTextField(
+                value = position,
+                onValueChange = { position = it },
+                readOnly = true,
+                label = {
+                    Text(
+                        text = stringResource(id = R.string.position),
+                        color = MaterialTheme.colorScheme.primary,
+                        fontSize = MaterialTheme.typography.labelLarge.fontSize,
+                        fontWeight = FontWeight.Bold
+                    )
+                },
+                placeholder = {
+                    Text(
+                        text = stringResource(id = R.string.update_position),
+                        color = MaterialTheme.colorScheme.primary,
+                        fontSize = MaterialTheme.typography.labelLarge.fontSize,
+                        fontWeight = FontWeight.Bold
+                    )
+                },
+                colors = TextFieldDefaults.outlinedTextFieldColors(
+                    textColor = MaterialTheme.colorScheme.primary,
+                    focusedBorderColor = MaterialTheme.colorScheme.primary,
+                    unfocusedBorderColor = MaterialTheme.colorScheme.primary,
+                ),
+                trailingIcon = {
+                    Icon(
+                        imageVector = if (enabled) Icons.Filled.ArrowDropUp else Icons.Filled.ArrowDropDown,
+                        contentDescription = null,
+                        Modifier.clickable { enabled = !enabled },
+                        tint = MaterialTheme.colorScheme.primary
+                    )
+                }
             )
-        )
+            DropdownMenu(
+                expanded = enabled,
+                modifier = Modifier
+                    .fillMaxWidth(0.7f)
+                    .background(MaterialTheme.colorScheme.onBackground),
+                onDismissRequest = { enabled = false }
+            ) {
+                positionList.forEach{
+                    DropdownMenuItem(
+                        text = {
+                            Text(
+                                text= it.value,
+                                fontWeight = FontWeight.ExtraBold)
+                        },
+                        onClick = {
+                            position = it.value
+                            enabled = false
+                        },
+                        trailingIcon = {
+                            Icon(
+                                Icons.Filled.SportsSoccer,
+                                contentDescription = null,
+                                tint = MaterialTheme.colorScheme.primary)
+                        },
+                        colors = MenuDefaults.itemColors(textColor = MaterialTheme.colorScheme.primary)
+                    )
+                }
+            }
+        }
         OutlinedTextField(
             value = address,
             onValueChange = { address = it },
@@ -112,6 +171,7 @@ fun ProfileUpdateForm(
         )
         Button(
             onClick = {
+                Log.d("position", position)
                 onUpdateUserInfo(UserUpdateDto(name, position, address))
             }
         ) {
