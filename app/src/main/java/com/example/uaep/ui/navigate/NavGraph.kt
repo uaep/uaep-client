@@ -1,5 +1,6 @@
 package com.example.uaep.ui.navigate
 
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -15,7 +16,9 @@ import com.example.uaep.ui.home.HomeViewModel
 import com.example.uaep.ui.login.LoginScreen
 import com.example.uaep.ui.login.LoginViewModel
 import com.example.uaep.ui.match.MatchCreationScreen
+import com.example.uaep.ui.match.MyMatchScreen
 import com.example.uaep.ui.profile.ProfileScreen
+import com.example.uaep.ui.review.ReviewScreen
 import com.example.uaep.ui.signup.AuthCodeScreen
 import com.example.uaep.ui.signup.AuthCodeViewModel
 import com.example.uaep.ui.signup.EmailAuthScreen
@@ -24,6 +27,7 @@ import com.example.uaep.ui.signup.SignUpScreen
 import com.example.uaep.ui.signup.SignUpViewModel
 import com.google.gson.Gson
 
+@ExperimentalMaterial3Api
 @Composable
 fun UaepNavGraph(
     isExpandedScreen: Boolean,
@@ -116,9 +120,23 @@ fun UaepNavGraph(
                 navController = navController
             )
         }
-//        composable(route = Screen.Room.route) {
-//            RoomContainer(room1)
-//        }
-
+        composable(
+            route = BottomNavItem.Review.route
+        ) {
+            ReviewScreen(
+                showTopAppBar = true,
+                openDrawer ={},
+                navController = navController
+            )
+        }
+        composable(
+            route = BottomNavItem.Match.route
+        ) {
+            MyMatchScreen(
+                showTopAppBar = true,
+                openDrawer ={},
+                navController = navController
+            )
+        }
     }
 }

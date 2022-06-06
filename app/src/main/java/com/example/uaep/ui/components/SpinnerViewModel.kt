@@ -8,7 +8,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import java.util.Calendar
+import java.util.*
 
 class SpinnerViewModel: ViewModel() {
     private val mTime = MutableLiveData("경기 일정 없음")
@@ -40,15 +40,15 @@ class SpinnerViewModel: ViewModel() {
         DatePickerDialog(context, { _, year, month, day ->
             TimePickerDialog(context, { _, hour, minute ->
                 val pickedDateTime = Calendar.getInstance()
-                pickedDateTime.set(year, month, day, hour, minute)
+                pickedDateTime.set(year, (month + 1), day, hour, minute)
 
                 mYear.value = year
-                mMonth.value = month
+                mMonth.value = month + 1
                 mDay.value = day
                 mHour.value = hour
                 mMinute.value = minute
 
-                time = "${year}년 ${month}월 ${day}일 ${hour}시 ${minute}분"
+                time = "${year}년 ${mMonth.value}월 ${day}일 ${hour}시 ${minute}분"
                 updateDateTime(time)
                 onSelected(true)
             }, startHour, startMinute, false).show()

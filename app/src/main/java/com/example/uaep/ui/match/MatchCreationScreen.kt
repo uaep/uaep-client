@@ -3,15 +3,14 @@
 package com.example.uaep.ui.match
 
 import android.content.res.Configuration
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
@@ -56,272 +55,234 @@ fun MatchCreationScreen (
             )
         }
     ) {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(it),
-        ) {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
+        Column (
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.fillMaxSize(),
+        ){
+            Spacer(modifier = Modifier.padding(vertical = 40.dp))
+            Text(
+                text = stringResource(id = R.string.create_room).uppercase(),
+                modifier = Modifier,
+                color = MaterialTheme.colorScheme.primary,
+                fontSize = MaterialTheme.typography.headlineLarge.fontSize,
+                fontWeight = FontWeight.Bold,
+            )
+            Spacer(modifier = Modifier.padding(vertical = 30.dp))
+            OutlinedTextField(
+                value = vm.place.value,
+                onValueChange = { vm.updatePlace(it) },
+                label = {
+                    Text(
+                        text = stringResource(R.string.location),
+                        color = MaterialTheme.colorScheme.primary,
+                        fontSize = MaterialTheme.typography.labelLarge.fontSize,
+                        fontWeight = FontWeight.Bold
+                    )
+                },
                 modifier = Modifier
-                    .fillMaxSize()
-                    .padding(top = 10.dp, bottom = 10.dp, start = 5.dp, end = 5.dp)
-                    .border(
-                        border = BorderStroke(
-                            width = 2.dp,
-                            color = MaterialTheme.colorScheme.primaryContainer
-                        ),
-                        shape = MaterialTheme.shapes.extraLarge
-                    )
-                    .background(
-                        color = MaterialTheme.colorScheme.onBackground,
-                        shape = MaterialTheme.shapes.extraLarge
-                    ),
-                verticalArrangement = Arrangement.SpaceEvenly
-            ) {
-                Text(
-                    text = stringResource(id = R.string.create_room).uppercase(),
-                    modifier = Modifier,
-                    color = MaterialTheme.colorScheme.primary,
-                    fontSize = MaterialTheme.typography.headlineLarge.fontSize,
-                    fontWeight = FontWeight.Bold,
+                    .fillMaxWidth(0.8f),
+                shape = MaterialTheme.shapes.medium,
+                textStyle = MaterialTheme.typography.bodyLarge,
+                colors = TextFieldDefaults.outlinedTextFieldColors(
+                    textColor = MaterialTheme.colorScheme.primary,
+                    focusedBorderColor = MaterialTheme.colorScheme.primary,
+                    unfocusedBorderColor = MaterialTheme.colorScheme.primary,
                 )
+            )
+            Spacer(modifier = Modifier.padding(vertical = 10.dp))
+            Column {
                 OutlinedTextField(
-                    value = vm.title.value,
-                    onValueChange = { vm.updateTitle(it) },
+                    value = vm.numPlayer.value,
+                    readOnly = true,
+                    onValueChange = {},
                     label = {
                         Text(
-                            text = stringResource(R.string.title),
+                            text = stringResource(R.string.num_player),
                             color = MaterialTheme.colorScheme.primary,
                             fontSize = MaterialTheme.typography.labelLarge.fontSize,
                             fontWeight = FontWeight.Bold
                         )
                     },
                     modifier = Modifier
-                        .fillMaxWidth(0.8f),
-                    shape = MaterialTheme.shapes.medium,
-                    textStyle = MaterialTheme.typography.bodyLarge,
-                    colors = TextFieldDefaults.outlinedTextFieldColors(
-                        textColor = MaterialTheme.colorScheme.primary,
-                        focusedBorderColor = MaterialTheme.colorScheme.primary,
-                        unfocusedBorderColor = MaterialTheme.colorScheme.primary,
-                    )
-                )
-                OutlinedTextField(
-                    value = vm.place.value,
-                    onValueChange = { vm.updatePlace(it) },
-                    label = {
-                        Text(
-                            text = stringResource(R.string.location),
-                            color = MaterialTheme.colorScheme.primary,
-                            fontSize = MaterialTheme.typography.labelLarge.fontSize,
-                            fontWeight = FontWeight.Bold
-                        )
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth(0.8f),
-                    shape = MaterialTheme.shapes.medium,
-                    textStyle = MaterialTheme.typography.bodyLarge,
-                    colors = TextFieldDefaults.outlinedTextFieldColors(
-                        textColor = MaterialTheme.colorScheme.primary,
-                        focusedBorderColor = MaterialTheme.colorScheme.primary,
-                        unfocusedBorderColor = MaterialTheme.colorScheme.primary,
-                    )
-                )
-                Column {
-                    OutlinedTextField(
-                        value = vm.numPlayer.value,
-                        readOnly = true,
-                        onValueChange = {},
-                        label = {
-                            Text(
-                                text = stringResource(R.string.num_player),
-                                color = MaterialTheme.colorScheme.primary,
-                                fontSize = MaterialTheme.typography.labelLarge.fontSize,
-                                fontWeight = FontWeight.Bold
-                            )
-                        },
-                        modifier = Modifier
-                            .fillMaxWidth(0.8f)
-                            .clickable {
-                                vm.onNumPlayerSelected()
-                            },
-                        shape = MaterialTheme.shapes.medium,
-                        textStyle = MaterialTheme.typography.bodyLarge,
-                        colors = TextFieldDefaults.outlinedTextFieldColors(
-                            textColor = MaterialTheme.colorScheme.primary,
-                            focusedBorderColor = MaterialTheme.colorScheme.primary,
-                            unfocusedBorderColor = MaterialTheme.colorScheme.primary,
-                        ),
-                        trailingIcon = {
-                            Icon(
-                                imageVector = vm.icon1,
-                                contentDescription = null,
-                                Modifier.clickable {
-                                    vm.onNumPlayerSelected()
-                                },
-                                tint = MaterialTheme.colorScheme.primary
-                            )
-                        }
-                    )
-                    DropdownMenu(
-                        expanded = vm.numPlayerSelected.value,
-                        onDismissRequest = {
+                        .fillMaxWidth(0.8f)
+                        .clickable {
                             vm.onNumPlayerSelected()
                         },
-                        modifier = Modifier
-                            .fillMaxWidth(0.8f)
-                            .background(color = MaterialTheme.colorScheme.onBackground)
+                    shape = MaterialTheme.shapes.medium,
+                    textStyle = MaterialTheme.typography.bodyLarge,
+                    colors = TextFieldDefaults.outlinedTextFieldColors(
+                        textColor = MaterialTheme.colorScheme.primary,
+                        focusedBorderColor = MaterialTheme.colorScheme.primary,
+                        unfocusedBorderColor = MaterialTheme.colorScheme.primary,
+                    ),
+                    trailingIcon = {
+                        Icon(
+                            imageVector = vm.icon1,
+                            contentDescription = null,
+                            Modifier.clickable {
+                                vm.onNumPlayerSelected()
+                            },
+                            tint = MaterialTheme.colorScheme.primary
+                        )
+                    }
+                )
+                DropdownMenu(
+                    expanded = vm.numPlayerSelected.value,
+                    onDismissRequest = {
+                        vm.onNumPlayerSelected()
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth(0.8f)
+                        .background(color = MaterialTheme.colorScheme.onBackground)
+                ) {
+                    DropdownMenuItem(
+                        onClick = {
+                            vm.updateNumPlayer(NumPlayers.FIVE.value)
+                            vm.onNumPlayerSelected()
+                        }
                     ) {
-                        DropdownMenuItem(
-                            onClick = {
-                                vm.updateNumPlayer(NumPlayers.FIVE.value)
-                                vm.onNumPlayerSelected()
-                            }
-                        ) {
-                            Text(
-                                text = NumPlayers.FIVE.value,
-                                color = MaterialTheme.colorScheme.primary,
-                                fontSize = MaterialTheme.typography.labelLarge.fontSize,
-                                fontWeight = FontWeight.ExtraBold
-                            )
+                        Text(
+                            text = NumPlayers.FIVE.value,
+                            color = MaterialTheme.colorScheme.primary,
+                            fontSize = MaterialTheme.typography.labelLarge.fontSize,
+                            fontWeight = FontWeight.ExtraBold
+                        )
+                    }
+                    DropdownMenuItem(
+                        onClick = {
+                            vm.updateNumPlayer(NumPlayers.SIX.value)
+                            vm.onNumPlayerSelected()
                         }
-                        DropdownMenuItem(
-                            onClick = {
-                                vm.updateNumPlayer(NumPlayers.SIX.value)
-                                vm.onNumPlayerSelected()
-                            }
-                        ) {
-                            Text(
-                                text = NumPlayers.SIX.value,
-                                color = MaterialTheme.colorScheme.primary,
-                                fontSize = MaterialTheme.typography.labelLarge.fontSize,
-                                fontWeight = FontWeight.ExtraBold
-                            )
-                        }
+                    ) {
+                        Text(
+                            text = NumPlayers.SIX.value,
+                            color = MaterialTheme.colorScheme.primary,
+                            fontSize = MaterialTheme.typography.labelLarge.fontSize,
+                            fontWeight = FontWeight.ExtraBold
+                        )
                     }
                 }
-                Column {
-                    OutlinedTextField(
-                        value = vm.gender.value,
-                        readOnly = true,
-                        onValueChange = {},
-                        label = {
-                            Text(
-                                text = stringResource(R.string.gender),
-                                color = MaterialTheme.colorScheme.primary,
-                                fontSize = MaterialTheme.typography.labelLarge.fontSize,
-                                fontWeight = FontWeight.Bold
-                            )
-                        },
-                        modifier = Modifier
-                            .fillMaxWidth(0.8f)
-                            .clickable {
-                                vm.onGenderSelected()
-                            },
-                        shape = MaterialTheme.shapes.medium,
-                        textStyle = MaterialTheme.typography.bodyLarge,
-                        colors = TextFieldDefaults.outlinedTextFieldColors(
-                            textColor = MaterialTheme.colorScheme.primary,
-                            focusedBorderColor = MaterialTheme.colorScheme.primary,
-                            unfocusedBorderColor = MaterialTheme.colorScheme.primary,
-                        ),
-                        trailingIcon = {
-                            Icon(
-                                imageVector = vm.icon2,
-                                contentDescription = null,
-                                Modifier.clickable {
-                                    vm.onGenderSelected()
-                                },
-                                tint = MaterialTheme.colorScheme.primary
-                            )
-                        }
-                    )
-                    DropdownMenu(
-                        expanded = vm.genderSelected.value,
-                        onDismissRequest = {
+            }
+            Spacer(modifier = Modifier.padding(vertical = 10.dp))
+            Column {
+                OutlinedTextField(
+                    value = vm.gender.value,
+                    readOnly = true,
+                    onValueChange = {},
+                    label = {
+                        Text(
+                            text = stringResource(R.string.gender),
+                            color = MaterialTheme.colorScheme.primary,
+                            fontSize = MaterialTheme.typography.labelLarge.fontSize,
+                            fontWeight = FontWeight.Bold
+                        )
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth(0.8f)
+                        .clickable {
                             vm.onGenderSelected()
                         },
-                        modifier = Modifier
-                            .fillMaxWidth(0.8f)
-                            .background(color = MaterialTheme.colorScheme.onBackground)
-                    ) {
-                        DropdownMenuItem(
-                            onClick = {
-                                vm.updateGender(Gender.MALE.value)
+                    shape = MaterialTheme.shapes.medium,
+                    textStyle = MaterialTheme.typography.bodyLarge,
+                    colors = TextFieldDefaults.outlinedTextFieldColors(
+                        textColor = MaterialTheme.colorScheme.primary,
+                        focusedBorderColor = MaterialTheme.colorScheme.primary,
+                        unfocusedBorderColor = MaterialTheme.colorScheme.primary,
+                    ),
+                    trailingIcon = {
+                        Icon(
+                            imageVector = vm.icon2,
+                            contentDescription = null,
+                            Modifier.clickable {
                                 vm.onGenderSelected()
-                            }
-                        ) {
-                            Text(
-                                text = Gender.MALE.value,
-                                color = MaterialTheme.colorScheme.primary,
-                                fontSize = MaterialTheme.typography.labelLarge.fontSize,
-                                fontWeight = FontWeight.ExtraBold
-                            )
-                        }
-                        DropdownMenuItem(
-                            onClick = {
-                                vm.updateGender(Gender.FEMALE.value)
-                                vm.onGenderSelected()
-                            }
-                        ) {
-                            Text(
-                                text = Gender.FEMALE.value,
-                                color = MaterialTheme.colorScheme.primary,
-                                fontSize = MaterialTheme.typography.labelLarge.fontSize,
-                                fontWeight = FontWeight.ExtraBold
-                            )
-                        }
-                        DropdownMenuItem(
-                            onClick = {
-                                vm.updateGender(Gender.ANY.value)
-                                vm.onGenderSelected()
-                            }
-                        ) {
-                            Text(
-                                text = Gender.ANY.value,
-                                color = MaterialTheme.colorScheme.primary,
-                                fontSize = MaterialTheme.typography.labelLarge.fontSize,
-                                fontWeight = FontWeight.ExtraBold
-                            )
-                        }
-                    }
-                    Column(
-                        verticalArrangement = Arrangement.spacedBy(15.dp)
-                    ) {
-                        SpinnerView(viewModel = spinnerViewModel)
-                        Button(
-                            onClick = {
-                                val newGame = GameCreateDto(
-                                    year = spinnerViewModel.year.value,
-                                    month = spinnerViewModel.month.value,
-                                    day = spinnerViewModel.day.value,
-                                    hour = spinnerViewModel.hour.value,
-                                    minute = spinnerViewModel.minute.value,
-                                    place = vm.place.value,
-                                    numberOfUsers = vm.numPlayer.value,
-                                    gender = vm.gender.value,
-                                )
-                                vm.postGameCreation(
-                                    newGame,
-                                    navController
-                                )
                             },
-                            modifier = Modifier
-                                .fillMaxWidth(0.8f),
-                            shape = MaterialTheme.shapes.medium,
-                            colors = ButtonDefaults.buttonColors(
-                                backgroundColor = MaterialTheme.colorScheme.secondary,
-                            ),
-                        ) {
-                            Text(
-                                text = stringResource(id = R.string.create_room),
-                                color = MaterialTheme.colorScheme.onPrimary,
-                                fontSize = MaterialTheme.typography.bodyLarge.fontSize,
-                                fontWeight = FontWeight.ExtraBold
-                            )
-                        }
+                            tint = MaterialTheme.colorScheme.primary
+                        )
                     }
+                )
+                DropdownMenu(
+                    expanded = vm.genderSelected.value,
+                    onDismissRequest = {
+                        vm.onGenderSelected()
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth(0.8f)
+                        .background(color = MaterialTheme.colorScheme.onBackground)
+                ) {
+                    DropdownMenuItem(
+                        onClick = {
+                            vm.updateGender(Gender.MALE.value)
+                            vm.onGenderSelected()
+                        }
+                    ) {
+                        Text(
+                            text = Gender.MALE.value,
+                            color = MaterialTheme.colorScheme.primary,
+                            fontSize = MaterialTheme.typography.labelLarge.fontSize,
+                            fontWeight = FontWeight.ExtraBold
+                        )
+                    }
+                    DropdownMenuItem(
+                        onClick = {
+                            vm.updateGender(Gender.FEMALE.value)
+                            vm.onGenderSelected()
+                        }
+                    ) {
+                        Text(
+                            text = Gender.FEMALE.value,
+                            color = MaterialTheme.colorScheme.primary,
+                            fontSize = MaterialTheme.typography.labelLarge.fontSize,
+                            fontWeight = FontWeight.ExtraBold
+                        )
+                    }
+                    DropdownMenuItem(
+                        onClick = {
+                            vm.updateGender(Gender.ANY.value)
+                            vm.onGenderSelected()
+                        }
+                    ) {
+                        Text(
+                            text = Gender.ANY.value,
+                            color = MaterialTheme.colorScheme.primary,
+                            fontSize = MaterialTheme.typography.labelLarge.fontSize,
+                            fontWeight = FontWeight.ExtraBold
+                        )
+                    }
+                }
+                Spacer(modifier = Modifier.padding(vertical = 10.dp))
+                SpinnerView(viewModel = spinnerViewModel)
+                Spacer(modifier = Modifier.padding(vertical = 10.dp))
+                Button(
+                    onClick = {
+                        val newGame = GameCreateDto(
+                            year = spinnerViewModel.year.value,
+                            month = spinnerViewModel.month.value,
+                            day = spinnerViewModel.day.value,
+                            hour = spinnerViewModel.hour.value,
+                            minute = spinnerViewModel.minute.value,
+                            place = vm.place.value,
+                            numberOfUsers = vm.numPlayer.value,
+                            gender = vm.gender.value,
+                        )
+                        vm.postGameCreation(
+                            newGame,
+                            navController
+                        )
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth(0.8f)
+                        .height(intrinsicSize = IntrinsicSize.Max),
+                    shape = MaterialTheme.shapes.medium,
+                    colors = ButtonDefaults.buttonColors(
+                        backgroundColor = MaterialTheme.colorScheme.secondary,
+                    ),
+                ) {
+                    Text(
+                        text = stringResource(id = R.string.create_room),
+                        color = MaterialTheme.colorScheme.onPrimary,
+                        fontSize = MaterialTheme.typography.bodyLarge.fontSize,
+                        fontWeight = FontWeight.ExtraBold
+                    )
                 }
             }
         }

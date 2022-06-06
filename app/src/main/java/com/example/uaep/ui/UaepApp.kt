@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.add
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.systemBars
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -14,6 +15,7 @@ import com.example.uaep.ui.navigate.UaepNavGraph
 import com.example.uaep.ui.theme.UaepTheme
 import com.example.uaep.utils.WindowSize
 
+@ExperimentalMaterial3Api
 @Composable
 fun UaepApp(
     windowSize: WindowSize
