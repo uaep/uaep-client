@@ -1,12 +1,13 @@
 package com.example.uaep.ui.navigate
 
-import com.example.uaep.R
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Handshake
+import androidx.compose.material.icons.filled.RateReview
+import androidx.compose.material.icons.filled.SportsSoccer
+import androidx.compose.ui.graphics.vector.ImageVector
 
-sealed class BottomNavItem(var title:String, var icon:Int, var screen_route:String){
-
-    object Home : BottomNavItem("Home", R.drawable.ic_baseline_home_24,"home")
-    object MyNetwork: BottomNavItem("My Network",R.drawable.ic_baseline_person_pin_24,"my_network")
-    object AddPost: BottomNavItem("Post",R.drawable.ic_baseline_home_24,"add_post")
-    object Notification: BottomNavItem("Notification",R.drawable.ic_baseline_person_pin_24,"notification")
-    //object Jobs: BottomNavItem("Jobs",R.drawable.ic_job,"jobs")
+sealed class BottomNavItem(val title: String, val icon: ImageVector, val route: String){
+    object Participate : BottomNavItem("참가", Icons.Filled.Handshake, "home")
+    object Review: BottomNavItem("리뷰", Icons.Filled.RateReview,"review_screen")
+    object Match: BottomNavItem("경기", Icons.Filled.SportsSoccer,"my_match_screen")
 }

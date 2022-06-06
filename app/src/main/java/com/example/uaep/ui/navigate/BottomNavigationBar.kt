@@ -1,56 +1,76 @@
 package com.example.uaep.ui.navigate
 
-import androidx.compose.material.BottomNavigationItem
-import androidx.compose.material.Icon
+import android.content.res.Configuration
 import androidx.compose.material.Text
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.sp
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.rememberNavController
+import com.example.uaep.R
+import com.example.uaep.ui.theme.UaepTheme
+
+
 
 @Composable
 fun BottomNavigationBar(navController: NavController) {
-    val items = listOf(
-        BottomNavItem.Home,
-        BottomNavItem.MyNetwork,
-        BottomNavItem.AddPost,
-        BottomNavItem.Notification
+    val bottomNavItems = listOf(
+        BottomNavItem.Participate,
+        BottomNavItem.Review,
+        BottomNavItem.Match
     )
-    androidx.compose.material.BottomNavigation(
-        backgroundColor = MaterialTheme.colorScheme.primary,
-        contentColor = MaterialTheme.colorScheme.onPrimary
+
+    NavigationBar(
+        containerColor = MaterialTheme.colorScheme.primary,
+        contentColor = MaterialTheme.colorScheme.surface
     ) {
         val navBackStackEntry by navController.currentBackStackEntryAsState()
         val currentRoute = navBackStackEntry?.destination?.route
-        items.forEach { item ->
-            BottomNavigationItem(
-                icon = { Icon(painterResource(id = item.icon), contentDescription = item.title) },
-                label = {
-                    Text(
-                        text = item.title,
-                        fontSize = 9.sp
-                    )
-                },
-                selectedContentColor = MaterialTheme.colorScheme.onPrimary,
-                unselectedContentColor = MaterialTheme.colorScheme.onPrimary.copy(0.4f),
-                alwaysShowLabel = true,
-                selected = currentRoute == item.screen_route,
-                onClick = {
-                    navController.navigate(item.screen_route) {
 
-                        navController.graph.startDestinationRoute?.let { screen_route ->
-                            popUpTo(screen_route) {
-                                saveState = true
-                            }
-                        }
-                        launchSingleTop = true
-                        restoreState = true
-                    }
-                }
+        bottomNavItems.forEachIndexed { index, bottomNavItem ->
+            NavigationBarItem(
+                icon = { Icon(bottomNavItem.icon, contentDescription = null) },
+                label = { Text(
+                    text = bottomNavItem.title,
+                    color = if (bottomNavItems[index].route == currentRoute) MaterialTheme.colorScheme.surface else Color.DarkGray,
+                    fontFamily = FontFamily(Font(R.font.jua_regular)),
+                    fontWeight = FontWeight.ExtraBold
+                ) },
+                selected = bottomNavItems[index].route == currentRoute,
+                onClick = {
+                    navController.navigate(bottomNavItems[index].route)
+                },
+                colors = NavigationBarItemDefaults.colors(
+                    selectedIconColor = MaterialTheme.colorScheme.secondary,
+                    selectedTextColor = MaterialTheme.colorScheme.surface,
+                )
             )
         }
+    }
+}
+
+@Preview(
+    name = "Light Mode",
+    showBackground = true
+)
+@Preview(
+    name = "Dark Mode",
+    showBackground = true,
+    uiMode = Configuration.UI_MODE_NIGHT_YES
+)
+@Composable
+fun PreviewBottomNavigationBar() {
+    UaepTheme {
+        BottomNavigationBar(navController = rememberNavController())
     }
 }
