@@ -36,9 +36,10 @@ import com.example.uaep.R
 import com.example.uaep.dto.GameCreateDto
 import com.example.uaep.enums.Gender
 import com.example.uaep.enums.NumPlayers
-import com.example.uaep.ui.components.BackToHomeTopAppBar
+import com.example.uaep.ui.components.CommonTopAppBar
 import com.example.uaep.ui.components.SpinnerView
 import com.example.uaep.ui.components.SpinnerViewModel
+import com.example.uaep.ui.navigate.BottomNavigationBar
 import com.example.uaep.ui.theme.UaepTheme
 
 @Composable
@@ -50,16 +51,20 @@ fun MatchCreationScreen (
 
     Scaffold(
         topBar = {
-            BackToHomeTopAppBar(
+            CommonTopAppBar(
+                openDrawer = {},
                 navController = navController
             )
+        },
+        bottomBar = {
+            BottomNavigationBar(navController = navController)
         }
     ) {
         Column (
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.fillMaxSize(),
         ){
-            Spacer(modifier = Modifier.padding(vertical = 40.dp))
+            Spacer(modifier = Modifier.padding(vertical = 20.dp))
             Text(
                 text = stringResource(id = R.string.create_room).uppercase(),
                 modifier = Modifier,
