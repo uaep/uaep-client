@@ -235,8 +235,9 @@ fun RoomContainer(
                 if (room.teamB == null)
                     positionButton(room = room, teamA = false, onRefresh = onRefresh)
             }
-            if (profile != null && userEmail != AuthService.getCookieJar().loadEmail())
+            if (profile != null&& userEmail != AuthService.getCookieJar().loadEmail())
                 ProfileDialog(visible = true, playerNotSelect, profile!!)
+
             Column(
                 modifier = modifier
                     //.padding(innerPadding)
@@ -244,17 +245,12 @@ fun RoomContainer(
                 verticalArrangement = Arrangement.SpaceBetween
             ) {
 
-
-//            Image(painter = painterResource(id =R.drawable.football_stage), contentDescription = "")
-//            ReadyButton(){
-//                position.value = it
-//            }
                 Spacer(Modifier.height(defaultSpacerSize))
-                Formation(reverse = false, Modifier.fillMaxWidth(), room.teamA, playerSelect ,teamSelect, posSelect)
+                Formation(reverse = false, Modifier.fillMaxWidth(), room.teamA, playerSelect ,teamSelect, posSelect, userEmail)
 
                 Spacer(Modifier.height(defaultSpacerSize))
 
-                Formation(reverse = true, Modifier.fillMaxWidth(), room.teamB, playerSelect,teamSelect, posSelect)
+                Formation(reverse = true, Modifier.fillMaxWidth(), room.teamB, playerSelect,teamSelect, posSelect, userEmail)
                 Spacer(Modifier.height(50.dp))
             }
         }
@@ -289,7 +285,7 @@ private fun BottomBar(
                 .fillMaxWidth()
         ) {
             Log.i("bottom_bar", room.number)
-            when(room.date < Date()){
+            when(room.date > Date()){
                 true -> {
                     if (pos !=null && team !=null) {
                         Button(
@@ -307,6 +303,7 @@ private fun BottomBar(
                                             ) {
                                                 if (response.isSuccessful) {
                                                     Log.i("position_success", response.body().toString())
+                                                    onRefresh(room.id)
                                                 } else {
                                                     Log.i("position_fail_raw", response.raw().toString())
                                                     Log.i("position_fail_head", response.headers().toString())
@@ -353,7 +350,7 @@ private fun BottomBar(
                                                 Log.i("test", "실패$t")
                                             }
                                         })
-                                onRefresh(room.id)
+
                             },
                             modifier = Modifier.fillMaxSize(),
                             colors = ButtonDefaults.buttonColors(backgroundColor = md_theme_light_primary)
@@ -504,7 +501,7 @@ fun positionButton(
                     ) {
                         if (response.isSuccessful) {
                             Log.i("room_enter", response.body().toString())
-
+                            onRefresh(room.id)
                         } else {
                             Log.i("rooms_fail_raw", response.raw().toString())
                             Log.i("rooms_fail_head", response.headers().toString())
@@ -543,7 +540,7 @@ fun positionButton(
                     }
                 })
             }while(check)
-            onRefresh(room.id)
+
         }
     ){
         if(teamA)

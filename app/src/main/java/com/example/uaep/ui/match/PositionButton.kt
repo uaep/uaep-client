@@ -1,6 +1,7 @@
 package com.example.uaep.ui.match
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -23,12 +24,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.uaep.dto.Player
 import com.example.uaep.enums.Position
-import com.example.uaep.ui.theme.UaepTheme
-import com.example.uaep.ui.theme.md_theme_light_error
-import com.example.uaep.ui.theme.md_theme_light_onPrimary
-import com.example.uaep.ui.theme.md_theme_light_primary
-import com.example.uaep.ui.theme.md_theme_light_secondary
-import com.example.uaep.ui.theme.md_theme_light_tertiary
+import com.example.uaep.ui.theme.*
 
 @Composable
 fun PositionButton(
@@ -39,7 +35,8 @@ fun PositionButton(
     teamSelect: (Boolean?) -> Unit,
     posSelect: (String?) -> Unit,
     pos_name: String,
-    reverse: Boolean
+    reverse: Boolean,
+    userEmail: String?
 ) {
     var enabled by remember { mutableStateOf(true) }
     var pos = player?.position
@@ -66,37 +63,67 @@ fun PositionButton(
                 }) {
             Text(
                 text = position.value,
-                modifier = Modifier
-                    .padding(10.dp)
-                    .defaultMinSize(20.dp)
-                    .clip(CircleShape)
-                    .clickable() {
-                        // TODO : 유저가 없으면 내가 들어가고
-                        // TODO : 유저가 있으면 그 유저 프로필 본다.
-                        if (position.value == Position.GK.value
-                            || position.value == Position.DF.value
-                            || position.value == Position.MF.value
-                            || position.value == Position.FW.value
-                        ) {
-                            //TODO: 유저 이름으로 변경되게하기
-                            playerSelect(player)
-                            teamSelect(reverse)
-                            posSelect(pos_name)
-                        } else {
-                            when (color) {
-                                md_theme_light_primary -> pos = Position.GK.value
-                                md_theme_light_tertiary -> pos = Position.DF.value
-                                md_theme_light_secondary -> pos = Position.MF.value
-                                md_theme_light_error -> pos = Position.FW.value
+                modifier = if(userEmail!=player?.email) {
+                    Modifier
+                        .padding(10.dp)
+                        .defaultMinSize(20.dp)
+                        .clip(CircleShape)
+                        .clickable() {
+                            // TODO : 유저가 없으면 내가 들어가고
+                            // TODO : 유저가 있으면 그 유저 프로필 본다.
+                            if (position.value == Position.GK.value
+                                || position.value == Position.DF.value
+                                || position.value == Position.MF.value
+                                || position.value == Position.FW.value
+                            ) {
+                                //TODO: 유저 이름으로 변경되게하기
+                                playerSelect(player)
+                                teamSelect(reverse)
+                                posSelect(pos_name)
+                            } else {
+                                when (color) {
+                                    md_theme_light_primary -> pos = Position.GK.value
+                                    md_theme_light_tertiary -> pos = Position.DF.value
+                                    md_theme_light_secondary -> pos = Position.MF.value
+                                    md_theme_light_error -> pos = Position.FW.value
+                                }
                             }
                         }
-                    },
+                }else{
+                    Modifier
+
+                        .border(width = 5.dp, color = md_theme_dark_error, shape = CircleShape)
+                        .padding(10.dp)
+                        .defaultMinSize(20.dp)
+                        .clip(CircleShape)
+                        .clickable() {
+                            // TODO : 유저가 없으면 내가 들어가고
+                            // TODO : 유저가 있으면 그 유저 프로필 본다.
+                            if (position.value == Position.GK.value
+                                || position.value == Position.DF.value
+                                || position.value == Position.MF.value
+                                || position.value == Position.FW.value
+                            ) {
+                                //TODO: 유저 이름으로 변경되게하기
+                                playerSelect(player)
+                                teamSelect(reverse)
+                                posSelect(pos_name)
+                            } else {
+                                when (color) {
+                                    md_theme_light_primary -> pos = Position.GK.value
+                                    md_theme_light_tertiary -> pos = Position.DF.value
+                                    md_theme_light_secondary -> pos = Position.MF.value
+                                    md_theme_light_error -> pos = Position.FW.value
+                                }
+                            }
+                        }
+                     },
                 textAlign = TextAlign.Center,
                 color = md_theme_light_onPrimary,
             )
         }
         Text(
-            text = player?.name ?: "empty"
+            text = player?.name ?: ""
         )
     }
 }
@@ -123,7 +150,8 @@ fun PositionButtonPreview() {
             teamSelect = {},
             playerSelect = {},
             pos_name = "mf2",
-            reverse = true
+            reverse = true,
+            userEmail = "test@gmail.com"
         )
     }
 }

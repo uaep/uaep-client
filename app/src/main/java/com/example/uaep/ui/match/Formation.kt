@@ -23,7 +23,8 @@ fun Formation(
     team: Team?,
     playerSelect: (Player?) -> Unit,
     teamSelect: (Boolean?) -> Unit,
-    posSelect: (String?) -> Unit
+    posSelect: (String?) -> Unit,
+    userEmail: String?
 //    vm: FormationViewModel
 ) {
     if(team != null) {
@@ -44,7 +45,8 @@ fun Formation(
                     teamSelect = teamSelect,
                     posSelect = posSelect,
                     pos_name = if (!reverse) "gk" else "fw",
-                    reverse = reverse
+                    reverse = reverse,
+                    userEmail = userEmail
                 )
             }
             Row(
@@ -59,7 +61,8 @@ fun Formation(
                     teamSelect = teamSelect,
                     posSelect = posSelect,
                     pos_name = if (!reverse) "df1" else "mf1",
-                    reverse = reverse
+                    reverse = reverse,
+                    userEmail = userEmail
                 )
                 PositionButton(
                     color = if (!reverse) md_theme_light_tertiary else md_theme_light_secondary,
@@ -69,7 +72,8 @@ fun Formation(
                     teamSelect = teamSelect,
                     posSelect = posSelect,
                     pos_name = if (!reverse) "df2" else "mf2",
-                    reverse = reverse
+                    reverse = reverse,
+                    userEmail = userEmail
                 )
             }
             Row(
@@ -85,7 +89,8 @@ fun Formation(
                     teamSelect = teamSelect,
                     posSelect = posSelect,
                     pos_name = if (!reverse) "mf2" else "df2",
-                    reverse = reverse
+                    reverse = reverse,
+                    userEmail = userEmail
                 )
                 PositionButton(
                     color = if (!reverse) md_theme_light_secondary else md_theme_light_tertiary,
@@ -95,7 +100,8 @@ fun Formation(
                     teamSelect = teamSelect,
                     posSelect = posSelect,
                     pos_name = if (!reverse) "mf1" else "df1",
-                    reverse = reverse
+                    reverse = reverse,
+                    userEmail = userEmail
                 )
             }
             Row(
@@ -110,7 +116,8 @@ fun Formation(
                     teamSelect = teamSelect,
                     posSelect = posSelect,
                     pos_name = if (!reverse) "fw" else "gk",
-                    reverse = reverse
+                    reverse = reverse,
+                    userEmail = userEmail
                 )
             }
         }
@@ -159,7 +166,8 @@ fun FormationPreview() {
                 ),
                 posSelect = {},
                 teamSelect = {},
-                playerSelect = {}
+                playerSelect = {},
+                userEmail = null
             )
         }
     }
