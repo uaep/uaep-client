@@ -8,15 +8,8 @@ import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.key
-import androidx.navigation.NavController
 import androidx.navigation.NavHostController
-import com.example.uaep.dto.Player
-import com.example.uaep.dto.RoomDto
-import com.example.uaep.dto.Team
 import com.example.uaep.ui.match.MatchScreen
-import com.example.uaep.ui.match.RoomContainer
-import java.util.*
 
 @Composable
 fun HomeRoute(
@@ -84,7 +77,8 @@ fun HomeRoute(
                 room = uiState.selectedRoom,
                 isExpandedScreen = isExpandedScreen,
                 onBack = onInteractWithFeed,
-                onRefresh = onSelectRoom
+                onRefresh = onSelectRoom,
+                navController = navController
             )
 
             // If we are just showing the detail, have a back press switch to the list.

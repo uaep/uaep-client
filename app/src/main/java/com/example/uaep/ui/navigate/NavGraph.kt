@@ -16,7 +16,7 @@ import com.example.uaep.ui.home.HomeViewModel
 import com.example.uaep.ui.login.LoginScreen
 import com.example.uaep.ui.login.LoginViewModel
 import com.example.uaep.ui.match.MatchCreationScreen
-import com.example.uaep.ui.match.MyMatchScreen
+import com.example.uaep.ui.match.ParticipatingScreen
 import com.example.uaep.ui.profile.ProfileScreen
 import com.example.uaep.ui.review.ReviewScreen
 import com.example.uaep.ui.signup.AuthCodeScreen
@@ -130,9 +130,9 @@ fun UaepNavGraph(
             )
         }
         composable(
-            route = BottomNavItem.Match.route
+            route = BottomNavItem.Participating.route
         ) {
-            MyMatchScreen(
+            ParticipatingScreen(
                 showTopAppBar = true,
                 openDrawer ={},
                 navController = navController

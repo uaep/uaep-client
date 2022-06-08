@@ -3,11 +3,23 @@ package com.example.uaep.ui.match
 import android.content.Context
 import android.util.Log
 import android.widget.Toast
-import androidx.compose.foundation.*
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.ContentAlpha
@@ -19,15 +31,12 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
-import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -42,27 +51,29 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.uaep.R
-import com.example.uaep.dto.*
-import com.example.uaep.network.AuthService
-import com.example.uaep.network.CookieChanger
-import com.example.uaep.network.ReAuthService
-import com.example.uaep.ui.profile.ProfileCard
-import com.example.uaep.ui.profile.ProfileDto
-import com.example.uaep.ui.theme.*
+import com.example.uaep.dto.DummyResponse
+import com.example.uaep.dto.ErrorResponse
+import com.example.uaep.dto.FormationRequestDto
 import com.example.uaep.dto.Player
 import com.example.uaep.dto.RoomDto
 import com.example.uaep.dto.Team
+import com.example.uaep.network.AuthService
+import com.example.uaep.network.CookieChanger
+import com.example.uaep.network.ReAuthService
+import com.example.uaep.ui.components.CommonTopAppBar
+import com.example.uaep.ui.profile.ProfileCard
+import com.example.uaep.ui.profile.ProfileDto
 import com.example.uaep.ui.theme.UaepTheme
+import com.example.uaep.ui.theme.md_theme_light_errorContainer
 import com.example.uaep.ui.theme.md_theme_light_inversePrimary
 import com.example.uaep.ui.theme.md_theme_light_onPrimary
-import com.example.uaep.ui.theme.md_theme_light_outline
 import com.example.uaep.ui.theme.md_theme_light_primary
 import com.example.uaep.ui.theme.md_theme_light_secondary
-import com.example.uaep.utils.isScrolled
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import kotlinx.coroutines.flow.update
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -82,7 +93,8 @@ fun MatchScreen(
     onBack: () -> Unit,
     onRefresh: (Int) -> Unit,
     modifier: Modifier = Modifier,
-    lazyListState: LazyListState = rememberLazyListState()
+    lazyListState: LazyListState = rememberLazyListState(),
+    navController: NavController
 ) {
     Log.i("room_enter_2", room.toString())
 
@@ -128,10 +140,10 @@ fun MatchScreen(
             playerSelect = {player.value = it},
             playerNotSelect ={player.value = null},
             profile = profile,
-            userEmail = userEmail
+            userEmail = userEmail,
+            navController = navController
         )
     }
-
 }
 
 @Composable
@@ -146,31 +158,12 @@ fun MatchScreenContent(
     playerSelect: (Player?) -> Unit,
     playerNotSelect: () -> Unit,
     profile: ProfileDto?,
-    userEmail: String?
+    userEmail: String?,
+    navController: NavController
 ){
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .wrapContentWidth(align = Alignment.CenterHorizontally)
-                    ) {
-                        Text(
-                            text = stringResource(R.string.app_name),
-                            style = MaterialTheme.typography.h5,
-                            color = md_theme_light_outline,
-                            modifier = Modifier
-                                .padding(start = 10.dp)
-                                .weight(1.5f)
-                        )
-                    }
-                },
-                navigationIcon = navigationIconContent,
-                elevation = if (!lazyListState.isScrolled) 0.dp else 4.dp,
-                backgroundColor = MaterialTheme.colors.surface
-            )
+            CommonTopAppBar(openDrawer = {}, navController = navController)
         },
         bottomBar = bottomBarContent
     ) { innerPadding ->
@@ -822,7 +815,7 @@ fun SimpleRoomPreview() {
 
     UaepTheme {
         Surface {
-            MatchScreen(room1, false, {}, {})
+            MatchScreen(room1, false, {}, {}, navController = rememberNavController())
         }
     }
 }

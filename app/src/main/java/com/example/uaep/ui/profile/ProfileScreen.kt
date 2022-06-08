@@ -15,7 +15,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.uaep.dto.UserDto
-import com.example.uaep.ui.components.BackToHomeTopAppBar
+import com.example.uaep.ui.components.CommonTopAppBar
 import com.example.uaep.ui.navigate.BottomNavigationBar
 import com.example.uaep.ui.theme.UaepTheme
 
@@ -34,7 +34,7 @@ fun ProfileScreen(
 
     Scaffold(
         topBar = {
-           BackToHomeTopAppBar(navController = navController) 
+           CommonTopAppBar(navController = navController, openDrawer = {})
         },
         bottomBar = {
             BottomNavigationBar(navController = navController)
