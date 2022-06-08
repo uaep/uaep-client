@@ -7,7 +7,7 @@ import androidx.compose.material.icons.filled.SportsSoccer
 import androidx.compose.ui.graphics.vector.ImageVector
 
 sealed class BottomNavItem(val title: String, val icon: ImageVector, val route: String){
-    object Participate : BottomNavItem("참가", Icons.Filled.Handshake, "home")
+    object Matching : BottomNavItem("매칭", Icons.Filled.Handshake, "home")
     object Review: BottomNavItem("리뷰", Icons.Filled.RateReview,"review_screen")
-    object Match: BottomNavItem("경기", Icons.Filled.SportsSoccer,"my_match_screen")
+    object Participating: BottomNavItem("참가 중", Icons.Filled.SportsSoccer,"participating_screen")
 }

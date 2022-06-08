@@ -25,9 +25,9 @@ import com.example.uaep.ui.theme.UaepTheme
 @Composable
 fun BottomNavigationBar(navController: NavController) {
     val bottomNavItems = listOf(
-        BottomNavItem.Participate,
+        BottomNavItem.Matching,
         BottomNavItem.Review,
-        BottomNavItem.Match
+        BottomNavItem.Participating
     )
 
 

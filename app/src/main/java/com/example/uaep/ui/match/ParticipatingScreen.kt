@@ -15,12 +15,12 @@ import com.example.uaep.ui.theme.UaepTheme
 
 @ExperimentalMaterial3Api
 @Composable
-fun MyMatchScreen(
+fun ParticipatingScreen(
     showTopAppBar: Boolean,
     openDrawer: () -> Unit,
     navController: NavController
 ) {
-    MyMatchWithList(
+    ParticipatingWithList(
         showTopAppBar = showTopAppBar,
         openDrawer = openDrawer,
         navController = navController
@@ -29,7 +29,7 @@ fun MyMatchScreen(
 
 @ExperimentalMaterial3Api
 @Composable
-fun MyMatchWithList(
+fun ParticipatingWithList(
     showTopAppBar: Boolean,
     openDrawer: () -> Unit,
     navController: NavController
@@ -47,7 +47,7 @@ fun MyMatchWithList(
             BottomNavigationBar(navController = navController)
         }
     ) {
-        Text("Match List", color = Color.Red)
+        Text("Participating List", color = Color.Red)
     }
 }
 
@@ -62,9 +62,9 @@ fun MyMatchWithList(
     showBackground = true
 )
 @Composable
-fun PreviewMyMatchScreen() {
+fun PreviewParticipatingScreen() {
     UaepTheme {
-        MyMatchScreen(
+        ParticipatingScreen(
             showTopAppBar = true,
             openDrawer = {},
             navController = rememberNavController()
