@@ -6,28 +6,40 @@ import com.example.ueap.model.RoomsFeed
 import java.util.*
 
 val room1 = Room(
-    id = 1001,
+    id = "1001",
     title = "let's play soccer",
     gender = "men",
     date = Date(2016,5,4,12,14),
     number = "6vs6",
-    host="sonny"
+    host="sonny",
+    status = null,
+    teamA_status = null,
+    teamB_status = null,
+    apply_flag = null
 )
 val room2 = Room(
-    id = 1002,
+    id = "1002",
     title = "let's play football",
     gender = "women",
     date = Date(2016,5,16,15,0),
     number = "5vs5",
-    host="sonny"
+    host="sonny",
+    status = null,
+    teamA_status = null,
+    teamB_status = null,
+    apply_flag = null
 )
 val room3 = Room(
-    id = 1003,
+    id = "1003",
     title = "let's play football",
     gender = "male",
     date = Date(2016,5,20,20,15),
     number = "5vs5",
-    host="sonny"
+    host="sonny",
+    status = null,
+    teamA_status = null,
+    teamB_status = null,
+    apply_flag = null
 )
 val rooms: RoomsFeed =
     RoomsFeed(

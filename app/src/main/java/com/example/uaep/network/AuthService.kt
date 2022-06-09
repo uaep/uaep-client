@@ -29,14 +29,14 @@ interface AuthService {
         "content-type: application/json")
     @GET("games/{id}")
     fun select(
-        @Path("id") id: Int
+        @Path("id") id: String
     ) : Call<RoomDto>
 
     @Headers("accept: application/json",
         "content-type: application/json")
     @PATCH("games/{id}/{teamType}")
     fun createFormation(
-        @Path("id") id: Int,
+        @Path("id") id: String,
         @Path("teamType") type: String,
         @Body formationRequestDto: FormationRequestDto
     ) : Call<RoomDto>
@@ -45,7 +45,7 @@ interface AuthService {
         "content-type: application/json")
     @PATCH("games/{id}/{teamType}/{position}")
     fun setPosition(
-        @Path("id") id: Int,
+        @Path("id") id: String,
         @Path("teamType") type: String,
         @Path("position") position: String
     ) : Call<RoomDto>
@@ -54,9 +54,18 @@ interface AuthService {
         "content-type: application/json")
     @DELETE("games/{id}/{teamType}")
     fun deleteTeam(
-        @Path("id") id: Int,
+        @Path("id") id: String,
         @Path("teamType") type: String
     ) : Call<DummyResponse>
+
+    @Headers("accept: application/json",
+        "content-type: application/json")
+    @PATCH("reviews/{id}/{teamType}/{position}")
+    fun review(
+        @Path("id") id: String,
+        @Path("teamType") type: String,
+        @Path("position") position: String
+    ) : Call<RoomDto>
 
     // 싱글톤 객체로서, 인스턴스 생성 없이 사용할 수 있다.
     companion object{

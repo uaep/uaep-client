@@ -2,10 +2,7 @@ package com.example.uaep.ui.home
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ContentAlpha
 import androidx.compose.material.LocalContentAlpha
@@ -30,6 +27,18 @@ import java.util.*
 fun RoomTitle(room: Room){
     Text(room.title,
         style = MaterialTheme.typography.titleLarge)
+}
+
+@Composable
+fun RoomGender(room: Room,modifier: Modifier = Modifier){
+    Row(modifier) {
+        CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
+            Text(
+                text = room.gender,
+                style = MaterialTheme.typography.bodyLarge
+            )
+        }
+    }
 }
 
 @Composable
@@ -101,7 +110,7 @@ fun RoomRank(
 @Composable
 fun RoomCardSimple(
     room: Room,
-    navigateToArticle: (Int) -> Unit
+    navigateToArticle: (String) -> Unit
 ){
     Row(
         modifier = Modifier
@@ -124,7 +133,12 @@ fun RoomCardSimple(
         Column(modifier = Modifier.weight(1f)) {
             RoomRank(room)
             RoomTitle(room)
-            RoomPersonnel(room)
+            Row(verticalAlignment = Alignment.Bottom) {
+                RoomPersonnel(room)
+                Spacer(Modifier.width(10.dp))
+                RoomGender(room)
+            }
+
         }
 
     }
@@ -134,12 +148,16 @@ fun RoomCardSimple(
 @Composable
 fun SimpleRoomPreview() {
     val room1 = Room(
-        id = 1234,
-        title = "let's play soccer",
+        id = "1234",
+        title = "수원월드컵경기장",
         date = Date(2016,5,4,12,14),
         number = "6vs6",
-        gender = "male",
-        host="sonny"
+        gender = "성별 무관",
+        host="sonny",
+        status = null,
+        teamA_status = null,
+        teamB_status = null,
+        apply_flag = null
     )
 
     UaepTheme {

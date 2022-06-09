@@ -12,11 +12,15 @@
     <string name="home_tap_to_load_content">Tap to load content</string>
 
     <!-- Match Screen -->
-    <string name="match_ready">준비 완료</string>
+    <string name="match_ready">포지션 선택</string>
     <string name="match_clear_ready">준비 해제</string>
     <string name="match_finish">경기 종료</string>
     <string name="match_not_ready">포지션 선택 중</string>
     <string name="foot_ball_back">축구장 배경</string>
+
+    <!-- Review Screen -->
+    <string name="review_wait">리뷰를 1명이상 진행해주세요</string>
+    <string name="review_send">리뷰 보내기</string>
 
     <!-- signup, login -->
     <string name="sign_up">회원가입</string>

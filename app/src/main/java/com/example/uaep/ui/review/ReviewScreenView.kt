@@ -1,32 +1,16 @@
-package com.example.uaep.ui.home
+package com.example.uaep.ui.review
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.Divider
-import androidx.compose.material.Scaffold
-import androidx.compose.material.ScaffoldState
-import androidx.compose.material.SnackbarResult
-import androidx.compose.material.Text
-import androidx.compose.material.TextButton
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddCircle
-import androidx.compose.material.rememberScaffoldState
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -44,6 +28,7 @@ import com.example.uaep.dto.RoomDto
 import com.example.uaep.model.Room
 import com.example.uaep.ui.components.CommonTopAppBar
 import com.example.uaep.ui.components.UaepSnackbarHost
+import com.example.uaep.ui.home.RoomCardSimple
 import com.example.uaep.ui.navigate.BottomNavigationBar
 import com.example.uaep.ui.navigate.Screen
 import com.example.uaep.ui.rememberContentPaddingForScreen
@@ -54,54 +39,54 @@ import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import java.util.*
 
 @Composable
-fun HomeFeedScreen(
-    uiState: HomeUiState,
+fun ReviewFeedScreen(
+    uiState: ReviewUiState,
     showTopAppBar: Boolean,
     onSelectPost: (String) -> Unit,
     onRefreshPosts: () -> Unit,
     onErrorDismiss: (Long) -> Unit,
     openDrawer: () -> Unit,
-    homeListLazyListState: LazyListState,
+    reviewListLazyListState: LazyListState,
     scaffoldState: ScaffoldState,
     modifier: Modifier = Modifier,
     navController : NavController
 ) {
-    HomeScreenWithList(
+    ReviewScreenWithList(
         uiState = uiState,
         showTopAppBar = showTopAppBar,
         onRefreshPosts = onRefreshPosts,
         onErrorDismiss = onErrorDismiss,
         openDrawer = openDrawer,
-        homeListLazyListState = homeListLazyListState,
+        reviewListLazyListState = reviewListLazyListState,
         scaffoldState = scaffoldState,
         modifier = modifier,
         navController = navController
     ) { hasPostsUiState, contentModifier ->
-        PostList(
+        ReviewList(
             roomsFeed = hasPostsUiState.roomsFeed,
             onArticleTapped = onSelectPost,
             contentPadding = rememberContentPaddingForScreen(
                 additionalTop = if (showTopAppBar) 0.dp else 8.dp
             ),
             modifier = contentModifier,
-            state = homeListLazyListState
+            state = reviewListLazyListState
         )
     }
 }
 
 @Composable
-private fun HomeScreenWithList(
-    uiState: HomeUiState,
+private fun ReviewScreenWithList(
+    uiState: ReviewUiState,
     showTopAppBar: Boolean,
     onRefreshPosts: () -> Unit,
     onErrorDismiss: (Long) -> Unit,
     openDrawer: () -> Unit,
-    homeListLazyListState: LazyListState,
+    reviewListLazyListState: LazyListState,
     scaffoldState: ScaffoldState,
     modifier: Modifier = Modifier,
     navController : NavController,
     hasPostsContent: @Composable (
-        uiState: HomeUiState.HasPosts,
+        uiState: ReviewUiState.HasPosts,
         modifier: Modifier
     ) -> Unit
 ) {
@@ -141,16 +126,16 @@ private fun HomeScreenWithList(
 
         LoadingContent(
             empty = when (uiState) {
-                is HomeUiState.HasPosts -> false
-                is HomeUiState.NoPosts -> uiState.isLoading
+                is ReviewUiState.HasPosts -> false
+                is ReviewUiState.NoPosts -> uiState.isLoading
             },
             emptyContent = { FullScreenLoading() },
             loading = uiState.isLoading,
             onRefresh = onRefreshPosts,
             content = {
                 when (uiState) {
-                    is HomeUiState.HasPosts -> hasPostsContent(uiState, contentModifier)
-                    is HomeUiState.NoPosts -> {
+                    is ReviewUiState.HasPosts -> hasPostsContent(uiState, contentModifier)
+                    is ReviewUiState.NoPosts -> {
                         if (uiState.errorMessages.isEmpty()) {
 
                             TextButton(
@@ -229,7 +214,7 @@ private fun FullScreenLoading() {
 }
 
 @Composable
-private fun PostList(
+private fun ReviewList(
     roomsFeed: RoomsFeed,
     onArticleTapped: (postId: String) -> Unit,
     modifier: Modifier = Modifier,
@@ -287,8 +272,8 @@ private fun HomeBottomAppBar(
 fun PreviewHomeListDrawerScreen() {
 
     UaepTheme {
-        HomeFeedScreen(
-            uiState = HomeUiState.HasPosts(
+        ReviewFeedScreen(
+            uiState = ReviewUiState.HasPosts(
                 roomsFeed = rooms,
                 isLoading = false,
                 errorMessages = emptyList(),
@@ -300,7 +285,7 @@ fun PreviewHomeListDrawerScreen() {
             onRefreshPosts = {},
             onErrorDismiss = {},
             openDrawer = {},
-            homeListLazyListState = rememberLazyListState(),
+            reviewListLazyListState = rememberLazyListState(),
             scaffoldState = rememberScaffoldState(),
             navController = rememberNavController()
         )

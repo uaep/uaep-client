@@ -18,7 +18,9 @@ import com.example.uaep.ui.login.LoginViewModel
 import com.example.uaep.ui.match.MatchCreationScreen
 import com.example.uaep.ui.match.ParticipatingScreen
 import com.example.uaep.ui.profile.ProfileScreen
+import com.example.uaep.ui.review.ReviewRoute
 import com.example.uaep.ui.review.ReviewScreen
+import com.example.uaep.ui.review.ReviewViewModel
 import com.example.uaep.ui.signup.AuthCodeScreen
 import com.example.uaep.ui.signup.AuthCodeViewModel
 import com.example.uaep.ui.signup.EmailAuthScreen
@@ -123,9 +125,13 @@ fun UaepNavGraph(
         composable(
             route = BottomNavItem.Review.route
         ) {
-            ReviewScreen(
-                showTopAppBar = true,
-                openDrawer ={},
+            val reviewViewModel: ReviewViewModel = viewModel(
+                factory = ReviewViewModel.provideFactory()
+            )
+            ReviewRoute(
+                reviewViewModel = reviewViewModel,
+                isExpandedScreen = isExpandedScreen,
+                openDrawer = { /*TODO*/ },
                 navController = navController
             )
         }

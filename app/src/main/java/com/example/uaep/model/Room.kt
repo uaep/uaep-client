@@ -20,14 +20,19 @@ import com.google.gson.annotations.SerializedName
 import java.util.*
 
 data class Room(
-    val id: Int,
+    @SerializedName("uuid")
+    val id: String,
     val date: Date,
     @SerializedName("place")
     val title: String,
     @SerializedName("number_of_users")
     val number: String,
     val gender: String,
-    val host: String
+    val host: String,
+    val status : String? = null,
+    val teamA_status : String? = null,
+    val teamB_status : String? = null,
+    val apply_flag : Boolean? =null
 )
 
 

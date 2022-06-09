@@ -4,7 +4,8 @@ import com.google.gson.annotations.SerializedName
 import java.util.*
 
 data class RoomDto(
-    val id: Int,
+    @SerializedName("uuid")
+    val id: String,
     val date: Date,
     @SerializedName("place")
     val title: String,
@@ -14,6 +15,10 @@ data class RoomDto(
     val host: String,
     val teamA: Team?,
     val teamB: Team?,
+    val status : String? = null,
+    val teamA_status : String? = null,
+    val teamB_status : String? = null,
+    val apply_flag : Boolean? = null
 )
 
 data class Team(

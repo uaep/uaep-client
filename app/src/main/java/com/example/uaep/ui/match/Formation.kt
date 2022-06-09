@@ -10,6 +10,7 @@ import androidx.compose.ui.unit.dp
 import com.example.uaep.dto.Player
 import com.example.uaep.dto.Team
 import com.example.uaep.enums.Position
+import com.example.uaep.ui.profile.ProfileDto
 import com.example.uaep.ui.theme.UaepTheme
 import com.example.uaep.ui.theme.md_theme_light_error
 import com.example.uaep.ui.theme.md_theme_light_primary
@@ -24,7 +25,8 @@ fun Formation(
     playerSelect: (Player?) -> Unit,
     teamSelect: (Boolean?) -> Unit,
     posSelect: (String?) -> Unit,
-    userEmail: String?
+    teamB: Boolean?,
+    profile: ProfileDto?
 //    vm: FormationViewModel
 ) {
     if(team != null) {
@@ -46,7 +48,8 @@ fun Formation(
                     posSelect = posSelect,
                     pos_name = if (!reverse) "gk" else "fw",
                     reverse = reverse,
-                    userEmail = userEmail
+                    teamB = teamB,
+                    profile = profile
                 )
             }
             Row(
@@ -62,7 +65,8 @@ fun Formation(
                     posSelect = posSelect,
                     pos_name = if (!reverse) "df1" else "mf1",
                     reverse = reverse,
-                    userEmail = userEmail
+                    teamB = teamB,
+                    profile = profile
                 )
                 PositionButton(
                     color = if (!reverse) md_theme_light_tertiary else md_theme_light_secondary,
@@ -73,7 +77,8 @@ fun Formation(
                     posSelect = posSelect,
                     pos_name = if (!reverse) "df2" else "mf2",
                     reverse = reverse,
-                    userEmail = userEmail
+                    teamB = teamB,
+                    profile = profile
                 )
             }
             Row(
@@ -90,7 +95,8 @@ fun Formation(
                     posSelect = posSelect,
                     pos_name = if (!reverse) "mf2" else "df2",
                     reverse = reverse,
-                    userEmail = userEmail
+                    teamB = teamB,
+                    profile = profile
                 )
                 PositionButton(
                     color = if (!reverse) md_theme_light_secondary else md_theme_light_tertiary,
@@ -101,7 +107,8 @@ fun Formation(
                     posSelect = posSelect,
                     pos_name = if (!reverse) "mf1" else "df1",
                     reverse = reverse,
-                    userEmail = userEmail
+                    teamB = teamB,
+                    profile = profile
                 )
             }
             Row(
@@ -117,7 +124,8 @@ fun Formation(
                     posSelect = posSelect,
                     pos_name = if (!reverse) "fw" else "gk",
                     reverse = reverse,
-                    userEmail = userEmail
+                    teamB = teamB,
+                    profile = profile
                 )
             }
         }
@@ -167,7 +175,15 @@ fun FormationPreview() {
                 posSelect = {},
                 teamSelect = {},
                 playerSelect = {},
-                userEmail = null
+                teamB = false,
+                profile = ProfileDto(
+                    name = "name",
+                    gender = "남성",
+                    address = "address",
+                    position = "fw",
+                    levelPoint = 0,
+                    positionChangePoint = null
+                )
             )
         }
     }

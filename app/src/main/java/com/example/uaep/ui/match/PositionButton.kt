@@ -24,6 +24,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.uaep.dto.Player
 import com.example.uaep.enums.Position
+import com.example.uaep.ui.profile.ProfileDto
 import com.example.uaep.ui.theme.*
 
 @Composable
@@ -36,12 +37,13 @@ fun PositionButton(
     posSelect: (String?) -> Unit,
     pos_name: String,
     reverse: Boolean,
-    userEmail: String?
+    teamB: Boolean?,
+    profile: ProfileDto?
 ) {
     var enabled by remember { mutableStateOf(true) }
     var pos = player?.position
 
-    Column {
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
         Box(contentAlignment= Alignment.Center,
             modifier = Modifier
                 .background(color, shape = CircleShape)
@@ -63,8 +65,9 @@ fun PositionButton(
                 }) {
             Text(
                 text = position.value,
-                modifier = if(userEmail!=player?.email) {
+                modifier = if(profile != null &&pos_name==profile.position && teamB != null && teamB == reverse) {
                     Modifier
+                        .border(width = 5.dp, color = md_theme_dark_error, shape = CircleShape)
                         .padding(10.dp)
                         .defaultMinSize(20.dp)
                         .clip(CircleShape)
@@ -91,8 +94,6 @@ fun PositionButton(
                         }
                 }else{
                     Modifier
-
-                        .border(width = 5.dp, color = md_theme_dark_error, shape = CircleShape)
                         .padding(10.dp)
                         .defaultMinSize(20.dp)
                         .clip(CircleShape)
@@ -123,7 +124,8 @@ fun PositionButton(
             )
         }
         Text(
-            text = player?.name ?: ""
+            text = player?.name ?: "",
+            modifier = Modifier.background(color = md_theme_light_onPrimary)
         )
     }
 }
@@ -143,15 +145,23 @@ fun PositionButtonPreview() {
                 name = "name",
                 gender = "남성",
                 address = "address",
-                position = "FW",
+                position = "fw",
                 levelPoint = 0
             ),
             posSelect = {  },
             teamSelect = {},
             playerSelect = {},
-            pos_name = "mf2",
+            pos_name = "fw",
             reverse = true,
-            userEmail = "test@gmail.com"
+            teamB = true,
+            profile = ProfileDto(
+                name = "name",
+                gender = "남성",
+                address = "address",
+                position = "fw",
+                levelPoint = 0,
+                positionChangePoint = null
+            )
         )
     }
 }
