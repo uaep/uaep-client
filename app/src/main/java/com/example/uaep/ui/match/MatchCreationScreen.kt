@@ -61,7 +61,7 @@ fun MatchCreationScreen (
                 )
             },
             bottomBar = {
-                BottomNavigationBar(navController = navController)
+                BottomNavigationBar(navController = navController,{})
             }
         ) {
             Column(

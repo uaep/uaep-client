@@ -19,12 +19,14 @@ import com.example.uaep.ui.theme.UaepTheme
 fun ReviewScreen(
     showTopAppBar: Boolean,
     openDrawer: () -> Unit,
-    navController: NavHostController
+    navController: NavHostController,
+    onSelectPost: (String) -> Unit
 ) {
     ReviewWithList(
         showTopAppBar = showTopAppBar,
         openDrawer = openDrawer,
-        navController = navController
+        navController = navController,
+        onSelectPost = onSelectPost
     )
 }
 
@@ -33,7 +35,8 @@ fun ReviewScreen(
 fun ReviewWithList(
     showTopAppBar: Boolean,
     openDrawer: () -> Unit,
-    navController: NavController
+    navController: NavController,
+    onSelectPost: (String) -> Unit
 ){
     Scaffold (
         topBar = {
@@ -45,7 +48,7 @@ fun ReviewWithList(
             }
         },
         bottomBar = {
-            BottomNavigationBar(navController = navController)
+            BottomNavigationBar(navController = navController, onSelectPost = onSelectPost)
         }
     ) {
         Text("ReviewList", color = Color.Red)
@@ -68,7 +71,8 @@ fun PreviewReviewScreen() {
         ReviewScreen(
             showTopAppBar = true,
             openDrawer = {},
-            navController = rememberNavController()
+            navController = rememberNavController(),
+            onSelectPost={}
         )
     }
 }

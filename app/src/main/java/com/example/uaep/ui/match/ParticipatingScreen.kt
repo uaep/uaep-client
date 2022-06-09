@@ -44,7 +44,7 @@ fun ParticipatingWithList(
             }
         },
         bottomBar = {
-            BottomNavigationBar(navController = navController)
+            BottomNavigationBar(navController = navController,{})
         }
     ) {
         Text("Participating List", color = Color.Red)

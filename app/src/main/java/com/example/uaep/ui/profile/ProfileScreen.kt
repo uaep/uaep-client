@@ -37,7 +37,7 @@ fun ProfileScreen(
            CommonTopAppBar(navController = navController, openDrawer = {})
         },
         bottomBar = {
-            BottomNavigationBar(navController = navController)
+            BottomNavigationBar(navController = navController,{})
         }
     ) {
         Column(

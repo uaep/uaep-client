@@ -60,12 +60,26 @@ interface AuthService {
 
     @Headers("accept: application/json",
         "content-type: application/json")
+    @GET("reviews")
+    fun reviews(
+    ) : Call<List<Room>>
+
+    @Headers("accept: application/json",
+        "content-type: application/json")
+    @GET("reviews/{id}")
+    fun selectReview(
+        @Path("id") id: String
+    ) : Call<RoomDto>
+
+    @Headers("accept: application/json",
+        "content-type: application/json")
     @PATCH("reviews/{id}/{teamType}/{position}")
-    fun review(
+    fun reviewOne(
         @Path("id") id: String,
         @Path("teamType") type: String,
-        @Path("position") position: String
-    ) : Call<RoomDto>
+        @Path("position") position: String,
+        @Body rateRequestDto: RateRequestDto
+    ) : Call<Void>
 
     // 싱글톤 객체로서, 인스턴스 생성 없이 사용할 수 있다.
     companion object{

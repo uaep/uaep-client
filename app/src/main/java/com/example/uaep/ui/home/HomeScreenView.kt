@@ -75,7 +75,8 @@ fun HomeFeedScreen(
         homeListLazyListState = homeListLazyListState,
         scaffoldState = scaffoldState,
         modifier = modifier,
-        navController = navController
+        navController = navController,
+        onSelectPost = onSelectPost
     ) { hasPostsUiState, contentModifier ->
         PostList(
             roomsFeed = hasPostsUiState.roomsFeed,
@@ -100,6 +101,7 @@ private fun HomeScreenWithList(
     scaffoldState: ScaffoldState,
     modifier: Modifier = Modifier,
     navController : NavController,
+    onSelectPost: (String) -> Unit,
     hasPostsContent: @Composable (
         uiState: HomeUiState.HasPosts,
         modifier: Modifier
@@ -134,7 +136,7 @@ private fun HomeScreenWithList(
         },
         modifier = modifier,
         bottomBar = {
-            BottomNavigationBar(navController = navController)
+            BottomNavigationBar(navController = navController, onSelectPost = onSelectPost)
         }
     ) { innerPadding ->
         val contentModifier = Modifier.padding(innerPadding)

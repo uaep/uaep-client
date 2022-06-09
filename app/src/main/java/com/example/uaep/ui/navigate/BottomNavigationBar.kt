@@ -23,7 +23,7 @@ import com.example.uaep.ui.theme.UaepTheme
 
 
 @Composable
-fun BottomNavigationBar(navController: NavController) {
+fun BottomNavigationBar(navController: NavController, onSelectPost: (String)->Unit) {
     val bottomNavItems = listOf(
         BottomNavItem.Matching,
         BottomNavItem.Review,
@@ -49,7 +49,10 @@ fun BottomNavigationBar(navController: NavController) {
                 ) },
                 selected = bottomNavItems[index].route == currentRoute,
                 onClick = {
-                    navController.navigate(bottomNavItems[index].route)
+                    if(index == 2)
+                        onSelectPost("cc7df00b-04b3-47c4-aee4-c0689fb5fbc9")
+                    else
+                        navController.navigate(bottomNavItems[index].route)
                 },
                 colors = NavigationBarItemDefaults.colors(
                     selectedIconColor = MaterialTheme.colorScheme.secondary,
@@ -72,6 +75,6 @@ fun BottomNavigationBar(navController: NavController) {
 @Composable
 fun PreviewBottomNavigationBar() {
     UaepTheme {
-        BottomNavigationBar(navController = rememberNavController())
+        BottomNavigationBar(navController = rememberNavController(), {})
     }
 }

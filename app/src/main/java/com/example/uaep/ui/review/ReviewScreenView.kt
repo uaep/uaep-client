@@ -60,7 +60,8 @@ fun ReviewFeedScreen(
         reviewListLazyListState = reviewListLazyListState,
         scaffoldState = scaffoldState,
         modifier = modifier,
-        navController = navController
+        navController = navController,
+        onSelectPost=onSelectPost
     ) { hasPostsUiState, contentModifier ->
         ReviewList(
             roomsFeed = hasPostsUiState.roomsFeed,
@@ -85,6 +86,7 @@ private fun ReviewScreenWithList(
     scaffoldState: ScaffoldState,
     modifier: Modifier = Modifier,
     navController : NavController,
+    onSelectPost: (String)->Unit,
     hasPostsContent: @Composable (
         uiState: ReviewUiState.HasPosts,
         modifier: Modifier
@@ -119,7 +121,7 @@ private fun ReviewScreenWithList(
         },
         modifier = modifier,
         bottomBar = {
-            BottomNavigationBar(navController = navController)
+            BottomNavigationBar(navController = navController, onSelectPost= onSelectPost)
         }
     ) { innerPadding ->
         val contentModifier = Modifier.padding(innerPadding)

@@ -95,7 +95,7 @@ class ReviewViewModel(
         //viewModelScope.launch {
         var check = false
         do {
-            AuthService.getInstance().rooms().enqueue(object :
+            AuthService.getInstance().reviews().enqueue(object :
                 Callback<List<Room>> {
                 override fun onResponse(
                     call: Call<List<Room>>,
@@ -105,9 +105,9 @@ class ReviewViewModel(
                         check = false
                         room_list = response.body().orEmpty()
                         Log.i("rooms_response", response.body().toString())
-                        Log.i("room_list", (listOf(room1, room2, room3)+room_list.orEmpty()).toString())
+                        Log.i("room_list", room_list.orEmpty().toString())
                         val result = RoomsFeed(
-                            data = listOf(room1, room2, room3)+room_list.orEmpty()
+                            data = room_list.orEmpty()
                         )
                         viewModelState.update {
                             it.copy(roomsFeed = result, isLoading = false)
@@ -163,7 +163,7 @@ class ReviewViewModel(
 
         do {
 
-            AuthService.getInstance().select(postId).enqueue(object :
+            AuthService.getInstance().selectReview(postId).enqueue(object :
                 Callback<RoomDto> {
                 override fun onResponse(
                     call: Call<RoomDto>,

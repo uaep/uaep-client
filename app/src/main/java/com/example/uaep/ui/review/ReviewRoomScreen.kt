@@ -107,12 +107,14 @@ fun ReviewRoomScreen(
             teamSelect = {team.value = it},
             posSelect = {pos.value = it},
             playerSelect = {player.value = it},
-            playerNotSelect ={player.value = null},
+            playerNotSelect ={player.value = null
+                             rateList.clear()},
             rateSelect = {rate.value = it},
             profile = profile,
             userEmail = userEmail,
             navController = navController,
-            teamB = team.value
+            teamB = team.value,
+            pos = pos.value
         )
     }
 }
@@ -132,7 +134,8 @@ fun ReviewRoomScreenContent(
     profile: ProfileDto?,
     userEmail: String?,
     navController: NavController,
-    teamB: Boolean?
+    teamB: Boolean?,
+    pos: String?
 ){
     Scaffold(
         topBar = {
@@ -155,7 +158,8 @@ fun ReviewRoomScreenContent(
                 rateSelect = rateSelect,
                 profile = profile,
                 userEmail = userEmail,
-                teamB = teamB
+                teamB = teamB,
+                pos = pos
             )
         }
 
@@ -175,7 +179,8 @@ fun ReviewRoomContainer(
     rateSelect: (Float) -> Unit,
     profile: ProfileDto?,
     userEmail: String?,
-    teamB: Boolean?
+    teamB: Boolean?,
+    pos: String?
 ) {
     Column(modifier.verticalScroll(rememberScrollState())) {
 
@@ -201,8 +206,9 @@ fun ReviewRoomContainer(
 
             )
 
-            if (profile != null&& userEmail != AuthService.getCookieJar().loadEmail())
-                ProfileDialog(visible = true, playerNotSelect, profile!!)
+            if (profile != null && userEmail != AuthService.getCookieJar().loadEmail() && pos != null && teamB != null)
+                ReviewDialog(visible = true, onDismissRequest = playerNotSelect, profileDto = profile, pos = pos, teamB = teamB, room = room, onRefresh = onRefresh, context = LocalContext.current)
+                //ProfileDialog(visible = true, playerNotSelect, profile!!)
 
             Column(
                 modifier = modifier
@@ -254,75 +260,7 @@ private fun ReviewRoomBottomBar(
                         Button(
                             onClick =
                             {
-                                for(review in rateList) {
-                                    val type = if (review.teamB) "B" else "A"
-                                    AuthService.getInstance()
-                                        .review(room.id, type, review.pos)
-                                        .enqueue(object :
-                                            Callback<RoomDto> {
-                                            override fun onResponse(
-                                                call: Call<RoomDto>,
-                                                response: Response<RoomDto>
-                                            ) {
-                                                if (response.isSuccessful) {
-                                                    Log.i(
-                                                        "position_success",
-                                                        response.body().toString()
-                                                    )
-                                                    onRefresh(room.id)
-                                                } else {
-                                                    Log.i(
-                                                        "position_fail_raw",
-                                                        response.raw().toString()
-                                                    )
-                                                    Log.i(
-                                                        "position_fail_head",
-                                                        response.headers().toString()
-                                                    )
-                                                    val errorResponse: ErrorResponse? =
-                                                        Gson().fromJson(
-                                                            response.errorBody()!!.charStream(),
-                                                            object :
-                                                                TypeToken<ErrorResponse>() {}.type
-                                                        )
-                                                    if (errorResponse!!.message != null && (errorResponse!!.statusCode == 401)) {
-                                                        ReAuthService.getInstance().reauth()
-                                                            .enqueue(object :
-                                                                Callback<DummyResponse> {
 
-                                                                override fun onResponse(
-                                                                    call: Call<DummyResponse>,
-                                                                    response: Response<DummyResponse>
-                                                                ) {
-                                                                    if (response.isSuccessful) {
-                                                                        val tokens =
-                                                                            CookieChanger<DummyResponse>().change(
-                                                                                response
-                                                                            )
-                                                                        AuthService.getCookieJar()
-                                                                            .saveToken(tokens)
-                                                                    }
-                                                                }
-
-                                                                override fun onFailure(
-                                                                    call: Call<DummyResponse>,
-                                                                    t: Throwable
-                                                                ) {
-                                                                    Log.i("test", "실패$t")
-                                                                }
-                                                            })
-                                                    }
-                                                }
-                                            }
-
-                                            override fun onFailure(
-                                                call: Call<RoomDto>,
-                                                t: Throwable
-                                            ) {
-                                                Log.i("test", "실패$t")
-                                            }
-                                        })
-                                }
                             },
                             modifier = Modifier.fillMaxSize(),
                             colors = ButtonDefaults.buttonColors(backgroundColor = md_theme_light_primary)
@@ -353,77 +291,6 @@ private fun ReviewRoomBottomBar(
     }
 }
 
-@Composable
-fun ReviewRoomPositionButton(
-    modifier: Modifier = Modifier,
-    room: RoomDto,
-    teamA: Boolean,
-    onRefresh: (String) -> Unit
-){
-    Button(
-        colors = ButtonDefaults.buttonColors(backgroundColor = md_theme_light_secondary),
-        onClick = {
-            var check = false
-            val type = if(teamA)"A" else "B"
-
-            do {
-
-                AuthService.getInstance().createFormation(room.id, type, FormationRequestDto("F221")).enqueue(object :
-                    Callback<RoomDto> {
-                    override fun onResponse(
-                        call: Call<RoomDto>,
-                        response: Response<RoomDto>
-                    ) {
-                        if (response.isSuccessful) {
-                            Log.i("room_enter", response.body().toString())
-                            onRefresh(room.id)
-                        } else {
-                            Log.i("rooms_fail_raw", response.raw().toString())
-                            Log.i("rooms_fail_head", response.headers().toString())
-
-                            val errorResponse: ErrorResponse? =
-                                Gson().fromJson(
-                                    response.errorBody()!!.charStream(),
-                                    object : TypeToken<ErrorResponse>() {}.type
-                                )
-                            if (errorResponse!!.message != null && (errorResponse!!.statusCode == 401)) {
-                                ReAuthService.getInstance().reauth().enqueue(object :
-                                    Callback<DummyResponse> {
-
-                                    override fun onResponse(
-                                        call: Call<DummyResponse>,
-                                        response: Response<DummyResponse>
-                                    ) {
-                                        if (response.isSuccessful) {
-                                            check = true
-                                            val tokens = CookieChanger<DummyResponse>().change(response)
-                                            AuthService.getCookieJar().saveToken(tokens)
-                                        }
-                                    }
-                                    override fun onFailure(
-                                        call: Call<DummyResponse>,
-                                        t: Throwable
-                                    ) {
-                                        Log.i("test", "실패$t")
-                                    }
-                                })
-                            }
-                        }
-                    }
-                    override fun onFailure(call: Call<RoomDto>, t: Throwable) {
-                        Log.i("test", "실패$t")
-                    }
-                })
-            }while(check)
-
-        }
-    ){
-        if(teamA)
-            Text("TeamA formation create")
-        else
-            Text("TeamB formation create")
-    }
-}
 
 fun getProfileDto(player: Player?): ProfileDto?{
     if(player != null){

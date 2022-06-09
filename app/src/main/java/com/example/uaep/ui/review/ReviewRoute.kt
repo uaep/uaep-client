@@ -69,13 +69,13 @@ fun ReviewRoute(
         ReviewScreenType.ArticleDetails -> {
             check(uiState is ReviewUiState.HasPosts)
 
-//            ReviewRoomScreen(
-//                room = uiState.selectedRoom,
-//                isExpandedScreen = isExpandedScreen,
-//                onBack = onInteractWithFeed,
-//                onRefresh = onSelectRoom,
-//                navController = navController
-//            )
+            ReviewRoomScreen(
+                room = uiState.selectedRoom,
+                isExpandedScreen = isExpandedScreen,
+                onBack = onInteractWithFeed,
+                onRefresh = onSelectRoom,
+                navController = navController
+            )
 
 
             BackHandler {

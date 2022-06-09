@@ -1,7 +1,9 @@
 package com.example.uaep.ui.review
 
+import android.content.Context
 import android.content.res.Configuration
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -26,18 +28,29 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.example.uaep.R
+import com.example.uaep.dto.*
+import com.example.uaep.network.AuthService
+import com.example.uaep.network.CookieChanger
+import com.example.uaep.network.ReAuthService
 import com.example.uaep.ui.components.Profile
 import com.example.uaep.ui.profile.ProfileDto
 import com.example.uaep.ui.theme.UaepTheme
 import com.example.uaep.ui.theme.md_theme_light_error
 import com.example.uaep.ui.theme.md_theme_light_primary
 import com.example.uaep.ui.theme.md_theme_light_secondary
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import java.util.*
 
 data class ReviewDto(
     val name: String,
@@ -49,7 +62,12 @@ data class ReviewDto(
 fun ReviewDialog(
     visible: Boolean,
     onDismissRequest: () -> Unit,
-    profileDto: ProfileDto
+    profileDto: ProfileDto,
+    pos: String,
+    teamB: Boolean,
+    room: RoomDto,
+    onRefresh: (String) -> Unit,
+    context: Context
 ) {
     val reviewDto = ReviewDto(
         name = profileDto.name,
@@ -109,6 +127,76 @@ fun ReviewDialog(
                         onClick = {
                             /* TODO: 리뷰 등록 HTTP */
                             Log.d("Network", "리뷰 등록")
+                            val type = if (teamB) "B" else "A"
+                            Log.i("review property", room.id +"   "+ type.toString()+ "     " + pos.uppercase())
+                            AuthService.getInstance()
+                                .reviewOne(room.id, type, pos.uppercase(), RateRequestDto(rating.toString()))
+                                .enqueue(object :
+                                    Callback<Void> {
+                                    override fun onResponse(
+                                        call: Call<Void>,
+                                        response: Response<Void>
+                                    ) {
+                                        if (response.isSuccessful) {
+                                            Log.i(
+                                                "position_success",
+                                                response.body().toString()
+                                            )
+                                            Toast.makeText(context, "리뷰가 성공적으로 등록되었습니다", Toast.LENGTH_SHORT).show()
+                                            onRefresh(room.id)
+                                            onDismissRequest()
+                                        } else {
+                                            Log.i(
+                                                "position_fail_raw",
+                                                response.raw().toString()
+                                            )
+                                            Log.i(
+                                                "position_fail_head",
+                                                response.headers().toString()
+                                            )
+                                            val errorResponse: ErrorResponse? =
+                                                Gson().fromJson(
+                                                    response.errorBody()!!.charStream(),
+                                                    object :
+                                                        TypeToken<ErrorResponse>() {}.type
+                                                )
+                                            if (errorResponse!!.message != null && (errorResponse!!.statusCode == 401)) {
+                                                ReAuthService.getInstance().reauth()
+                                                    .enqueue(object :
+                                                        Callback<DummyResponse> {
+
+                                                        override fun onResponse(
+                                                            call: Call<DummyResponse>,
+                                                            response: Response<DummyResponse>
+                                                        ) {
+                                                            if (response.isSuccessful) {
+                                                                val tokens =
+                                                                    CookieChanger<DummyResponse>().change(
+                                                                        response
+                                                                    )
+                                                                AuthService.getCookieJar()
+                                                                    .saveToken(tokens)
+                                                            }
+                                                        }
+
+                                                        override fun onFailure(
+                                                            call: Call<DummyResponse>,
+                                                            t: Throwable
+                                                        ) {
+                                                            Log.i("test", "실패$t")
+                                                        }
+                                                    })
+                                            }
+                                        }
+                                    }
+
+                                    override fun onFailure(
+                                        call: Call<Void>,
+                                        t: Throwable
+                                    ) {
+                                        Log.i("test", "실패$t")
+                                    }
+                                })
                         },
                         modifier = Modifier.width(270.dp),
                         colors = ButtonDefaults.buttonColors(Color.Black)
@@ -157,6 +245,64 @@ private fun selectColorByLevel(lv: Int): Color {
 )
 @Composable
 fun PreviewReview() {
+    val room1 = RoomDto(
+        id = "2001",
+        title = "let's play soccer",
+        gender = "남성",
+        date = Date(2016,5,4,12,14),
+        number = "6v6",
+        host="sonny",
+        teamA = Team(
+            fw = Player(
+                email = "test@gmail.com",
+                name = "name",
+                gender = "남성",
+                address = "address",
+                position = "FW",
+                levelPoint = 0
+            ),
+            mf1 = null,
+            mf2 = null,
+            df1 = null,
+            df2 = null,
+            gk = null,
+            captain = Player(
+                email = "test@gmail.com",
+                name = "name",
+                gender = "남성",
+                address = "address",
+                position = "FW",
+                levelPoint = 0
+            )
+        ),
+        teamB = Team(
+            fw = Player(
+                email = "test@gmail.com",
+                name = "name",
+                gender = "남성",
+                address = "address",
+                position = "FW",
+                levelPoint = 0
+            ),
+            mf1 = null,
+            mf2 = null,
+            df1 = null,
+            df2 = null,
+            gk = null,
+            captain = Player(
+                email = "test@gmail.com",
+                name = "name",
+                gender = "남성",
+                address = "address",
+                position = "FW",
+                levelPoint = 0
+            )
+        ),
+        status = null,
+        teamA_status = null,
+        teamB_status = null,
+        apply_flag = null
+    )
     UaepTheme {
         ReviewDialog(
             visible = true,
@@ -168,7 +314,12 @@ fun PreviewReview() {
                 gender = "남성",
                 levelPoint = 3,
                 positionChangePoint = 30
-            )
+            ),
+            pos = "fw",
+            teamB = true,
+            room = room1,
+            onRefresh = {},
+            context = LocalContext.current
         )
     }
 }
