@@ -37,7 +37,6 @@ fun CustomOutlinedTextField(
                 fontWeight = FontWeight.Bold
             )
         },
-        singleLine = true,
         modifier = Modifier.fillMaxWidth(0.8f),
         textStyle = MaterialTheme.typography.bodyLarge,
         colors = TextFieldDefaults.outlinedTextFieldColors(

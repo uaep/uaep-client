@@ -91,7 +91,6 @@ fun SignUpScreen (
                     enabled = false,
                     readOnly = true,
                     placeholder = { Text(stringResource(R.string.email)) },
-                    singleLine = true,
                     modifier = Modifier.fillMaxWidth(0.8f),
                     textStyle = MaterialTheme.typography.bodyLarge,
                     colors = TextFieldDefaults.outlinedTextFieldColors(

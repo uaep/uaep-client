@@ -95,7 +95,6 @@ fun EmailAuthScreen (
                             fontWeight = FontWeight.Bold
                         )
                     },
-                    singleLine = true,
                     textStyle = MaterialTheme.typography.bodyLarge,
                     modifier = Modifier.fillMaxWidth(0.8f),
                     colors = TextFieldDefaults.outlinedTextFieldColors(
