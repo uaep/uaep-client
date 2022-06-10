@@ -62,299 +62,293 @@ fun SignUpScreen (
 ) {
     val context = LocalContext.current
 
-
+    Column(Modifier.verticalScroll(rememberScrollState())) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center,
             modifier = Modifier
+                .height(800.dp)
                 .fillMaxSize()
                 .background(MaterialTheme.colorScheme.onBackground)
-                .verticalScroll(rememberScrollState())
         ) {
-            Column(Modifier.height(800.dp)) {
-                Spacer(Modifier.height(20.dp))
-                Text(
-                    text = stringResource(id = R.string.sign_up),
+            Text(
+                text = stringResource(id = R.string.sign_up),
+                color = MaterialTheme.colorScheme.primary,
+                fontSize = MaterialTheme.typography.headlineLarge.fontSize,
+                fontWeight = FontWeight.ExtraBold
+            )
+            Spacer(
+                modifier = Modifier.padding(20.dp)
+            )
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                CustomOutlinedTextField(
+                    value = vm.name.value,
+                    onValueChange = { vm.updateName(it) },
+                    labelText = stringResource(id = R.string.name),
+                    placeholderText = stringResource(id = R.string.name)
+                )
+                OutlinedTextField(
+                    value = email,
+                    onValueChange = { vm.updateEmail(it) },
+                    enabled = false,
+                    readOnly = true,
+                    placeholder = { Text(stringResource(R.string.email)) },
+                    singleLine = true,
+                    modifier = Modifier.fillMaxWidth(0.8f),
+                    textStyle = MaterialTheme.typography.bodyLarge,
+                    colors = TextFieldDefaults.outlinedTextFieldColors(
+                        textColor = MaterialTheme.colorScheme.primary,
+                        unfocusedBorderColor = MaterialTheme.colorScheme.primary,
+                        unfocusedLabelColor = MaterialTheme.colorScheme.primary,
+                    ),
+                )
+                PasswordOutlinedTextField(
+                    password = vm.password.value,
+                    onValueChange = { vm.updatePassword(it) },
+                    label = {
+                        Text(
+                            text = stringResource(id = R.string.password),
+                            color = MaterialTheme.colorScheme.primary,
+                            fontSize = MaterialTheme.typography.labelLarge.fontSize,
+                            fontWeight = FontWeight.Bold
+                        )
+                    },
+                    placeholder = {
+                        Text(
+                            text = stringResource(id = R.string.password),
+                            color = MaterialTheme.colorScheme.primary,
+                            fontSize = MaterialTheme.typography.labelLarge.fontSize,
+                            fontWeight = FontWeight.Bold
+                        )
+                    },
+                    color = MaterialTheme.colorScheme.primary
+                )
+                PasswordOutlinedTextField(
+                    password = vm.matchingPassword.value,
+                    onValueChange = { vm.updateMatchingPassword(it) },
+                    label = {
+                        Text(
+                            text = stringResource(id = R.string.matching_password),
+                            color = MaterialTheme.colorScheme.primary,
+                            fontSize = MaterialTheme.typography.labelLarge.fontSize,
+                            fontWeight = FontWeight.Bold
+                        )
+                    },
+                    placeholder = {
+                        Text(
+                            text = stringResource(id = R.string.matching_password),
+                            color = MaterialTheme.colorScheme.primary,
+                            fontSize = MaterialTheme.typography.labelLarge.fontSize,
+                            fontWeight = FontWeight.Bold
+                        )
+                    },
+                    color = MaterialTheme.colorScheme.primary
+                )
+                CustomOutlinedTextField(
+                    value = vm.address.value,
+                    onValueChange = { vm.updateAddress(it) },
+                    labelText = stringResource(id = R.string.address),
+                    placeholderText = stringResource(id = R.string.address)
+                )
+                GenderExposedDropDownMenu(
+                    gender = vm.gender.value,
+                    label = {
+                        Text(
+                            text = stringResource(id = R.string.gender),
+                            color = MaterialTheme.colorScheme.primary,
+                            fontSize = MaterialTheme.typography.labelLarge.fontSize,
+                            fontWeight = FontWeight.Bold
+                        )
+                    },
+                    placeholder = {
+                        Text(
+                            text = stringResource(id = R.string.gender),
+                            color = MaterialTheme.colorScheme.primary,
+                            fontSize = MaterialTheme.typography.labelLarge.fontSize,
+                            fontWeight = FontWeight.Bold
+                        )
+                    },
                     color = MaterialTheme.colorScheme.primary,
-                    fontSize = MaterialTheme.typography.headlineLarge.fontSize,
-                    fontWeight = FontWeight.ExtraBold
+                    vm = vm
                 )
-                Spacer(
-                    modifier = Modifier.padding(20.dp)
-                )
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    CustomOutlinedTextField(
-                        value = vm.name.value,
-                        onValueChange = { vm.updateName(it) },
-                        labelText = stringResource(id = R.string.name),
-                        placeholderText = stringResource(id = R.string.name)
-                    )
-                    OutlinedTextField(
-                        value = email,
-                        onValueChange = { vm.updateEmail(it) },
-                        enabled = false,
-                        readOnly = true,
-                        placeholder = { Text(stringResource(R.string.email)) },
-                        singleLine = true,
-                        modifier = Modifier.fillMaxWidth(0.8f),
-                        textStyle = MaterialTheme.typography.bodyLarge,
-                        colors = TextFieldDefaults.outlinedTextFieldColors(
-                            textColor = MaterialTheme.colorScheme.primary,
-                            unfocusedBorderColor = MaterialTheme.colorScheme.primary,
-                            unfocusedLabelColor = MaterialTheme.colorScheme.primary,
-                        ),
-                    )
-                    PasswordOutlinedTextField(
-                        password = vm.password.value,
-                        onValueChange = { vm.updatePassword(it) },
-                        label = {
-                            Text(
-                                text = stringResource(id = R.string.password),
-                                color = MaterialTheme.colorScheme.primary,
-                                fontSize = MaterialTheme.typography.labelLarge.fontSize,
-                                fontWeight = FontWeight.Bold
-                            )
-                        },
-                        placeholder = {
-                            Text(
-                                text = stringResource(id = R.string.password),
-                                color = MaterialTheme.colorScheme.primary,
-                                fontSize = MaterialTheme.typography.labelLarge.fontSize,
-                                fontWeight = FontWeight.Bold
-                            )
-                        },
-                        color = MaterialTheme.colorScheme.primary
-                    )
-                    PasswordOutlinedTextField(
-                        password = vm.matchingPassword.value,
-                        onValueChange = { vm.updateMatchingPassword(it) },
-                        label = {
-                            Text(
-                                text = stringResource(id = R.string.matching_password),
-                                color = MaterialTheme.colorScheme.primary,
-                                fontSize = MaterialTheme.typography.labelLarge.fontSize,
-                                fontWeight = FontWeight.Bold
-                            )
-                        },
-                        placeholder = {
-                            Text(
-                                text = stringResource(id = R.string.matching_password),
-                                color = MaterialTheme.colorScheme.primary,
-                                fontSize = MaterialTheme.typography.labelLarge.fontSize,
-                                fontWeight = FontWeight.Bold
-                            )
-                        },
-                        color = MaterialTheme.colorScheme.primary
-                    )
-                    CustomOutlinedTextField(
-                        value = vm.address.value,
-                        onValueChange = { vm.updateAddress(it) },
-                        labelText = stringResource(id = R.string.address),
-                        placeholderText = stringResource(id = R.string.address)
-                    )
-                    GenderExposedDropDownMenu(
-                        gender = vm.gender.value,
-                        label = {
-                            Text(
-                                text = stringResource(id = R.string.gender),
-                                color = MaterialTheme.colorScheme.primary,
-                                fontSize = MaterialTheme.typography.labelLarge.fontSize,
-                                fontWeight = FontWeight.Bold
-                            )
-                        },
-                        placeholder = {
-                            Text(
-                                text = stringResource(id = R.string.gender),
-                                color = MaterialTheme.colorScheme.primary,
-                                fontSize = MaterialTheme.typography.labelLarge.fontSize,
-                                fontWeight = FontWeight.Bold
-                            )
-                        },
-                        color = MaterialTheme.colorScheme.primary,
-                        vm = vm
-                    )
-                    Column {
-                        Box {
-                            OutlinedTextField(
-                                value = vm.position.value,
-                                readOnly = true,
-                                onValueChange = {},
-                                label = {
-                                    Text(
-                                        text = stringResource(id = R.string.position),
-                                        color = MaterialTheme.colorScheme.primary,
-                                        fontSize = MaterialTheme.typography.labelLarge.fontSize,
-                                        fontWeight = FontWeight.Bold
-                                    )
-                                },
-                                placeholder = {
-                                    Text(
-                                        text = stringResource(id = R.string.position),
-                                        color = MaterialTheme.colorScheme.primary,
-                                        fontSize = MaterialTheme.typography.labelLarge.fontSize,
-                                        fontWeight = FontWeight.Bold
-                                    )
-                                },
-                                modifier = Modifier
-                                    .fillMaxWidth(0.8f)
-                                    .clickable {
-                                        vm.onPosEnabled(!vm.posEnabled.value)
-                                    },
-                                textStyle = MaterialTheme.typography.bodyLarge,
-                                colors = TextFieldDefaults.outlinedTextFieldColors(
-                                    textColor = MaterialTheme.colorScheme.primary,
-                                    unfocusedBorderColor = MaterialTheme.colorScheme.primary,
-                                    unfocusedLabelColor = MaterialTheme.colorScheme.primary,
-                                    focusedLabelColor = MaterialTheme.colorScheme.primary,
-                                    focusedBorderColor = MaterialTheme.colorScheme.primary
-                                ),
-                                trailingIcon = {
-                                    Icon(
-                                        imageVector = vm.icon2,
-                                        contentDescription = null,
-                                        Modifier.clickable {
-                                            vm.onPosEnabled(!vm.posEnabled.value)
-                                        },
-                                        tint = MaterialTheme.colorScheme.primary
-                                    )
-                                }
-                            )
-                        }
-                        DropdownMenu(
-                            expanded = vm.posEnabled.value,
-                            onDismissRequest = {
-                                vm.onPosEnabled(false)
+                Column {
+                    Box {
+                        OutlinedTextField(
+                            value = vm.position.value,
+                            readOnly = true,
+                            onValueChange = {},
+                            label = {
+                                Text(
+                                    text = stringResource(id = R.string.position),
+                                    color = MaterialTheme.colorScheme.primary,
+                                    fontSize = MaterialTheme.typography.labelLarge.fontSize,
+                                    fontWeight = FontWeight.Bold
+                                )
+                            },
+                            placeholder = {
+                                Text(
+                                    text = stringResource(id = R.string.position),
+                                    color = MaterialTheme.colorScheme.primary,
+                                    fontSize = MaterialTheme.typography.labelLarge.fontSize,
+                                    fontWeight = FontWeight.Bold
+                                )
                             },
                             modifier = Modifier
-                                .width(300.dp)
-                                .background(MaterialTheme.colorScheme.onBackground),
-                        ) {
-                            DropdownMenuItem(
-                                onClick = {
-                                    vm.updatePosition(Position.GK)
-                                    vm.onPosEnabled(false)
+                                .fillMaxWidth(0.8f)
+                                .clickable {
+                                    vm.onPosEnabled(!vm.posEnabled.value)
                                 },
-                                modifier = Modifier.background(MaterialTheme.colorScheme.onBackground)
-                            ) {
-                                Text(
-                                    text = Position.GK.value,
-                                    color = MaterialTheme.colorScheme.primary,
-                                    fontWeight = FontWeight(1000)
+                            textStyle = MaterialTheme.typography.bodyLarge,
+                            colors = TextFieldDefaults.outlinedTextFieldColors(
+                                textColor = MaterialTheme.colorScheme.primary,
+                                unfocusedBorderColor = MaterialTheme.colorScheme.primary,
+                                unfocusedLabelColor = MaterialTheme.colorScheme.primary,
+                                focusedLabelColor = MaterialTheme.colorScheme.primary,
+                                focusedBorderColor = MaterialTheme.colorScheme.primary
+                            ),
+                            trailingIcon = {
+                                Icon(
+                                    imageVector = vm.icon2,
+                                    contentDescription = null,
+                                    Modifier.clickable {
+                                        vm.onPosEnabled(!vm.posEnabled.value)
+                                    },
+                                    tint = MaterialTheme.colorScheme.primary
                                 )
                             }
-                            DropdownMenuItem(
-                                onClick = {
-                                    vm.updatePosition(Position.DF)
-                                    vm.onPosEnabled(false)
-                                },
-                                modifier = Modifier.background(MaterialTheme.colorScheme.onBackground)
-                            ) {
-                                Text(
-                                    text = Position.DF.value,
-                                    color = MaterialTheme.colorScheme.primary,
-                                    fontWeight = FontWeight(1000)
-                                )
-                            }
-                            DropdownMenuItem(
-                                onClick = {
-                                    vm.updatePosition(Position.MF)
-                                    vm.onPosEnabled(false)
-                                },
-                                modifier = Modifier.background(MaterialTheme.colorScheme.onBackground)
-                            ) {
-                                Text(
-                                    text = Position.MF.value,
-                                    color = MaterialTheme.colorScheme.primary,
-                                    fontWeight = FontWeight(1000)
-                                )
-                            }
-                            DropdownMenuItem(
-                                onClick = {
-                                    vm.updatePosition(Position.FW)
-                                    vm.onPosEnabled(false)
-                                },
-                                modifier = Modifier.background(MaterialTheme.colorScheme.onBackground)
-                            ) {
-                                Text(
-                                    text = Position.FW.value,
-                                    color = MaterialTheme.colorScheme.primary,
-                                    fontWeight = FontWeight(1000)
-                                )
-                            }
-
-                        }
+                        )
                     }
-                    Spacer(modifier = Modifier.padding(10.dp))
-                    Button(
-                        onClick = {
-                            if (!vm.isSamePassword(vm.password.value, vm.matchingPassword.value)) {
-                                mToast(context, "비밀번호가 일치하지 않습니다.")
-                            } else {
-                                mToast(context, "회원가입을 진행 중입니다.")
-
-                                Log.i("Name", vm.name.value)
-                                Log.i("Password", vm.password.value)
-                                Log.i("Matching password", vm.matchingPassword.value)
-                                Log.i("Gender", vm.gender.value)
-                                Log.i("Address", vm.address.value)
-                                Log.i("Position", vm.position.value)
-                                val signUpRequestDto = SignUpRequestDto(
-                                    name = vm.name.value,
-                                    password = vm.password.value,
-                                    matchingPassword = vm.matchingPassword.value,
-                                    gender = vm.gender.value,
-                                    address = vm.address.value,
-                                    position = vm.position.value
-                                )
-                                val userApiService = UserApiService.getInstance()
-                                userApiService.signup(
-                                    signUpRequestDto = signUpRequestDto,
-                                    token = token
-                                ).enqueue(object :
-                                    Callback<UrlResponseDto> {
-                                    override fun onResponse(
-                                        call: Call<UrlResponseDto>,
-                                        response: Response<UrlResponseDto>
-                                    ) {
-                                        if (response.isSuccessful) {
-                                            navController.navigate(Screen.Login.route)
-                                        } else {
-                                            // TODO: 배열로 넘오는 json 에러 값 처리하기
-                                            val jObjError = JSONObject(
-                                                response.errorBody()!!.string()
-                                            )
-                                            Log.d("Error Test", jObjError.toString())
-
-                                        }
-                                    }
-
-                                    override fun onFailure(
-                                        call: Call<UrlResponseDto>,
-                                        t: Throwable
-                                    ) {
-                                        Log.e("test", "실패$t")
-                                    }
-                                })
-                            }
+                    DropdownMenu(
+                        expanded = vm.posEnabled.value,
+                        onDismissRequest = {
+                            vm.onPosEnabled(false)
                         },
                         modifier = Modifier
-                            .fillMaxWidth(0.8f)
-                            .height(50.dp),
-                        colors = ButtonDefaults.buttonColors(
-                            backgroundColor = MaterialTheme.colorScheme.primary,
-                        )
+                            .width(300.dp)
+                            .background(MaterialTheme.colorScheme.onBackground),
                     ) {
-                        Text(
-                            text = stringResource(id = R.string.sign_up),
-                            color = MaterialTheme.colorScheme.onBackground
-                        )
+                        DropdownMenuItem(
+                            onClick = {
+                                vm.updatePosition(Position.GK)
+                                vm.onPosEnabled(false)
+                            },
+                            modifier = Modifier.background(MaterialTheme.colorScheme.onBackground)
+                        ) {
+                            Text(
+                                text = Position.GK.value,
+                                color = MaterialTheme.colorScheme.primary,
+                                fontWeight = FontWeight(1000)
+                            )
+                        }
+                        DropdownMenuItem(
+                            onClick = {
+                                vm.updatePosition(Position.DF)
+                                vm.onPosEnabled(false)
+                            },
+                            modifier = Modifier.background(MaterialTheme.colorScheme.onBackground)
+                        ) {
+                            Text(
+                                text = Position.DF.value,
+                                color = MaterialTheme.colorScheme.primary,
+                                fontWeight = FontWeight(1000)
+                            )
+                        }
+                        DropdownMenuItem(
+                            onClick = {
+                                vm.updatePosition(Position.MF)
+                                vm.onPosEnabled(false)
+                            },
+                            modifier = Modifier.background(MaterialTheme.colorScheme.onBackground)
+                        ) {
+                            Text(
+                                text = Position.MF.value,
+                                color = MaterialTheme.colorScheme.primary,
+                                fontWeight = FontWeight(1000)
+                            )
+                        }
+                        DropdownMenuItem(
+                            onClick = {
+                                vm.updatePosition(Position.FW)
+                                vm.onPosEnabled(false)
+                            },
+                            modifier = Modifier.background(MaterialTheme.colorScheme.onBackground)
+                        ) {
+                            Text(
+                                text = Position.FW.value,
+                                color = MaterialTheme.colorScheme.primary,
+                                fontWeight = FontWeight(1000)
+                            )
+                        }
+
                     }
                 }
+                Spacer(modifier = Modifier.padding(10.dp))
+                Button(
+                    onClick = {
+                        if (!vm.isSamePassword(vm.password.value, vm.matchingPassword.value)) {
+                            mToast(context, "비밀번호가 일치하지 않습니다.")
+                        } else {
+                            mToast(context, "회원가입을 진행 중입니다.")
 
+                            Log.i("Name", vm.name.value)
+                            Log.i("Password", vm.password.value)
+                            Log.i("Matching password", vm.matchingPassword.value)
+                            Log.i("Gender", vm.gender.value)
+                            Log.i("Address", vm.address.value)
+                            Log.i("Position", vm.position.value)
+                            val signUpRequestDto = SignUpRequestDto(
+                                name = vm.name.value,
+                                password = vm.password.value,
+                                matchingPassword = vm.matchingPassword.value,
+                                gender = vm.gender.value,
+                                address =  vm.address.value,
+                                position = vm.position.value
+                            )
+                            val userApiService = UserApiService.getInstance()
+                            userApiService.signup(
+                                signUpRequestDto = signUpRequestDto,
+                                token = token
+                            ).enqueue(object :
+                                Callback<UrlResponseDto> {
+                                override fun onResponse(
+                                    call: Call<UrlResponseDto>,
+                                    response: Response<UrlResponseDto>
+                                ) {
+                                    if(response.isSuccessful) {
+                                        navController.navigate(Screen.Login.route)
+                                    } else {
+                                        // TODO: 배열로 넘오는 json 에러 값 처리하기
+                                        val jObjError = JSONObject(
+                                            response.errorBody()!!.string()
+                                        )
+                                        Log.d("Error Test", jObjError.toString())
+
+                                    }
+                                }
+
+                                override fun onFailure(call: Call<UrlResponseDto>, t: Throwable) {
+                                    Log.e("test", "실패$t")
+                                }
+                            })
+                        }
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth(0.8f)
+                        .height(50.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        backgroundColor = MaterialTheme.colorScheme.primary,
+                    )
+                ) {
+                    Text(
+                        text = stringResource(id = R.string.sign_up),
+                        color = MaterialTheme.colorScheme.onBackground
+                    )
+                }
             }
 
+        }
     }
 }
 

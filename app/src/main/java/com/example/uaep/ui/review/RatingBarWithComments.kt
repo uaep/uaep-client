@@ -45,8 +45,8 @@ private fun displayCommentByRating(rating: Float): String {
 
     comment = when(rating) {
         1f -> "왼발의 맙소사!!"
-        2f -> "이 점수는 아닌거 같은데~"
-        3f -> "적절한 점수인 듯?"
+        2f -> "이 레벨은 아닌거 같은데~"
+        3f -> "적절한 레벨인 듯?"
         4f -> "내가 쫌~ 더 잘하지만 인정~!"
         else -> "UAEP 말고 UEFA로..?"
     }

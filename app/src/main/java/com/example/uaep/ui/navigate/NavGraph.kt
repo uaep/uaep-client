@@ -19,7 +19,6 @@ import com.example.uaep.ui.match.MatchCreationScreen
 import com.example.uaep.ui.match.ParticipatingScreen
 import com.example.uaep.ui.profile.ProfileScreen
 import com.example.uaep.ui.review.ReviewRoute
-import com.example.uaep.ui.review.ReviewScreen
 import com.example.uaep.ui.review.ReviewViewModel
 import com.example.uaep.ui.signup.AuthCodeScreen
 import com.example.uaep.ui.signup.AuthCodeViewModel
