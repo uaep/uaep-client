@@ -136,7 +136,7 @@ private fun HomeScreenWithList(
         },
         modifier = modifier,
         bottomBar = {
-            BottomNavigationBar(navController = navController, onSelectPost = onSelectPost)
+            BottomNavigationBar(navController = navController)
         }
     ) { innerPadding ->
         val contentModifier = Modifier.padding(innerPadding)

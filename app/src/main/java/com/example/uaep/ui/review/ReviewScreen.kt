@@ -48,7 +48,7 @@ fun ReviewWithList(
             }
         },
         bottomBar = {
-            BottomNavigationBar(navController = navController, onSelectPost = onSelectPost)
+            BottomNavigationBar(navController = navController)
         }
     ) {
         Text("ReviewList", color = Color.Red)

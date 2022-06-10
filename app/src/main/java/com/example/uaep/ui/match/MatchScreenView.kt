@@ -44,6 +44,7 @@ import com.example.uaep.dto.FormationRequestDto
 import com.example.uaep.dto.Player
 import com.example.uaep.dto.RoomDto
 import com.example.uaep.dto.Team
+import com.example.uaep.model.Room
 import com.example.uaep.network.AuthService
 import com.example.uaep.network.CookieChanger
 import com.example.uaep.network.ReAuthService
@@ -110,7 +111,8 @@ fun MatchScreen(
                     team = team.value,
                     onRefresh = onRefresh,
                     context = context,
-                    player = player.value
+                    player = player.value,
+                    onBack = onBack
                 )
             },
             lazyListState = lazyListState,
@@ -256,7 +258,8 @@ private fun BottomBar(
     team: Boolean?,
     onRefresh: (String) -> Unit,
     context: Context,
-    player: Player?
+    player: Player?,
+    onBack: () -> Unit
 ) {
     Surface(elevation = 0.dp, modifier = modifier) {
 
@@ -386,17 +389,19 @@ private fun BottomBar(
                                     AuthService.getInstance()
                                         .deleteTeam(room.id, type)
                                         .enqueue(object :
-                                            Callback<DummyResponse> {
+                                            Callback<Void> {
                                             override fun onResponse(
-                                                call: Call<DummyResponse>,
-                                                response: Response<DummyResponse>
+                                                call: Call<Void>,
+                                                response: Response<Void>
                                             ) {
                                                 if (response.isSuccessful) {
                                                     Log.i(
                                                         "position_success",
                                                         response.body().toString()
                                                     )
-                                                    onRefresh(room.id)
+                                                    Toast.makeText(context, "성공적으로 경기가 종료되었습니다", Toast.LENGTH_LONG).show()
+                                                    //onRefresh(room.id)
+                                                    onBack()
                                                 } else {
                                                     Log.i(
                                                         "position_fail_raw",
@@ -446,7 +451,7 @@ private fun BottomBar(
                                             }
 
                                             override fun onFailure(
-                                                call: Call<DummyResponse>,
+                                                call: Call<Void>,
                                                 t: Throwable
                                             ) {
                                                 Log.i("test", "실패$t")

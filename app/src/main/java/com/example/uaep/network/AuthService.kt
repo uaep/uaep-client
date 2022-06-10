@@ -56,7 +56,7 @@ interface AuthService {
     fun deleteTeam(
         @Path("id") id: String,
         @Path("teamType") type: String
-    ) : Call<DummyResponse>
+    ) : Call<Void>
 
     @Headers("accept: application/json",
         "content-type: application/json")
