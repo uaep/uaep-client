@@ -25,7 +25,13 @@ import androidx.compose.ui.unit.dp
 import com.example.uaep.dto.Player
 import com.example.uaep.enums.Position
 import com.example.uaep.ui.profile.ProfileDto
-import com.example.uaep.ui.theme.*
+import com.example.uaep.ui.theme.UaepTheme
+import com.example.uaep.ui.theme.md_theme_dark_error
+import com.example.uaep.ui.theme.md_theme_light_error
+import com.example.uaep.ui.theme.md_theme_light_onPrimary
+import com.example.uaep.ui.theme.md_theme_light_primary
+import com.example.uaep.ui.theme.md_theme_light_secondary
+import com.example.uaep.ui.theme.md_theme_light_tertiary
 
 @Composable
 fun PositionButton(
@@ -144,9 +150,10 @@ fun PositionButtonPreview() {
                 email = "test@gmail.com",
                 name = "name",
                 gender = "남성",
-                address = "address",
+                province = "province",
+                town = "town",
                 position = "fw",
-                levelPoint = 0
+                level = "비기너1",
             ),
             posSelect = {  },
             teamSelect = {},
@@ -157,9 +164,10 @@ fun PositionButtonPreview() {
             profile = ProfileDto(
                 name = "name",
                 gender = "남성",
-                address = "address",
+                province = "province",
+                town = "town",
                 position = "fw",
-                levelPoint = 0,
+                level = "비기너1",
                 positionChangePoint = null
             )
         )

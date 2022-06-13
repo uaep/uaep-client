@@ -42,8 +42,8 @@ data class Player(
     val email: String,
     val name: String,
     var gender: String,
-    val address: String,
+    val province: String,
+    val town: String,
     val position: String,
-    @SerializedName(value = "level_point")
-    val levelPoint: Int
+    val level: String
 )

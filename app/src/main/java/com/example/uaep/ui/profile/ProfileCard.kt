@@ -85,9 +85,10 @@ fun PreviewProfileCard() {
             ProfileDto(
                 name = "김광진",
                 position = "FK",
-                address = "경기도 수원시 00대로",
+                province = "서울",
+                town = "강남구 테헤란로",
                 gender = "남자",
-                levelPoint = 1,
+                level = "비기너1",
                 positionChangePoint = 1000
             ),
             onUpdateUserInfo = {}

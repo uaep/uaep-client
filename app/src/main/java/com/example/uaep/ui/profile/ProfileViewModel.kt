@@ -16,16 +16,18 @@ class ProfileViewModel(
 
     private val mName = mutableStateOf("")
     private val mPosition = mutableStateOf("")
-    private val mAddress = mutableStateOf("")
+    private val mProvince = mutableStateOf("")
+    private val mTown = mutableStateOf("")
     private val mGender = mutableStateOf("")
-    private val mLevelPoint = mutableStateOf(0)
+    private val mLevel= mutableStateOf("")
     private val mPositionChangePoint = mutableStateOf(0)
 
     val name: State<String> = mName
     val position: State<String> = mPosition
-    val address: State<String> = mAddress
+    val province: State<String> = mProvince
+    val town: State<String> = mTown
     val gender: State<String> = mGender
-    val levelPoint: State<Int> = mLevelPoint
+    val level: State<String> = mLevel
     val positionChangePoint: State<Int> = mPositionChangePoint
 
     fun updateName(name: String) {
@@ -36,16 +38,20 @@ class ProfileViewModel(
         mPosition.value = position
     }
 
-    fun updateAddress(address: String) {
-        mAddress.value = address
+    fun updateProvince(province: String) {
+        mProvince.value = province
+    }
+
+    fun updateTown(town: String) {
+        mTown.value = town
     }
 
     fun updateGender(gender: String) {
         mGender.value = gender
     }
 
-    fun updateLevelPoint(level: Int) {
-        mLevelPoint.value = level
+    fun updateLevel(level: String) {
+        mLevel.value = level
     }
 
     fun updatePositionChangePoint(positionChangePoint: Int) {
@@ -62,7 +68,8 @@ class ProfileViewModel(
                 if (response.isSuccessful) {
                     mName.value = response.body()!!.name
                     mPosition.value = response.body()!!.position
-                    mAddress.value = response.body()!!.address
+                    mProvince.value = response.body()!!.province
+                    mTown.value = response.body()!!.town
                 } else {
                     Log.d("debug2", (response.errorBody()?.charStream()).toString())
                 }
@@ -72,4 +79,5 @@ class ProfileViewModel(
             }
         })
     }
+
 }

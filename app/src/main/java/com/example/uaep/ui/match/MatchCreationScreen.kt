@@ -258,6 +258,7 @@ fun MatchCreationScreen (
                             )
                         }
                     }
+                    // TODO: 레벨 제한
                     Spacer(modifier = Modifier.padding(vertical = 10.dp))
                     SpinnerView(viewModel = spinnerViewModel)
                     Spacer(modifier = Modifier.padding(vertical = 10.dp))

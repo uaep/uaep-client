@@ -2,13 +2,36 @@ package com.example.uaep.ui.review
 
 import android.content.Context
 import android.util.Log
-import android.widget.Toast
-import androidx.compose.foundation.*
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.BottomAppBar
+import androidx.compose.material.Button
+import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.ContentAlpha
+import androidx.compose.material.Divider
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
+import androidx.compose.material.LocalContentAlpha
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Scaffold
+import androidx.compose.material.Surface
+import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
@@ -34,23 +57,21 @@ import androidx.compose.ui.window.DialogProperties
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.uaep.R
-import com.example.uaep.dto.*
+import com.example.uaep.dto.Player
+import com.example.uaep.dto.RoomDto
+import com.example.uaep.dto.Team
 import com.example.uaep.model.Review
 import com.example.uaep.network.AuthService
-import com.example.uaep.network.CookieChanger
-import com.example.uaep.network.ReAuthService
 import com.example.uaep.ui.components.CommonTopAppBar
 import com.example.uaep.ui.match.Formation
 import com.example.uaep.ui.profile.ProfileCard
 import com.example.uaep.ui.profile.ProfileDto
-import com.example.uaep.ui.theme.*
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import com.example.uaep.ui.theme.UaepTheme
+import com.example.uaep.ui.theme.md_theme_light_inversePrimary
+import com.example.uaep.ui.theme.md_theme_light_onPrimary
+import com.example.uaep.ui.theme.md_theme_light_primary
+import com.example.uaep.ui.theme.md_theme_light_secondary
 import java.util.*
-import kotlin.collections.ArrayList
 
 @Composable
 fun ReviewRoomScreen(
@@ -297,9 +318,10 @@ fun getProfileDto(player: Player?): ProfileDto?{
         return ProfileDto(
             player.name,
             player.position,
-            player.address,
+            player.province,
+            player.town,
             player.gender,
-            player.levelPoint,
+            player.level,
             null
         )
     }
@@ -523,9 +545,10 @@ fun SimpleRoomPreview() {
                 email = "test@gmail.com",
                 name = "name",
                 gender = "남성",
-                address = "address",
+                province = "province",
+                town = "town",
                 position = "FW",
-                levelPoint = 0
+                level= ""
             ),
             mf1 = null,
             mf2 = null,
@@ -536,9 +559,10 @@ fun SimpleRoomPreview() {
                 email = "test@gmail.com",
                 name = "name",
                 gender = "남성",
-                address = "address",
+                province = "province",
+                town = "town",
                 position = "FW",
-                levelPoint = 0
+                level= ""
             )
         ),
         teamB = Team(
@@ -546,9 +570,10 @@ fun SimpleRoomPreview() {
                 email = "test@gmail.com",
                 name = "name",
                 gender = "남성",
-                address = "address",
+                province = "province",
+                town = "town",
                 position = "FW",
-                levelPoint = 0
+                level= ""
             ),
             mf1 = null,
             mf2 = null,
@@ -559,9 +584,10 @@ fun SimpleRoomPreview() {
                 email = "test@gmail.com",
                 name = "name",
                 gender = "남성",
-                address = "address",
+                province = "province",
+                town = "town",
                 position = "FW",
-                levelPoint = 0
+                level= ""
             )
         ),
         status = null,

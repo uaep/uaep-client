@@ -3,7 +3,11 @@
 package com.example.uaep.ui.profile
 
 import android.content.res.Configuration
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -27,9 +31,10 @@ fun ProfileScreen(
 ) {
     viewModel.updateName(userDto.name)
     viewModel.updatePosition(userDto.position)
-    viewModel.updateAddress(userDto.address)
+    viewModel.updateProvince(userDto.province)
+    viewModel.updateTown(userDto.town)
     viewModel.updateGender(userDto.gender)
-    viewModel.updateLevelPoint(userDto.levelPoint)
+    viewModel.updateLevel(userDto.level)
     viewModel.updatePositionChangePoint(userDto.positionChangePoint)
 
     Column(Modifier.fillMaxSize().verticalScroll(rememberScrollState())) {
@@ -52,9 +57,10 @@ fun ProfileScreen(
                     ProfileDto(
                         name = viewModel.name.value,
                         position = viewModel.position.value,
-                        address = viewModel.address.value,
+                        province = viewModel.province.value,
+                        town = viewModel.town.value,
                         gender = viewModel.gender.value,
-                        levelPoint = viewModel.levelPoint.value,
+                        level = viewModel.level.value,
                         positionChangePoint = viewModel.positionChangePoint.value
                     ),
                     onUpdateUserInfo = { userUpdateDto ->
@@ -82,9 +88,10 @@ fun PreviewProfileScreen() {
             email = "",
             name = "김광진",
             gender = "남성",
-            address = "경기도 수원시 중부대로",
+            province = "서울",
+            town = "강남구 테헤란로",
             position = "GK",
-            levelPoint = 1,
+            level = "비기너1",
             positionChangePoint = 1000,
             games = emptyList()
         )
