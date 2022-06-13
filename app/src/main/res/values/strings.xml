@@ -60,4 +60,6 @@
     <string name="level">레벨</string>
     <string name="position_change_point">포지션 변경 포인트</string>
     <string name="review_level">Lv.</string>
+    <string name="province">시/도</string>
+    <string name="town">상세 주소</string>
 </resources>

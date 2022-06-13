@@ -42,6 +42,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.uaep.R
 import com.example.uaep.dto.SignUpRequestDto
 import com.example.uaep.dto.UrlResponseDto
+import com.example.uaep.enums.Level
 import com.example.uaep.enums.Location
 import com.example.uaep.enums.Position
 import com.example.uaep.network.UserApiService
@@ -74,6 +75,14 @@ fun SignUpScreen (
         Location.BUG,
         Location.GJ,
         Location.JEJU
+    )
+
+    val levelList = listOf(
+        Level.STARTER,
+        Level.BEGINNER,
+        Level.AMATEUR,
+        Level.SEMIPRO,
+        Level.PRO,
     )
 
     Column(Modifier.verticalScroll(rememberScrollState())) {
@@ -160,21 +169,15 @@ fun SignUpScreen (
                     },
                     color = MaterialTheme.colorScheme.primary
                 )
-//                CustomOutlinedTextField(
-//                    value = vm.address.value,
-//                    onValueChange = { vm.updateAddress(it) },
-//                    labelText = stringResource(id = R.string.address),
-//                    placeholderText = stringResource(id = R.string.address)
-//                )
                 Column {
                     androidx.compose.material3.OutlinedTextField(
-                        value = vm.address.value,
-                        onValueChange = { vm.updateAddress(it) },
+                        value = vm.province.value,
+                        onValueChange = { vm.updateProvince(it) },
                         modifier = Modifier.fillMaxWidth(0.8f),
                         readOnly = true,
                         label = {
                             Text(
-                                text = stringResource(id = R.string.address),
+                                text = stringResource(id = R.string.province),
                                 color = MaterialTheme.colorScheme.primary,
                                 fontSize = MaterialTheme.typography.labelLarge.fontSize,
                                 fontWeight = FontWeight.Bold
@@ -182,7 +185,7 @@ fun SignUpScreen (
                         },
                         placeholder = {
                             Text(
-                                text = stringResource(id = R.string.address),
+                                text = stringResource(id = R.string.province),
                                 color = MaterialTheme.colorScheme.primary,
                                 fontSize = MaterialTheme.typography.labelLarge.fontSize,
                                 fontWeight = FontWeight.Bold
@@ -198,18 +201,18 @@ fun SignUpScreen (
                                 imageVector = vm.icon3,
                                 contentDescription = null,
                                 Modifier.clickable {
-                                    vm.onAddressEnabled(!vm.addressEnabled.value)
+                                    vm.onProvinceEnabled(!vm.provinceEnabled.value)
                                 },
                                 tint = MaterialTheme.colorScheme.primary
                             )
                         }
                     )
                     androidx.compose.material3.DropdownMenu(
-                        expanded = vm.addressEnabled.value,
+                        expanded = vm.provinceEnabled.value,
                         modifier = Modifier
                             .fillMaxWidth(0.8f)
                             .background(MaterialTheme.colorScheme.onBackground),
-                        onDismissRequest = { vm.onAddressEnabled(false) }
+                        onDismissRequest = { vm.onProvinceEnabled(false) }
                     ) {
                         locationList.forEach {
                             androidx.compose.material3.DropdownMenuItem(
@@ -220,8 +223,8 @@ fun SignUpScreen (
                                     )
                                 },
                                 onClick = {
-                                    vm.updateAddress(it.value)
-                                    vm.onAddressEnabled(false)
+                                    vm.updateProvince(it.value)
+                                    vm.onProvinceEnabled(false)
                                 },
                                 trailingIcon = {
                                     Icon(
@@ -235,6 +238,12 @@ fun SignUpScreen (
                         }
                     }
                 }
+                CustomOutlinedTextField(
+                    value = vm.town.value,
+                    onValueChange = { vm.updateTown(it) },
+                    labelText = stringResource(id = R.string.town),
+                    placeholderText = stringResource(id = R.string.town)
+                )
                 GenderExposedDropDownMenu(
                     gender = vm.gender.value,
                     label = {
@@ -367,6 +376,68 @@ fun SignUpScreen (
 
                     }
                 }
+                Column {
+                    androidx.compose.material3.OutlinedTextField(
+                        value = vm.level.value,
+                        onValueChange = { vm.updateLevel(it) },
+                        modifier = Modifier.fillMaxWidth(0.8f),
+                        readOnly = true,
+                        label = {
+                            Text(
+                                text = stringResource(id = R.string.level),
+                                color = MaterialTheme.colorScheme.primary,
+                                fontSize = MaterialTheme.typography.labelLarge.fontSize,
+                                fontWeight = FontWeight.Bold
+                            )
+                        },
+                        placeholder = {
+                            Text(
+                                text = stringResource(id = R.string.level),
+                                color = MaterialTheme.colorScheme.primary,
+                                fontSize = MaterialTheme.typography.labelLarge.fontSize,
+                                fontWeight = FontWeight.Bold
+                            )
+                        },
+                        colors = androidx.compose.material3.TextFieldDefaults.outlinedTextFieldColors(
+                            textColor = MaterialTheme.colorScheme.primary,
+                            focusedBorderColor = MaterialTheme.colorScheme.primary,
+                            unfocusedBorderColor = MaterialTheme.colorScheme.primary,
+                        ),
+                        trailingIcon = {
+                            Icon(
+                                imageVector = vm.icon4,
+                                contentDescription = null,
+                                Modifier.clickable {
+                                    vm.onLevelEnabled(!vm.levelEnabled.value)
+                                },
+                                tint = MaterialTheme.colorScheme.primary
+                            )
+                        }
+                    )
+                    androidx.compose.material3.DropdownMenu(
+                        expanded = vm.levelEnabled.value,
+                        modifier = Modifier
+                            .fillMaxWidth(0.8f)
+                            .background(MaterialTheme.colorScheme.onBackground),
+                        onDismissRequest = { vm.onLevelEnabled(false) }
+                    ) {
+                        levelList.forEach {
+                            androidx.compose.material3.DropdownMenuItem(
+                                text = {
+                                    Text(
+                                        text = it.value,
+                                        fontWeight = FontWeight.ExtraBold
+                                    )
+                                },
+                                onClick = {
+                                    vm.updateLevel(it.value)
+                                    vm.onLevelEnabled(false)
+                                },
+                                colors = MenuDefaults.itemColors(textColor = MaterialTheme.colorScheme.primary)
+                            )
+                        }
+                    }
+                }
                 Spacer(modifier = Modifier.padding(10.dp))
                 Button(
                     onClick = {
@@ -375,20 +446,17 @@ fun SignUpScreen (
                         } else {
                             mToast(context, "회원가입을 진행 중입니다.")
 
-                            Log.i("Name", vm.name.value)
-                            Log.i("Password", vm.password.value)
-                            Log.i("Matching password", vm.matchingPassword.value)
-                            Log.i("Gender", vm.gender.value)
-                            Log.i("Address", vm.address.value)
-                            Log.i("Position", vm.position.value)
                             val signUpRequestDto = SignUpRequestDto(
                                 name = vm.name.value,
                                 password = vm.password.value,
                                 matchingPassword = vm.matchingPassword.value,
                                 gender = vm.gender.value,
-                                address =  vm.address.value,
-                                position = vm.position.value
+                                province =  vm.province.value,
+                                town = vm.town.value,
+                                position = vm.position.value,
+                                level = vm.level.value
                             )
+                            Log.i("signUpRequestDto", signUpRequestDto.toString())
                             val userApiService = UserApiService.getInstance()
                             userApiService.signup(
                                 signUpRequestDto = signUpRequestDto,
