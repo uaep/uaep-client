@@ -21,6 +21,7 @@ class SignUpViewModel : ViewModel() {
     private val mGender = mutableStateOf("")
     private val mGenderEnabled = mutableStateOf(false)
     private val mPosEnabled = mutableStateOf(false)
+    private val mAddressEnabled = mutableStateOf(false)
 
     val name: State<String> = mName
     val email: State<String> = mEmail
@@ -31,10 +32,13 @@ class SignUpViewModel : ViewModel() {
     val gender: State<String> = mGender
     val genderEnabled: State<Boolean> = mGenderEnabled
     val posEnabled: State<Boolean> = mPosEnabled
+    val addressEnabled: State<Boolean> = mAddressEnabled
     val icon1:ImageVector
         @Composable get() = if (mGenderEnabled.value) Icons.Filled.ArrowDropUp else Icons.Filled.ArrowDropDown
     val icon2:ImageVector
         @Composable get() = if (mPosEnabled.value) Icons.Filled.ArrowDropUp else Icons.Filled.ArrowDropDown
+    val icon3:ImageVector
+        @Composable get() = if (mAddressEnabled.value) Icons.Filled.ArrowDropUp else Icons.Filled.ArrowDropDown
 
     fun updateName(name: String) {
         mName.value = name
@@ -70,6 +74,10 @@ class SignUpViewModel : ViewModel() {
 
     fun onPosEnabled(enabled: Boolean) {
         mPosEnabled.value = enabled
+    }
+
+    fun onAddressEnabled(enabled: Boolean) {
+        mAddressEnabled.value = enabled
     }
 
     fun isSamePassword(password: String, matchingPassword: String): Boolean {

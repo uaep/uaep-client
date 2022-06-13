@@ -24,8 +24,10 @@ import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.Icon
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.TextFieldDefaults
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.PinDrop
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
+import androidx.compose.material3.MenuDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -40,6 +42,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.uaep.R
 import com.example.uaep.dto.SignUpRequestDto
 import com.example.uaep.dto.UrlResponseDto
+import com.example.uaep.enums.Location
 import com.example.uaep.enums.Position
 import com.example.uaep.network.UserApiService
 import com.example.uaep.ui.components.CustomOutlinedTextField
@@ -61,6 +64,17 @@ fun SignUpScreen (
     token: String
 ) {
     val context = LocalContext.current
+
+    val locationList = listOf(
+        Location.SEOUL,
+        Location.GG,
+        Location.INCHEON,
+        Location.DSC,
+        Location.DG,
+        Location.BUG,
+        Location.GJ,
+        Location.JEJU
+    )
 
     Column(Modifier.verticalScroll(rememberScrollState())) {
         Column(
@@ -146,12 +160,81 @@ fun SignUpScreen (
                     },
                     color = MaterialTheme.colorScheme.primary
                 )
-                CustomOutlinedTextField(
-                    value = vm.address.value,
-                    onValueChange = { vm.updateAddress(it) },
-                    labelText = stringResource(id = R.string.address),
-                    placeholderText = stringResource(id = R.string.address)
-                )
+//                CustomOutlinedTextField(
+//                    value = vm.address.value,
+//                    onValueChange = { vm.updateAddress(it) },
+//                    labelText = stringResource(id = R.string.address),
+//                    placeholderText = stringResource(id = R.string.address)
+//                )
+                Column {
+                    androidx.compose.material3.OutlinedTextField(
+                        value = vm.address.value,
+                        onValueChange = { vm.updateAddress(it) },
+                        modifier = Modifier.fillMaxWidth(0.8f),
+                        readOnly = true,
+                        label = {
+                            Text(
+                                text = stringResource(id = R.string.address),
+                                color = MaterialTheme.colorScheme.primary,
+                                fontSize = MaterialTheme.typography.labelLarge.fontSize,
+                                fontWeight = FontWeight.Bold
+                            )
+                        },
+                        placeholder = {
+                            Text(
+                                text = stringResource(id = R.string.address),
+                                color = MaterialTheme.colorScheme.primary,
+                                fontSize = MaterialTheme.typography.labelLarge.fontSize,
+                                fontWeight = FontWeight.Bold
+                            )
+                        },
+                        colors = androidx.compose.material3.TextFieldDefaults.outlinedTextFieldColors(
+                            textColor = MaterialTheme.colorScheme.primary,
+                            focusedBorderColor = MaterialTheme.colorScheme.primary,
+                            unfocusedBorderColor = MaterialTheme.colorScheme.primary,
+                        ),
+                        trailingIcon = {
+                            Icon(
+                                imageVector = vm.icon3,
+                                contentDescription = null,
+                                Modifier.clickable {
+                                    vm.onAddressEnabled(!vm.addressEnabled.value)
+                                },
+                                tint = MaterialTheme.colorScheme.primary
+                            )
+                        }
+                    )
+                    androidx.compose.material3.DropdownMenu(
+                        expanded = vm.addressEnabled.value,
+                        modifier = Modifier
+                            .fillMaxWidth(0.8f)
+                            .background(MaterialTheme.colorScheme.onBackground),
+                        onDismissRequest = { vm.onAddressEnabled(false) }
+                    ) {
+                        locationList.forEach {
+                            androidx.compose.material3.DropdownMenuItem(
+                                text = {
+                                    Text(
+                                        text = it.value,
+                                        fontWeight = FontWeight.ExtraBold
+                                    )
+                                },
+                                onClick = {
+                                    vm.updateAddress(it.value)
+                                    vm.onAddressEnabled(false)
+                                },
+                                trailingIcon = {
+                                    Icon(
+                                        Icons.Filled.PinDrop,
+                                        contentDescription = null,
+                                        tint = MaterialTheme.colorScheme.primary
+                                    )
+                                },
+                                colors = MenuDefaults.itemColors(textColor = MaterialTheme.colorScheme.primary)
+                            )
+                        }
+                    }
+                }
                 GenderExposedDropDownMenu(
                     gender = vm.gender.value,
                     label = {
