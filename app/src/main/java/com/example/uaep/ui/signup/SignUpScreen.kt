@@ -9,6 +9,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -24,8 +25,10 @@ import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.Icon
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.TextFieldDefaults
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.PinDrop
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
+import androidx.compose.material3.MenuDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -40,7 +43,9 @@ import androidx.navigation.compose.rememberNavController
 import com.example.uaep.R
 import com.example.uaep.dto.SignUpRequestDto
 import com.example.uaep.dto.UrlResponseDto
+import com.example.uaep.enums.Level
 import com.example.uaep.enums.Position
+import com.example.uaep.enums.Province
 import com.example.uaep.network.UserApiService
 import com.example.uaep.ui.components.CustomOutlinedTextField
 import com.example.uaep.ui.components.GenderExposedDropDownMenu
@@ -61,6 +66,14 @@ fun SignUpScreen (
     token: String
 ) {
     val context = LocalContext.current
+
+    val levelList = listOf(
+        Level.STARTER,
+        Level.BEGINNER,
+        Level.AMATEUR,
+        Level.SEMIPRO,
+        Level.PRO,
+    )
 
     Column(Modifier.verticalScroll(rememberScrollState())) {
         Column(
@@ -146,12 +159,537 @@ fun SignUpScreen (
                     },
                     color = MaterialTheme.colorScheme.primary
                 )
-                CustomOutlinedTextField(
-                    value = vm.address.value,
-                    onValueChange = { vm.updateAddress(it) },
-                    labelText = stringResource(id = R.string.address),
-                    placeholderText = stringResource(id = R.string.address)
-                )
+                Row (
+                    modifier = Modifier.fillMaxWidth(0.8f)
+                ){
+                    Column (modifier = Modifier.weight(0.45f)){
+                        androidx.compose.material3.OutlinedTextField(
+                            value = vm.province.value,
+                            onValueChange = { vm.updateProvince(it) },
+                            readOnly = true,
+                            label = {
+                                Text(
+                                    text = stringResource(id = R.string.province),
+                                    color = MaterialTheme.colorScheme.primary,
+                                    fontSize = MaterialTheme.typography.labelLarge.fontSize,
+                                    fontWeight = FontWeight.Bold
+                                )
+                            },
+                            placeholder = {
+                                Text(
+                                    text = stringResource(id = R.string.province),
+                                    color = MaterialTheme.colorScheme.primary,
+                                    fontSize = MaterialTheme.typography.labelLarge.fontSize,
+                                    fontWeight = FontWeight.Bold
+                                )
+                            },
+                            colors = androidx.compose.material3.TextFieldDefaults.outlinedTextFieldColors(
+                                textColor = MaterialTheme.colorScheme.primary,
+                                focusedBorderColor = MaterialTheme.colorScheme.primary,
+                                unfocusedBorderColor = MaterialTheme.colorScheme.primary,
+                            ),
+                            trailingIcon = {
+                                Icon(
+                                    imageVector = vm.icon3,
+                                    contentDescription = null,
+                                    Modifier.clickable {
+                                        vm.onProvinceEnabled(!vm.provinceEnabled.value)
+                                    },
+                                    tint = MaterialTheme.colorScheme.primary
+                                )
+                            }
+                        )
+                        androidx.compose.material3.DropdownMenu(
+                            expanded = vm.provinceEnabled.value,
+                            modifier = Modifier
+                                .background(MaterialTheme.colorScheme.onBackground)
+                                .verticalScroll(rememberScrollState())
+                                .height(200.dp),
+                            onDismissRequest = { vm.onProvinceEnabled(false) }
+                        ) {
+                            vm.provinceList.forEach {
+                                androidx.compose.material3.DropdownMenuItem(
+                                    text = {
+                                        Text(
+                                            text = it.value,
+                                            fontWeight = FontWeight.ExtraBold
+                                        )
+                                    },
+                                    onClick = {
+                                        vm.updateProvince(it.value)
+                                        vm.onProvinceEnabled(false)
+                                    },
+                                    trailingIcon = {
+                                        Icon(
+                                            Icons.Filled.PinDrop,
+                                            contentDescription = null,
+                                            tint = MaterialTheme.colorScheme.primary
+                                        )
+                                    },
+                                    colors = MenuDefaults.itemColors(textColor = MaterialTheme.colorScheme.primary)
+                                )
+                            }
+                        }
+                    }
+                    Spacer(modifier = Modifier.weight(0.05f))
+                    Column (modifier = Modifier.weight(0.45f)){
+                        androidx.compose.material3.OutlinedTextField(
+                            value = vm.town.value,
+                            onValueChange = { vm.updateTown(it) },
+                            readOnly = true,
+                            label = {
+                                Text(
+                                    text = stringResource(id = R.string.town),
+                                    color = MaterialTheme.colorScheme.primary,
+                                    fontSize = MaterialTheme.typography.labelLarge.fontSize,
+                                    fontWeight = FontWeight.Bold
+                                )
+                            },
+                            placeholder = {
+                                Text(
+                                    text = stringResource(id = R.string.town),
+                                    color = MaterialTheme.colorScheme.primary,
+                                    fontSize = MaterialTheme.typography.labelLarge.fontSize,
+                                    fontWeight = FontWeight.Bold
+                                )
+                            },
+                            colors = androidx.compose.material3.TextFieldDefaults.outlinedTextFieldColors(
+                                textColor = MaterialTheme.colorScheme.primary,
+                                focusedBorderColor = MaterialTheme.colorScheme.primary,
+                                unfocusedBorderColor = MaterialTheme.colorScheme.primary,
+                            ),
+                            trailingIcon = {
+                                Icon(
+                                    imageVector = vm.icon5,
+                                    contentDescription = null,
+                                    Modifier.clickable {
+                                        vm.onTownEnabled(!vm.townEnabled.value)
+                                    },
+                                    tint = MaterialTheme.colorScheme.primary
+                                )
+                            }
+                        )
+                        androidx.compose.material3.DropdownMenu(
+                            expanded = vm.townEnabled.value,
+                            modifier = Modifier
+                                .background(MaterialTheme.colorScheme.onBackground)
+                                .verticalScroll(rememberScrollState())
+                                .height(200.dp),
+                            onDismissRequest = { vm.onTownEnabled(false) }
+                        ) {
+                            when (vm.province.value) {
+                                Province.SEOUL.value -> {
+                                    vm.townSeoulList.forEach {
+                                        androidx.compose.material3.DropdownMenuItem(
+                                            text = {
+                                                Text(
+                                                    text = it.town,
+                                                    fontWeight = FontWeight.ExtraBold
+                                                )
+                                            },
+                                            onClick = {
+                                                vm.updateTown(it.town)
+                                                vm.onTownEnabled(false)
+                                            },
+                                            trailingIcon = {
+                                                Icon(
+                                                    Icons.Filled.PinDrop,
+                                                    contentDescription = null,
+                                                    tint = MaterialTheme.colorScheme.primary
+                                                )
+                                            },
+                                            colors = MenuDefaults.itemColors(textColor = MaterialTheme.colorScheme.primary)
+                                        )
+                                    }
+                                }
+                                Province.GYEONGGI.value -> {
+                                   vm.townGyeonggiList.forEach {
+                                       androidx.compose.material3.DropdownMenuItem(
+                                           text = {
+                                               Text(
+                                                   text = it.town,
+                                                   fontWeight = FontWeight.ExtraBold
+                                               )
+                                           },
+                                           onClick = {
+                                               vm.updateTown(it.town)
+                                               vm.onTownEnabled(false)
+                                           },
+                                           trailingIcon = {
+                                               Icon(
+                                                   Icons.Filled.PinDrop,
+                                                   contentDescription = null,
+                                                   tint = MaterialTheme.colorScheme.primary
+                                               )
+                                           },
+                                           colors = MenuDefaults.itemColors(textColor = MaterialTheme.colorScheme.primary)
+                                       )
+                                   }
+                                }
+                                Province.INCHEON.value -> {
+                                    vm.townIncheonList.forEach {
+                                        androidx.compose.material3.DropdownMenuItem(
+                                            text = {
+                                                Text(
+                                                    text = it.town,
+                                                    fontWeight = FontWeight.ExtraBold
+                                                )
+                                            },
+                                            onClick = {
+                                                vm.updateTown(it.town)
+                                                vm.onTownEnabled(false)
+                                            },
+                                            trailingIcon = {
+                                                Icon(
+                                                    Icons.Filled.PinDrop,
+                                                    contentDescription = null,
+                                                    tint = MaterialTheme.colorScheme.primary
+                                                )
+                                            },
+                                            colors = MenuDefaults.itemColors(textColor = MaterialTheme.colorScheme.primary)
+                                        )
+                                    }
+                                }
+                                Province.GWANGJU.value -> {
+                                    vm.townGwangjuList.forEach {
+                                        androidx.compose.material3.DropdownMenuItem(
+                                            text = {
+                                                Text(
+                                                    text = it.town,
+                                                    fontWeight = FontWeight.ExtraBold
+                                                )
+                                            },
+                                            onClick = {
+                                                vm.updateTown(it.town)
+                                                vm.onTownEnabled(false)
+                                            },
+                                            trailingIcon = {
+                                                Icon(
+                                                    Icons.Filled.PinDrop,
+                                                    contentDescription = null,
+                                                    tint = MaterialTheme.colorScheme.primary
+                                                )
+                                            },
+                                            colors = MenuDefaults.itemColors(textColor = MaterialTheme.colorScheme.primary)
+                                        )
+                                    }
+                                }
+                                Province.DAEJEON.value -> {
+                                    vm.townDaejeonList.forEach {
+                                        androidx.compose.material3.DropdownMenuItem(
+                                            text = {
+                                                Text(
+                                                    text = it.town,
+                                                    fontWeight = FontWeight.ExtraBold
+                                                )
+                                            },
+                                            onClick = {
+                                                vm.updateTown(it.town)
+                                                vm.onTownEnabled(false)
+                                            },
+                                            trailingIcon = {
+                                                Icon(
+                                                    Icons.Filled.PinDrop,
+                                                    contentDescription = null,
+                                                    tint = MaterialTheme.colorScheme.primary
+                                                )
+                                            },
+                                            colors = MenuDefaults.itemColors(textColor = MaterialTheme.colorScheme.primary)
+                                        )
+                                    }
+                                }
+                                Province.DAEGU.value -> {
+                                    vm.townDaeguList.forEach {
+                                        androidx.compose.material3.DropdownMenuItem(
+                                            text = {
+                                                Text(
+                                                    text = it.town,
+                                                    fontWeight = FontWeight.ExtraBold
+                                                )
+                                            },
+                                            onClick = {
+                                                vm.updateTown(it.town)
+                                                vm.onTownEnabled(false)
+                                            },
+                                            trailingIcon = {
+                                                Icon(
+                                                    Icons.Filled.PinDrop,
+                                                    contentDescription = null,
+                                                    tint = MaterialTheme.colorScheme.primary
+                                                )
+                                            },
+                                            colors = MenuDefaults.itemColors(textColor = MaterialTheme.colorScheme.primary)
+                                        )
+                                    }
+                                }
+                                Province.BUSAN.value -> {
+                                    vm.townBusanList.forEach {
+                                        androidx.compose.material3.DropdownMenuItem(
+                                            text = {
+                                                Text(
+                                                    text = it.town,
+                                                    fontWeight = FontWeight.ExtraBold
+                                                )
+                                            },
+                                            onClick = {
+                                                vm.updateTown(it.town)
+                                                vm.onTownEnabled(false)
+                                            },
+                                            trailingIcon = {
+                                                Icon(
+                                                    Icons.Filled.PinDrop,
+                                                    contentDescription = null,
+                                                    tint = MaterialTheme.colorScheme.primary
+                                                )
+                                            },
+                                            colors = MenuDefaults.itemColors(textColor = MaterialTheme.colorScheme.primary)
+                                        )
+                                    }
+                                }
+                                Province.ULSAN.value -> {
+                                    vm.townUlsanList.forEach {
+                                        androidx.compose.material3.DropdownMenuItem(
+                                            text = {
+                                                Text(
+                                                    text = it.town,
+                                                    fontWeight = FontWeight.ExtraBold
+                                                )
+                                            },
+                                            onClick = {
+                                                vm.updateTown(it.town)
+                                                vm.onTownEnabled(false)
+                                            },
+                                            trailingIcon = {
+                                                Icon(
+                                                    Icons.Filled.PinDrop,
+                                                    contentDescription = null,
+                                                    tint = MaterialTheme.colorScheme.primary
+                                                )
+                                            },
+                                            colors = MenuDefaults.itemColors(textColor = MaterialTheme.colorScheme.primary)
+                                        )
+                                    }
+                                }
+                                Province.SEJONG.value -> {
+                                    vm.townGyeonggiList.forEach {
+                                        androidx.compose.material3.DropdownMenuItem(
+                                            text = {
+                                                Text(
+                                                    text = it.town,
+                                                    fontWeight = FontWeight.ExtraBold
+                                                )
+                                            },
+                                            onClick = {
+                                                vm.updateTown(it.town)
+                                                vm.onTownEnabled(false)
+                                            },
+                                            trailingIcon = {
+                                                Icon(
+                                                    Icons.Filled.PinDrop,
+                                                    contentDescription = null,
+                                                    tint = MaterialTheme.colorScheme.primary
+                                                )
+                                            },
+                                            colors = MenuDefaults.itemColors(textColor = MaterialTheme.colorScheme.primary)
+                                        )
+                                    }
+                                }
+                                Province.GANGWON.value -> {
+                                    vm.townGangwonList.forEach {
+                                        androidx.compose.material3.DropdownMenuItem(
+                                            text = {
+                                                Text(
+                                                    text = it.town,
+                                                    fontWeight = FontWeight.ExtraBold
+                                                )
+                                            },
+                                            onClick = {
+                                                vm.updateTown(it.town)
+                                                vm.onTownEnabled(false)
+                                            },
+                                            trailingIcon = {
+                                                Icon(
+                                                    Icons.Filled.PinDrop,
+                                                    contentDescription = null,
+                                                    tint = MaterialTheme.colorScheme.primary
+                                                )
+                                            },
+                                            colors = MenuDefaults.itemColors(textColor = MaterialTheme.colorScheme.primary)
+                                        )
+                                    }
+                                }
+                                Province.CHUNGCHEONGBUK.value -> {
+                                    vm.townChungBukList.forEach {
+                                        androidx.compose.material3.DropdownMenuItem(
+                                            text = {
+                                                Text(
+                                                    text = it.town,
+                                                    fontWeight = FontWeight.ExtraBold
+                                                )
+                                            },
+                                            onClick = {
+                                                vm.updateTown(it.town)
+                                                vm.onTownEnabled(false)
+                                            },
+                                            trailingIcon = {
+                                                Icon(
+                                                    Icons.Filled.PinDrop,
+                                                    contentDescription = null,
+                                                    tint = MaterialTheme.colorScheme.primary
+                                                )
+                                            },
+                                            colors = MenuDefaults.itemColors(textColor = MaterialTheme.colorScheme.primary)
+                                        )
+                                    }
+                                }
+                                Province.CHUNGCHEONGNAM.value -> {
+                                    vm.townChungNamList.forEach {
+                                        androidx.compose.material3.DropdownMenuItem(
+                                            text = {
+                                                Text(
+                                                    text = it.town,
+                                                    fontWeight = FontWeight.ExtraBold
+                                                )
+                                            },
+                                            onClick = {
+                                                vm.updateTown(it.town)
+                                                vm.onTownEnabled(false)
+                                            },
+                                            trailingIcon = {
+                                                Icon(
+                                                    Icons.Filled.PinDrop,
+                                                    contentDescription = null,
+                                                    tint = MaterialTheme.colorScheme.primary
+                                                )
+                                            },
+                                            colors = MenuDefaults.itemColors(textColor = MaterialTheme.colorScheme.primary)
+                                        )
+                                    }
+                                }
+                                Province.JEOLLABUK.value -> {
+                                    vm.townJeonBukList.forEach {
+                                        androidx.compose.material3.DropdownMenuItem(
+                                            text = {
+                                                Text(
+                                                    text = it.town,
+                                                    fontWeight = FontWeight.ExtraBold
+                                                )
+                                            },
+                                            onClick = {
+                                                vm.updateTown(it.town)
+                                                vm.onTownEnabled(false)
+                                            },
+                                            trailingIcon = {
+                                                Icon(
+                                                    Icons.Filled.PinDrop,
+                                                    contentDescription = null,
+                                                    tint = MaterialTheme.colorScheme.primary
+                                                )
+                                            },
+                                            colors = MenuDefaults.itemColors(textColor = MaterialTheme.colorScheme.primary)
+                                        )
+                                    }
+                                }
+                                Province.JEOLLANAM.value -> {
+                                    vm.townJeonNamList.forEach {
+                                        androidx.compose.material3.DropdownMenuItem(
+                                            text = {
+                                                Text(
+                                                    text = it.town,
+                                                    fontWeight = FontWeight.ExtraBold
+                                                )
+                                            },
+                                            onClick = {
+                                                vm.updateTown(it.town)
+                                                vm.onTownEnabled(false)
+                                            },
+                                            trailingIcon = {
+                                                Icon(
+                                                    Icons.Filled.PinDrop,
+                                                    contentDescription = null,
+                                                    tint = MaterialTheme.colorScheme.primary
+                                                )
+                                            },
+                                            colors = MenuDefaults.itemColors(textColor = MaterialTheme.colorScheme.primary)
+                                        )
+                                    }
+                                }
+                                Province.GYEONGSANGBUK.value -> {
+                                    vm.townGyungBukList.forEach {
+                                        androidx.compose.material3.DropdownMenuItem(
+                                            text = {
+                                                Text(
+                                                    text = it.town,
+                                                    fontWeight = FontWeight.ExtraBold
+                                                )
+                                            },
+                                            onClick = {
+                                                vm.updateTown(it.town)
+                                                vm.onTownEnabled(false)
+                                            },
+                                            trailingIcon = {
+                                                Icon(
+                                                    Icons.Filled.PinDrop,
+                                                    contentDescription = null,
+                                                    tint = MaterialTheme.colorScheme.primary
+                                                )
+                                            },
+                                            colors = MenuDefaults.itemColors(textColor = MaterialTheme.colorScheme.primary)
+                                        )
+                                    }
+                                }
+                                Province.GYEONGSANGNAM.value -> {
+                                    vm.townGyungNamList.forEach {
+                                        androidx.compose.material3.DropdownMenuItem(
+                                            text = {
+                                                Text(
+                                                    text = it.town,
+                                                    fontWeight = FontWeight.ExtraBold
+                                                )
+                                            },
+                                            onClick = {
+                                                vm.updateTown(it.town)
+                                                vm.onTownEnabled(false)
+                                            },
+                                            trailingIcon = {
+                                                Icon(
+                                                    Icons.Filled.PinDrop,
+                                                    contentDescription = null,
+                                                    tint = MaterialTheme.colorScheme.primary
+                                                )
+                                            },
+                                            colors = MenuDefaults.itemColors(textColor = MaterialTheme.colorScheme.primary)
+                                        )
+                                    }
+                                }
+                                Province.JEJU.value -> {
+                                    vm.townJejuList.forEach {
+                                        androidx.compose.material3.DropdownMenuItem(
+                                            text = {
+                                                Text(
+                                                    text = it.town,
+                                                    fontWeight = FontWeight.ExtraBold
+                                                )
+                                            },
+                                            onClick = {
+                                                vm.updateTown(it.town)
+                                                vm.onTownEnabled(false)
+                                            },
+                                            trailingIcon = {
+                                                Icon(
+                                                    Icons.Filled.PinDrop,
+                                                    contentDescription = null,
+                                                    tint = MaterialTheme.colorScheme.primary
+                                                )
+                                            },
+                                            colors = MenuDefaults.itemColors(textColor = MaterialTheme.colorScheme.primary)
+                                        )
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
                 GenderExposedDropDownMenu(
                     gender = vm.gender.value,
                     label = {
@@ -284,6 +822,68 @@ fun SignUpScreen (
 
                     }
                 }
+                Column {
+                    androidx.compose.material3.OutlinedTextField(
+                        value = vm.level.value,
+                        onValueChange = { vm.updateLevel(it) },
+                        modifier = Modifier.fillMaxWidth(0.8f),
+                        readOnly = true,
+                        label = {
+                            Text(
+                                text = stringResource(id = R.string.level),
+                                color = MaterialTheme.colorScheme.primary,
+                                fontSize = MaterialTheme.typography.labelLarge.fontSize,
+                                fontWeight = FontWeight.Bold
+                            )
+                        },
+                        placeholder = {
+                            Text(
+                                text = stringResource(id = R.string.level),
+                                color = MaterialTheme.colorScheme.primary,
+                                fontSize = MaterialTheme.typography.labelLarge.fontSize,
+                                fontWeight = FontWeight.Bold
+                            )
+                        },
+                        colors = androidx.compose.material3.TextFieldDefaults.outlinedTextFieldColors(
+                            textColor = MaterialTheme.colorScheme.primary,
+                            focusedBorderColor = MaterialTheme.colorScheme.primary,
+                            unfocusedBorderColor = MaterialTheme.colorScheme.primary,
+                        ),
+                        trailingIcon = {
+                            Icon(
+                                imageVector = vm.icon4,
+                                contentDescription = null,
+                                Modifier.clickable {
+                                    vm.onLevelEnabled(!vm.levelEnabled.value)
+                                },
+                                tint = MaterialTheme.colorScheme.primary
+                            )
+                        }
+                    )
+                    androidx.compose.material3.DropdownMenu(
+                        expanded = vm.levelEnabled.value,
+                        modifier = Modifier
+                            .fillMaxWidth(0.8f)
+                            .background(MaterialTheme.colorScheme.onBackground),
+                        onDismissRequest = { vm.onLevelEnabled(false) }
+                    ) {
+                        levelList.forEach {
+                            androidx.compose.material3.DropdownMenuItem(
+                                text = {
+                                    Text(
+                                        text = it.value,
+                                        fontWeight = FontWeight.ExtraBold
+                                    )
+                                },
+                                onClick = {
+                                    vm.updateLevel(it.value)
+                                    vm.onLevelEnabled(false)
+                                },
+                                colors = MenuDefaults.itemColors(textColor = MaterialTheme.colorScheme.primary)
+                            )
+                        }
+                    }
+                }
                 Spacer(modifier = Modifier.padding(10.dp))
                 Button(
                     onClick = {
@@ -292,20 +892,17 @@ fun SignUpScreen (
                         } else {
                             mToast(context, "회원가입을 진행 중입니다.")
 
-                            Log.i("Name", vm.name.value)
-                            Log.i("Password", vm.password.value)
-                            Log.i("Matching password", vm.matchingPassword.value)
-                            Log.i("Gender", vm.gender.value)
-                            Log.i("Address", vm.address.value)
-                            Log.i("Position", vm.position.value)
                             val signUpRequestDto = SignUpRequestDto(
                                 name = vm.name.value,
                                 password = vm.password.value,
                                 matchingPassword = vm.matchingPassword.value,
                                 gender = vm.gender.value,
-                                address =  vm.address.value,
-                                position = vm.position.value
+                                province =  vm.province.value,
+                                town = vm.town.value,
+                                position = vm.position.value,
+                                level = vm.level.value
                             )
+                            Log.i("signUpRequestDto", signUpRequestDto.toString())
                             val userApiService = UserApiService.getInstance()
                             userApiService.signup(
                                 signUpRequestDto = signUpRequestDto,

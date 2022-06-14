@@ -6,12 +6,18 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Icon
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.ArrowDropUp
+import androidx.compose.material.icons.filled.PinDrop
 import androidx.compose.material.icons.filled.SportsSoccer
 import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenu
@@ -33,7 +39,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.uaep.R
 import com.example.uaep.dto.UserUpdateDto
-import com.example.uaep.enums.Position
+import com.example.uaep.enums.*
 import com.example.uaep.ui.theme.UaepTheme
 
 @Composable
@@ -42,13 +48,27 @@ fun ProfileUpdateForm(
 ) {
     var name by rememberSaveable { mutableStateOf("") }
     var position by rememberSaveable { mutableStateOf("") }
-    var address by rememberSaveable { mutableStateOf("") }
-    var enabled by rememberSaveable { mutableStateOf(false) }
+    var province by rememberSaveable { mutableStateOf("") }
+    var town by rememberSaveable { mutableStateOf("") }
+    var positionEnabled by rememberSaveable { mutableStateOf(false) }
+    var provinceEnabled by rememberSaveable { mutableStateOf(false) }
+    var townEnabled by rememberSaveable { mutableStateOf(false) }
     val positionList = listOf(
         Position.GK,
         Position.DF,
         Position.MF,
         Position.FW,
+    )
+
+    val regionFilterLists = listOf(
+        RegionFilter.SEOUL,
+        RegionFilter.GG,
+        RegionFilter.INCHEON,
+        RegionFilter.DSC,
+        RegionFilter.DG,
+        RegionFilter.BUG,
+        RegionFilter.GJ,
+        RegionFilter.JEJU
     )
 
     Column(
@@ -108,19 +128,19 @@ fun ProfileUpdateForm(
                 ),
                 trailingIcon = {
                     Icon(
-                        imageVector = if (enabled) Icons.Filled.ArrowDropUp else Icons.Filled.ArrowDropDown,
+                        imageVector = if (positionEnabled) Icons.Filled.ArrowDropUp else Icons.Filled.ArrowDropDown,
                         contentDescription = null,
-                        Modifier.clickable { enabled = !enabled },
+                        Modifier.clickable { positionEnabled = !positionEnabled },
                         tint = MaterialTheme.colorScheme.primary
                     )
                 }
             )
             DropdownMenu(
-                expanded = enabled,
+                expanded = positionEnabled,
                 modifier = Modifier
                     .fillMaxWidth(0.7f)
                     .background(MaterialTheme.colorScheme.onBackground),
-                onDismissRequest = { enabled = false }
+                onDismissRequest = { positionEnabled = false }
             ) {
                 positionList.forEach{
                     DropdownMenuItem(
@@ -131,7 +151,7 @@ fun ProfileUpdateForm(
                         },
                         onClick = {
                             position = it.value
-                            enabled = false
+                            positionEnabled = false
                         },
                         trailingIcon = {
                             Icon(
@@ -144,35 +164,543 @@ fun ProfileUpdateForm(
                 }
             }
         }
-        OutlinedTextField(
-            value = address,
-            onValueChange = { address = it },
-            label = {
-                Text(
-                    text = stringResource(id = R.string.address),
-                    color = MaterialTheme.colorScheme.primary,
-                    fontSize = MaterialTheme.typography.labelLarge.fontSize,
-                    fontWeight = FontWeight.Bold
+        Row (
+            modifier = Modifier.fillMaxWidth(0.8f)
+        ){
+            Column (modifier = Modifier.weight(0.45f)){
+                OutlinedTextField(
+                    value = province,
+                    onValueChange = { province = it },
+                    readOnly = true,
+                    label = {
+                        Text(
+                            text = stringResource(id = R.string.province),
+                            color = MaterialTheme.colorScheme.primary,
+                            fontSize = MaterialTheme.typography.labelLarge.fontSize,
+                            fontWeight = FontWeight.Bold
+                        )
+                    },
+                    placeholder = {
+                        Text(
+                            text = stringResource(id = R.string.province),
+                            color = MaterialTheme.colorScheme.primary,
+                            fontSize = MaterialTheme.typography.labelLarge.fontSize,
+                            fontWeight = FontWeight.Bold
+                        )
+                    },
+                    colors = TextFieldDefaults.outlinedTextFieldColors(
+                        textColor = MaterialTheme.colorScheme.primary,
+                        focusedBorderColor = MaterialTheme.colorScheme.primary,
+                        unfocusedBorderColor = MaterialTheme.colorScheme.primary,
+                    ),
+                    trailingIcon = {
+                        Icon(
+                            imageVector = if (provinceEnabled) Icons.Filled.ArrowDropUp else Icons.Filled.ArrowDropDown,
+                            contentDescription = null,
+                            Modifier.clickable {
+                                provinceEnabled = !provinceEnabled
+                            },
+                            tint = MaterialTheme.colorScheme.primary
+                        )
+                    }
                 )
-            },
-            placeholder = {
-                Text(
-                    text = stringResource(id = R.string.update_address),
-                    color = MaterialTheme.colorScheme.primary,
-                    fontSize = MaterialTheme.typography.labelLarge.fontSize,
-                    fontWeight = FontWeight.Bold
+                DropdownMenu(
+                    expanded = provinceEnabled,
+                    modifier = Modifier
+                        .background(MaterialTheme.colorScheme.onBackground)
+                        .verticalScroll(rememberScrollState())
+                        .height(200.dp),
+                    onDismissRequest = { provinceEnabled = false }
+                ) {
+                    provinceList.forEach {
+                        DropdownMenuItem(
+                            text = {
+                                Text(
+                                    text = it.value,
+                                    fontWeight = FontWeight.ExtraBold
+                                )
+                            },
+                            onClick = {
+                                province = it.value
+                                provinceEnabled = false
+                            },
+                            trailingIcon = {
+                                Icon(
+                                    Icons.Filled.PinDrop,
+                                    contentDescription = null,
+                                    tint = MaterialTheme.colorScheme.primary
+                                )
+                            },
+                            colors = MenuDefaults.itemColors(textColor = MaterialTheme.colorScheme.primary)
+                        )
+                    }
+                }
+            }
+            Spacer(modifier = Modifier.weight(0.05f))
+            Column (modifier = Modifier.weight(0.45f)){
+                OutlinedTextField(
+                    value = town,
+                    onValueChange = { town = it },
+                    readOnly = true,
+                    label = {
+                        Text(
+                            text = stringResource(id = R.string.town),
+                            color = MaterialTheme.colorScheme.primary,
+                            fontSize = MaterialTheme.typography.labelLarge.fontSize,
+                            fontWeight = FontWeight.Bold
+                        )
+                    },
+                    placeholder = {
+                        Text(
+                            text = stringResource(id = R.string.town),
+                            color = MaterialTheme.colorScheme.primary,
+                            fontSize = MaterialTheme.typography.labelLarge.fontSize,
+                            fontWeight = FontWeight.Bold
+                        )
+                    },
+                    colors = TextFieldDefaults.outlinedTextFieldColors(
+                        textColor = MaterialTheme.colorScheme.primary,
+                        focusedBorderColor = MaterialTheme.colorScheme.primary,
+                        unfocusedBorderColor = MaterialTheme.colorScheme.primary,
+                    ),
+                    trailingIcon = {
+                        Icon(
+                            imageVector = if (townEnabled) Icons.Filled.ArrowDropUp else Icons.Filled.ArrowDropDown,
+                            contentDescription = null,
+                            Modifier.clickable {
+                                townEnabled = !townEnabled
+                            },
+                            tint = MaterialTheme.colorScheme.primary
+                        )
+                    }
                 )
-            },
-            colors = TextFieldDefaults.outlinedTextFieldColors(
-                textColor = MaterialTheme.colorScheme.primary,
-                focusedBorderColor = MaterialTheme.colorScheme.primary,
-                unfocusedBorderColor = MaterialTheme.colorScheme.primary,
-            )
-        )
+                DropdownMenu(
+                    expanded = townEnabled,
+                    modifier = Modifier
+                        .background(MaterialTheme.colorScheme.onBackground)
+                        .verticalScroll(rememberScrollState())
+                        .height(200.dp),
+                    onDismissRequest = { townEnabled = false }
+                ) {
+                    when (province) {
+                        Province.SEOUL.value -> {
+                            townSeoulList.forEach {
+                                DropdownMenuItem(
+                                    text = {
+                                        Text(
+                                            text = it.town,
+                                            fontWeight = FontWeight.ExtraBold
+                                        )
+                                    },
+                                    onClick = {
+                                        town = it.town
+                                        townEnabled = false
+                                    },
+                                    trailingIcon = {
+                                        Icon(
+                                            Icons.Filled.PinDrop,
+                                            contentDescription = null,
+                                            tint = MaterialTheme.colorScheme.primary
+                                        )
+                                    },
+                                    colors = MenuDefaults.itemColors(textColor = MaterialTheme.colorScheme.primary)
+                                )
+                            }
+                        }
+                        Province.GYEONGGI.value -> {
+                            townGyeonggiList.forEach {
+                                DropdownMenuItem(
+                                    text = {
+                                        Text(
+                                            text = it.town,
+                                            fontWeight = FontWeight.ExtraBold
+                                        )
+                                    },
+                                    onClick = {
+                                        town = it.town
+                                        townEnabled = false
+                                    },
+                                    trailingIcon = {
+                                        Icon(
+                                            Icons.Filled.PinDrop,
+                                            contentDescription = null,
+                                            tint = MaterialTheme.colorScheme.primary
+                                        )
+                                    },
+                                    colors = MenuDefaults.itemColors(textColor = MaterialTheme.colorScheme.primary)
+                                )
+                            }
+                        }
+                        Province.INCHEON.value -> {
+                            townIncheonList.forEach {
+                                DropdownMenuItem(
+                                    text = {
+                                        Text(
+                                            text = it.town,
+                                            fontWeight = FontWeight.ExtraBold
+                                        )
+                                    },
+                                    onClick = {
+                                        town = it.town
+                                        townEnabled = false
+                                    },
+                                    trailingIcon = {
+                                        Icon(
+                                            Icons.Filled.PinDrop,
+                                            contentDescription = null,
+                                            tint = MaterialTheme.colorScheme.primary
+                                        )
+                                    },
+                                    colors = MenuDefaults.itemColors(textColor = MaterialTheme.colorScheme.primary)
+                                )
+                            }
+                        }
+                        Province.GWANGJU.value -> {
+                            townGwangjuList.forEach {
+                                DropdownMenuItem(
+                                    text = {
+                                        Text(
+                                            text = it.town,
+                                            fontWeight = FontWeight.ExtraBold
+                                        )
+                                    },
+                                    onClick = {
+                                        town = it.town
+                                        townEnabled = false
+                                    },
+                                    trailingIcon = {
+                                        Icon(
+                                            Icons.Filled.PinDrop,
+                                            contentDescription = null,
+                                            tint = MaterialTheme.colorScheme.primary
+                                        )
+                                    },
+                                    colors = MenuDefaults.itemColors(textColor = MaterialTheme.colorScheme.primary)
+                                )
+                            }
+                        }
+                        Province.DAEJEON.value -> {
+                            townDaejeonList.forEach {
+                                DropdownMenuItem(
+                                    text = {
+                                        Text(
+                                            text = it.town,
+                                            fontWeight = FontWeight.ExtraBold
+                                        )
+                                    },
+                                    onClick = {
+                                        town = it.town
+                                        townEnabled = false
+                                    },
+                                    trailingIcon = {
+                                        Icon(
+                                            Icons.Filled.PinDrop,
+                                            contentDescription = null,
+                                            tint = MaterialTheme.colorScheme.primary
+                                        )
+                                    },
+                                    colors = MenuDefaults.itemColors(textColor = MaterialTheme.colorScheme.primary)
+                                )
+                            }
+                        }
+                        Province.DAEGU.value -> {
+                            townDaeguList.forEach {
+                                DropdownMenuItem(
+                                    text = {
+                                        Text(
+                                            text = it.town,
+                                            fontWeight = FontWeight.ExtraBold
+                                        )
+                                    },
+                                    onClick = {
+                                        town = it.town
+                                        townEnabled = false
+                                    },
+                                    trailingIcon = {
+                                        Icon(
+                                            Icons.Filled.PinDrop,
+                                            contentDescription = null,
+                                            tint = MaterialTheme.colorScheme.primary
+                                        )
+                                    },
+                                    colors = MenuDefaults.itemColors(textColor = MaterialTheme.colorScheme.primary)
+                                )
+                            }
+                        }
+                        Province.BUSAN.value -> {
+                            townBusanList.forEach {
+                                DropdownMenuItem(
+                                    text = {
+                                        Text(
+                                            text = it.town,
+                                            fontWeight = FontWeight.ExtraBold
+                                        )
+                                    },
+                                    onClick = {
+                                        town = it.town
+                                        townEnabled = false
+                                    },
+                                    trailingIcon = {
+                                        Icon(
+                                            Icons.Filled.PinDrop,
+                                            contentDescription = null,
+                                            tint = MaterialTheme.colorScheme.primary
+                                        )
+                                    },
+                                    colors = MenuDefaults.itemColors(textColor = MaterialTheme.colorScheme.primary)
+                                )
+                            }
+                        }
+                        Province.ULSAN.value -> {
+                            townUlsanList.forEach {
+                                DropdownMenuItem(
+                                    text = {
+                                        Text(
+                                            text = it.town,
+                                            fontWeight = FontWeight.ExtraBold
+                                        )
+                                    },
+                                    onClick = {
+                                        town = it.town
+                                        townEnabled = false
+                                    },
+                                    trailingIcon = {
+                                        Icon(
+                                            Icons.Filled.PinDrop,
+                                            contentDescription = null,
+                                            tint = MaterialTheme.colorScheme.primary
+                                        )
+                                    },
+                                    colors = MenuDefaults.itemColors(textColor = MaterialTheme.colorScheme.primary)
+                                )
+                            }
+                        }
+                        Province.SEJONG.value -> {
+                            townGyeonggiList.forEach {
+                                DropdownMenuItem(
+                                    text = {
+                                        Text(
+                                            text = it.town,
+                                            fontWeight = FontWeight.ExtraBold
+                                        )
+                                    },
+                                    onClick = {
+                                        town = it.town
+                                        townEnabled = false
+                                    },
+                                    trailingIcon = {
+                                        Icon(
+                                            Icons.Filled.PinDrop,
+                                            contentDescription = null,
+                                            tint = MaterialTheme.colorScheme.primary
+                                        )
+                                    },
+                                    colors = MenuDefaults.itemColors(textColor = MaterialTheme.colorScheme.primary)
+                                )
+                            }
+                        }
+                        Province.GANGWON.value -> {
+                            townGangwonList.forEach {
+                                DropdownMenuItem(
+                                    text = {
+                                        Text(
+                                            text = it.town,
+                                            fontWeight = FontWeight.ExtraBold
+                                        )
+                                    },
+                                    onClick = {
+                                        town = it.town
+                                        townEnabled = false
+                                    },
+                                    trailingIcon = {
+                                        Icon(
+                                            Icons.Filled.PinDrop,
+                                            contentDescription = null,
+                                            tint = MaterialTheme.colorScheme.primary
+                                        )
+                                    },
+                                    colors = MenuDefaults.itemColors(textColor = MaterialTheme.colorScheme.primary)
+                                )
+                            }
+                        }
+                        Province.CHUNGCHEONGBUK.value -> {
+                            townChungBukList.forEach {
+                                DropdownMenuItem(
+                                    text = {
+                                        Text(
+                                            text = it.town,
+                                            fontWeight = FontWeight.ExtraBold
+                                        )
+                                    },
+                                    onClick = {
+                                        town = it.town
+                                        townEnabled = false
+                                    },
+                                    trailingIcon = {
+                                        Icon(
+                                            Icons.Filled.PinDrop,
+                                            contentDescription = null,
+                                            tint = MaterialTheme.colorScheme.primary
+                                        )
+                                    },
+                                    colors = MenuDefaults.itemColors(textColor = MaterialTheme.colorScheme.primary)
+                                )
+                            }
+                        }
+                        Province.CHUNGCHEONGNAM.value -> {
+                            townChungNamList.forEach {
+                                DropdownMenuItem(
+                                    text = {
+                                        Text(
+                                            text = it.town,
+                                            fontWeight = FontWeight.ExtraBold
+                                        )
+                                    },
+                                    onClick = {
+                                        town = it.town
+                                        townEnabled = false
+                                    },
+                                    trailingIcon = {
+                                        Icon(
+                                            Icons.Filled.PinDrop,
+                                            contentDescription = null,
+                                            tint = MaterialTheme.colorScheme.primary
+                                        )
+                                    },
+                                    colors = MenuDefaults.itemColors(textColor = MaterialTheme.colorScheme.primary)
+                                )
+                            }
+                        }
+                        Province.JEOLLABUK.value -> {
+                            townJeonBukList.forEach {
+                                DropdownMenuItem(
+                                    text = {
+                                        Text(
+                                            text = it.town,
+                                            fontWeight = FontWeight.ExtraBold
+                                        )
+                                    },
+                                    onClick = {
+                                        town = it.town
+                                        townEnabled = false
+                                    },
+                                    trailingIcon = {
+                                        Icon(
+                                            Icons.Filled.PinDrop,
+                                            contentDescription = null,
+                                            tint = MaterialTheme.colorScheme.primary
+                                        )
+                                    },
+                                    colors = MenuDefaults.itemColors(textColor = MaterialTheme.colorScheme.primary)
+                                )
+                            }
+                        }
+                        Province.JEOLLANAM.value -> {
+                            townJeonNamList.forEach {
+                                DropdownMenuItem(
+                                    text = {
+                                        Text(
+                                            text = it.town,
+                                            fontWeight = FontWeight.ExtraBold
+                                        )
+                                    },
+                                    onClick = {
+                                        town = it.town
+                                        townEnabled = false
+                                    },
+                                    trailingIcon = {
+                                        Icon(
+                                            Icons.Filled.PinDrop,
+                                            contentDescription = null,
+                                            tint = MaterialTheme.colorScheme.primary
+                                        )
+                                    },
+                                    colors = MenuDefaults.itemColors(textColor = MaterialTheme.colorScheme.primary)
+                                )
+                            }
+                        }
+                        Province.GYEONGSANGBUK.value -> {
+                            townGyungBukList.forEach {
+                                DropdownMenuItem(
+                                    text = {
+                                        Text(
+                                            text = it.town,
+                                            fontWeight = FontWeight.ExtraBold
+                                        )
+                                    },
+                                    onClick = {
+                                        town = it.town
+                                        townEnabled = false
+                                    },
+                                    trailingIcon = {
+                                        Icon(
+                                            Icons.Filled.PinDrop,
+                                            contentDescription = null,
+                                            tint = MaterialTheme.colorScheme.primary
+                                        )
+                                    },
+                                    colors = MenuDefaults.itemColors(textColor = MaterialTheme.colorScheme.primary)
+                                )
+                            }
+                        }
+                        Province.GYEONGSANGNAM.value -> {
+                            townGyungNamList.forEach {
+                                DropdownMenuItem(
+                                    text = {
+                                        Text(
+                                            text = it.town,
+                                            fontWeight = FontWeight.ExtraBold
+                                        )
+                                    },
+                                    onClick = {
+                                        town = it.town
+                                        townEnabled = false
+                                    },
+                                    trailingIcon = {
+                                        Icon(
+                                            Icons.Filled.PinDrop,
+                                            contentDescription = null,
+                                            tint = MaterialTheme.colorScheme.primary
+                                        )
+                                    },
+                                    colors = MenuDefaults.itemColors(textColor = MaterialTheme.colorScheme.primary)
+                                )
+                            }
+                        }
+                        Province.JEJU.value -> {
+                            townJejuList.forEach {
+                                DropdownMenuItem(
+                                    text = {
+                                        Text(
+                                            text = it.town,
+                                            fontWeight = FontWeight.ExtraBold
+                                        )
+                                    },
+                                    onClick = {
+                                        town = it.town
+                                        townEnabled = false
+                                    },
+                                    trailingIcon = {
+                                        Icon(
+                                            Icons.Filled.PinDrop,
+                                            contentDescription = null,
+                                            tint = MaterialTheme.colorScheme.primary
+                                        )
+                                    },
+                                    colors = MenuDefaults.itemColors(textColor = MaterialTheme.colorScheme.primary)
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
         Button(
             onClick = {
-                Log.d("position", position)
-                onUpdateUserInfo(UserUpdateDto(name, position, address))
+                val userUpdateDto = UserUpdateDto(name, position, province, town)
+                Log.d("userUpdateDto", userUpdateDto.toString())
+                onUpdateUserInfo(userUpdateDto)
             }
         ) {
             Text(text = stringResource(id = R.string.update_profile))

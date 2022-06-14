@@ -35,16 +35,18 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.example.uaep.R
-import com.example.uaep.dto.*
+import com.example.uaep.dto.DummyResponse
+import com.example.uaep.dto.ErrorResponse
+import com.example.uaep.dto.Player
+import com.example.uaep.dto.RateRequestDto
+import com.example.uaep.dto.RoomDto
+import com.example.uaep.dto.Team
 import com.example.uaep.network.AuthService
 import com.example.uaep.network.CookieChanger
 import com.example.uaep.network.ReAuthService
 import com.example.uaep.ui.components.Profile
 import com.example.uaep.ui.profile.ProfileDto
 import com.example.uaep.ui.theme.UaepTheme
-import com.example.uaep.ui.theme.md_theme_light_error
-import com.example.uaep.ui.theme.md_theme_light_primary
-import com.example.uaep.ui.theme.md_theme_light_secondary
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import retrofit2.Call
@@ -55,7 +57,7 @@ import java.util.*
 data class ReviewDto(
     val name: String,
     val position: String,
-    val levelPoint: Int,
+    val level: String,
 )
 
 @Composable
@@ -72,7 +74,7 @@ fun ReviewDialog(
     val reviewDto = ReviewDto(
         name = profileDto.name,
         position = profileDto.position,
-        levelPoint = profileDto.levelPoint
+        level= profileDto.level
     )
 
     val initialRating = 3.0F
@@ -96,8 +98,7 @@ fun ReviewDialog(
                         fontWeight = FontWeight.Bold
                     )
                     Text(
-                        text = reviewDto.levelPoint.toString(),
-                        color = selectColorByLevel(reviewDto.levelPoint),
+                        text = reviewDto.level,
                         fontSize = MaterialTheme.typography.headlineMedium.fontSize,
                         fontWeight = FontWeight.ExtraBold
                     )
@@ -216,24 +217,6 @@ fun ReviewDialog(
 
 }
 
-private fun selectColorByLevel(lv: Int): Color {
-    var color: Color = Color.Black
-
-    color = when (lv) {
-        in 1..3 -> {
-            md_theme_light_secondary
-        }
-        in 4..6 -> {
-            md_theme_light_primary
-        }
-        else -> {
-            md_theme_light_error
-        }
-    }
-
-    return color
-}
-
 @Preview(
     name = "Light Mode",
     showBackground = true
@@ -257,9 +240,10 @@ fun PreviewReview() {
                 email = "test@gmail.com",
                 name = "name",
                 gender = "남성",
-                address = "address",
+                province = "province",
+                town = "town",
                 position = "FW",
-                levelPoint = 0
+                level= "비기너1"
             ),
             mf1 = null,
             mf2 = null,
@@ -270,9 +254,10 @@ fun PreviewReview() {
                 email = "test@gmail.com",
                 name = "name",
                 gender = "남성",
-                address = "address",
+                province = "province",
+                town = "town",
                 position = "FW",
-                levelPoint = 0
+                level= "비기너1"
             )
         ),
         teamB = Team(
@@ -280,9 +265,10 @@ fun PreviewReview() {
                 email = "test@gmail.com",
                 name = "name",
                 gender = "남성",
-                address = "address",
+                province = "province",
+                town = "town",
                 position = "FW",
-                levelPoint = 0
+                level= "비기너1"
             ),
             mf1 = null,
             mf2 = null,
@@ -293,9 +279,10 @@ fun PreviewReview() {
                 email = "test@gmail.com",
                 name = "name",
                 gender = "남성",
-                address = "address",
+                province = "province",
+                town = "town",
                 position = "FW",
-                levelPoint = 0
+                level= "비기너1"
             )
         ),
         status = null,
@@ -310,9 +297,10 @@ fun PreviewReview() {
             profileDto = ProfileDto(
                 name = "김광진",
                 position = "FW",
-                address = "경기도 수원시",
+                province = "province",
+                town = "town",
                 gender = "남성",
-                levelPoint = 3,
+                level = "비기너1",
                 positionChangePoint = 30
             ),
             pos = "fw",

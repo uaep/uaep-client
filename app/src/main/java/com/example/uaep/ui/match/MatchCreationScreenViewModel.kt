@@ -33,16 +33,23 @@ class MatchCreationScreenViewModel(
     private val mNumPlayerSelected = mutableStateOf(false)
     private val mGender = mutableStateOf("")
     private val mGenderSelected = mutableStateOf(false)
+    private val mLimitaion = mutableStateOf("")
+    private val mLimitaionSelected = mutableStateOf(false)
 
     val place: State<String> = mPlace
     val numPlayer: State<String> = mNumPlayer
     val numPlayerSelected: State<Boolean> = mNumPlayerSelected
     val gender: State<String> = mGender
     val genderSelected: State<Boolean> = mGenderSelected
+    val limitation: State<String> = mLimitaion
+    val limitationSelected: State<Boolean> = mLimitaionSelected
+
     val icon1: ImageVector
         @Composable get() = if (mNumPlayerSelected.value) Icons.Filled.ArrowDropUp else Icons.Filled.ArrowDropDown
     val icon2: ImageVector
         @Composable get() = if (mGenderSelected.value) Icons.Filled.ArrowDropUp else Icons.Filled.ArrowDropDown
+    val icon3: ImageVector
+        @Composable get() = if (mLimitaionSelected.value) Icons.Filled.ArrowDropUp else Icons.Filled.ArrowDropDown
 
     fun updatePlace(place: String) {
         mPlace.value = place
@@ -62,6 +69,14 @@ class MatchCreationScreenViewModel(
 
     fun onGenderSelected() {
         mGenderSelected.value = !mGenderSelected.value
+    }
+
+    fun updateLimitaion(limitaion: String) {
+        mLimitaion.value = limitaion
+    }
+
+    fun onLimitationSelected() {
+        mLimitaionSelected.value = !mLimitaionSelected.value
     }
 
     fun postGameCreation(gameCreateDto: GameCreateDto, navController: NavController) {

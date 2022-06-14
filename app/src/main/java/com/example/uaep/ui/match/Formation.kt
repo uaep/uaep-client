@@ -1,6 +1,13 @@
 package com.example.uaep.ui.match
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -160,9 +167,10 @@ fun FormationPreview() {
                             email = "test@gmail.com",
                             name = "name",
                             gender = "남성",
-                            address = "address",
+                            province = "province",
+                            town = "town",
                             position = "FW",
-                            levelPoint = 0
+                            level = "비기너1"
                         ),
                         mf1 = null,
                         mf2 = null,
@@ -173,9 +181,10 @@ fun FormationPreview() {
                             email = "test@gmail.com",
                             name = "name",
                             gender = "남성",
-                            address = "address",
+                            province = "province",
+                            town = "town",
                             position = "FW",
-                            levelPoint = 0
+                            level = "비기너1"
                         )
                 ),
                 posSelect = {},
@@ -185,9 +194,10 @@ fun FormationPreview() {
                 profile = ProfileDto(
                     name = "name",
                     gender = "남성",
-                    address = "address",
+                    province = "address",
+                    town = "",
                     position = "fw",
-                    levelPoint = 0,
+                    level = "비기너1",
                     positionChangePoint = null
                 )
             )

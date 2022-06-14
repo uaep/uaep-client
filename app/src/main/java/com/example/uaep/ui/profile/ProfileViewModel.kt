@@ -1,6 +1,8 @@
 package com.example.uaep.ui.profile
 
+import android.content.Context
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -12,20 +14,23 @@ import retrofit2.Response
 
 class ProfileViewModel(
     private val userApiService: UserApiService = UserApiService.getInstance(),
+    val context: Context
 ): ViewModel() {
 
     private val mName = mutableStateOf("")
     private val mPosition = mutableStateOf("")
-    private val mAddress = mutableStateOf("")
+    private val mProvince = mutableStateOf("")
+    private val mTown = mutableStateOf("")
     private val mGender = mutableStateOf("")
-    private val mLevelPoint = mutableStateOf(0)
+    private val mLevel= mutableStateOf("")
     private val mPositionChangePoint = mutableStateOf(0)
 
     val name: State<String> = mName
     val position: State<String> = mPosition
-    val address: State<String> = mAddress
+    val province: State<String> = mProvince
+    val town: State<String> = mTown
     val gender: State<String> = mGender
-    val levelPoint: State<Int> = mLevelPoint
+    val level: State<String> = mLevel
     val positionChangePoint: State<Int> = mPositionChangePoint
 
     fun updateName(name: String) {
@@ -36,16 +41,20 @@ class ProfileViewModel(
         mPosition.value = position
     }
 
-    fun updateAddress(address: String) {
-        mAddress.value = address
+    fun updateProvince(province: String) {
+        mProvince.value = province
+    }
+
+    fun updateTown(town: String) {
+        mTown.value = town
     }
 
     fun updateGender(gender: String) {
         mGender.value = gender
     }
 
-    fun updateLevelPoint(level: Int) {
-        mLevelPoint.value = level
+    fun updateLevel(level: String) {
+        mLevel.value = level
     }
 
     fun updatePositionChangePoint(positionChangePoint: Int) {
@@ -62,14 +71,32 @@ class ProfileViewModel(
                 if (response.isSuccessful) {
                     mName.value = response.body()!!.name
                     mPosition.value = response.body()!!.position
-                    mAddress.value = response.body()!!.address
+                    mProvince.value = response.body()!!.province
+                    mTown.value = response.body()!!.town
                 } else {
-                    Log.d("debug2", (response.errorBody()?.charStream()).toString())
+                    Log.d("error",response.errorBody()?.string().toString())
+//                    val errorResponse: ErrorResponse? =
+//                        Gson().fromJson(
+//                            response.errorBody()!!.charStream(),
+//                            object : TypeToken<ErrorResponse>() {}.type
+//                        )
+
+//                    Log.d("error", errorResponse?.message.toString())
+
+                    if (response.errorBody()?.string().toString().contains("points")) {
+                        mToast(context, "포지션 변경 포인트가 부족합니다.")
+                    } else if (response.errorBody()?.string().toString().contains("Precondition")) {
+                        mToast(context, "포지션 변경을 위해선 현재 참여중인 방이 없어야합니다.")
+                    }
                 }
             }
             override fun onFailure(call: Call<UserUpdateDto>, t: Throwable) {
                 Log.i("test", "실패$t")
             }
         })
+    }
+
+    private fun mToast(context: Context, msg: String){
+        Toast.makeText(context, msg, Toast.LENGTH_LONG).show()
     }
 }

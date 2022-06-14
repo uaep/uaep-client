@@ -8,6 +8,8 @@ data class SignUpRequestDto(
     @SerializedName("password_check")
     val matchingPassword: String,
     val gender: String,
-    val address: String,
+    val province: String,
+    val town: String,
+    val level: String,
     val position: String
 )

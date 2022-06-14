@@ -19,9 +19,10 @@ import com.example.uaep.ui.theme.UaepTheme
 data class ProfileDto(
     val name: String,
     val position: String,
-    val address: String,
+    val province: String,
+    val town: String,
     val gender: String,
-    val levelPoint: Int,
+    val level: String,
     val positionChangePoint: Int?
 )
 
@@ -46,7 +47,14 @@ fun ProfileInfo(
         }
         Spacer(modifier = Modifier.padding(vertical = 5.dp))
         Text(
-            text = stringResource(id = R.string.address) + " : " + profileInfoDto.address,
+            text = stringResource(id = R.string.province) + " : " + profileInfoDto.province,
+            modifier = Modifier.padding(all = 4.dp),
+            maxLines = Int.MAX_VALUE,
+            style = MaterialTheme.typography.bodyLarge,
+            fontWeight = FontWeight.ExtraBold
+        )
+        Text(
+            text = stringResource(id = R.string.town) + " : " + profileInfoDto.town,
             modifier = Modifier.padding(all = 4.dp),
             maxLines = Int.MAX_VALUE,
             style = MaterialTheme.typography.bodyLarge,
@@ -60,7 +68,7 @@ fun ProfileInfo(
             fontWeight = FontWeight.ExtraBold
         )
         Text(
-            text = stringResource(id = R.string.level) + " : " + profileInfoDto.levelPoint,
+            text = stringResource(id = R.string.level) + " : " + profileInfoDto.level,
             modifier = Modifier.padding(all = 4.dp),
             maxLines = Int.MAX_VALUE,
             style = MaterialTheme.typography.bodyLarge,
@@ -94,9 +102,10 @@ fun PreviewProfileInfo() {
             profileInfoDto = ProfileDto(
                 name = "김광진",
                 position = "FK",
-                address = "경기도 수원시 어디로 가야하죠 아저씨 119",
+                province = "서울",
+                town = "강남구 테헤란로",
                 gender = "남자",
-                levelPoint = 1,
+                level = "비기너1",
                 positionChangePoint = 1000
             )
         )
