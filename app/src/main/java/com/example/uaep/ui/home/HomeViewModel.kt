@@ -78,7 +78,7 @@ private data class HomeViewModelState(
                 isLoading = isLoading,
                 errorMessages = errorMessages,
                 selectedRoom = selectedRoomId
-                    ?: RoomDto("-1", Date(0,0,0,0,0),"Wrong Page","6vs6","-", "-", null, null, null, null, null, null)
+                    ?: RoomDto("-1", Date(0,0,0,0,0),"Wrong Page","6vs6","-", "-", null, null, null, null, null)
             )
         }
 }

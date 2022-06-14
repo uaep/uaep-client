@@ -18,6 +18,11 @@
     <string name="match_not_ready">포지션 선택 중</string>
     <string name="foot_ball_back">축구장 배경</string>
     <string name="match_captain_not_select">주장변경이 불가능 합니다</string>
+    <string name="match_beginner">비기너</string>
+    <string name="match_amateur">아마추어</string>
+    <string name="match_semi_pro">세미프로</string>
+    <string name="match_pro">프로</string>
+    <string name="match_starter">스타터</string>
 
     <!-- Review Screen -->
     <string name="review_wait">리뷰를 1명이상 진행해주세요</string>

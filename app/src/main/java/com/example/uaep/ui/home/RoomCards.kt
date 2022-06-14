@@ -72,10 +72,30 @@ fun RoomPersonnel(
 ) {
     Row(modifier) {
         CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
-            Text(
-                text = room.number,
-                style = MaterialTheme.typography.bodyLarge
-            )
+            if(room.level_limit!=null) {
+                Text(
+                    text = room.level_limit,
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.secondary
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun RoomNumber(
+    room: Room,
+    modifier: Modifier = Modifier
+) {
+    Row(modifier) {
+        CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
+            if(room.level_limit!=null) {
+                Text(
+                    text = room.number,
+                    style = MaterialTheme.typography.bodyLarge,
+                )
+            }
         }
     }
 }
@@ -131,10 +151,14 @@ fun RoomCardSimple(
             ReadTime(room)
         }
         Column(modifier = Modifier.weight(1f)) {
-            RoomRank(room)
+            Row(verticalAlignment = Alignment.Bottom) {
+                RoomRank(room)
+                Spacer(Modifier.width(10.dp))
+                RoomPersonnel(room)
+            }
             RoomTitle(room)
             Row(verticalAlignment = Alignment.Bottom) {
-                RoomPersonnel(room)
+                RoomNumber(room)
                 Spacer(Modifier.width(10.dp))
                 RoomGender(room)
             }
@@ -157,7 +181,8 @@ fun SimpleRoomPreview() {
         status = null,
         teamA_status = null,
         teamB_status = null,
-        apply_flag = null
+        apply_flag = null,
+        level_limit = "비기너3 이하"
     )
 
     UaepTheme {

@@ -69,6 +69,7 @@ class ProfileViewModel(
                 response: Response<UserUpdateDto>
             ) {
                 if (response.isSuccessful) {
+                    Log.i("profile", response.raw().toString())
                     mName.value = response.body()!!.name
                     mPosition.value = response.body()!!.position
                     mProvince.value = response.body()!!.province

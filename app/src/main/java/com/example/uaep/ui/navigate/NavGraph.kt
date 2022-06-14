@@ -1,5 +1,6 @@
 package com.example.uaep.ui.navigate
 
+import android.util.Log
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -110,6 +111,7 @@ fun UaepNavGraph(
         ) {
             val userJson = it.arguments?.getString("user")
             val userDto = Gson().fromJson(userJson, UserDto::class.java)
+            Log.i("profile_enter_navi",userJson ?: "none")
             ProfileScreen(
                 userDto = userDto,
                 navController = navController

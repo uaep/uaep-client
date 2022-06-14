@@ -286,9 +286,8 @@ fun PreviewReview() {
             )
         ),
         status = null,
-        teamA_status = null,
-        teamB_status = null,
-        apply_flag = null
+        level_limit = null,
+        level_distribution = null
     )
     UaepTheme {
         ReviewDialog(

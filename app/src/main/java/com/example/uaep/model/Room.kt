@@ -32,7 +32,10 @@ data class Room(
     val status : String? = null,
     val teamA_status : String? = null,
     val teamB_status : String? = null,
-    val apply_flag : Boolean? =null
+    val apply_flag : Boolean? =null,
+    val level_limit: String? = null,
+    val province: String? = null,
+    val town: String? = null
 )
 
 

@@ -280,7 +280,7 @@ fun PreviewHomeListDrawerScreen() {
                 isLoading = false,
                 errorMessages = emptyList(),
                 isArticleOpen = false,
-                selectedRoom = RoomDto("-1", Date(0,0,0,0,0),"Wrong Page","6vs6","-", "-", null, null, null, null, null, null)
+                selectedRoom = RoomDto("-1", Date(0,0,0,0,0),"Wrong Page","6vs6","-", "-", null, null, null, null, null)
             ),
             showTopAppBar = true,
             onSelectPost = {},

@@ -57,7 +57,7 @@ fun PositionButton(
             modifier = Modifier
                 .border(
                     width = 2.dp,
-                    color = md_theme_light_inverseSurface,
+                    color = androidx.compose.material3.MaterialTheme.colorScheme.inverseSurface,
                     shape = RoundedCornerShape(0)
                 )
                 .padding(5.dp)
@@ -115,7 +115,7 @@ fun PositionButton(
                 )
             }
             Row(verticalAlignment = Alignment.CenterVertically,modifier = Modifier
-                .background(color = md_theme_light_inverseSurface)
+                .background(color = androidx.compose.material3.MaterialTheme.colorScheme.inverseSurface)
                 .padding(1.dp)
                 .border(
                     width = 1.dp,
@@ -197,7 +197,7 @@ fun PositionButton(
             if(player!=null) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically, modifier = Modifier
-                        .background(color = md_theme_light_inverseSurface)
+                        .background(color = androidx.compose.material3.MaterialTheme.colorScheme.inverseSurface)
                         .padding(1.dp)
                         .border(
                             width = 1.dp,

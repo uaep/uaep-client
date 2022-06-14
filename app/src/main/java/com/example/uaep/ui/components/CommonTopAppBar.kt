@@ -57,6 +57,7 @@ fun CommonTopAppBar(
                             response: Response<UserDto>
                         ) {
                             if (response.isSuccessful) {
+                                Log.i("profile_enter", response.raw().toString())
                                 val userJson = Gson().toJson(response.body())
                                 navController.navigate(Screen.Profile.route.replace("{user}", userJson))
                             } else {

@@ -1,11 +1,10 @@
 package com.example.uaep.ui.match
 
 import android.content.Context
+import android.graphics.Typeface
 import android.util.Log
 import android.widget.Toast
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -18,9 +17,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.BottomAppBar
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
@@ -42,8 +39,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Paint
 import androidx.compose.ui.graphics.compositeOver
+import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -58,25 +59,15 @@ import androidx.compose.ui.window.DialogProperties
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.uaep.R
+import com.example.uaep.dto.*
 import com.example.uaep.model.Room
-import com.example.uaep.dto.DummyResponse
-import com.example.uaep.dto.ErrorResponse
-import com.example.uaep.dto.FormationRequestDto
-import com.example.uaep.dto.Player
-import com.example.uaep.dto.RoomDto
-import com.example.uaep.dto.Team
 import com.example.uaep.network.AuthService
 import com.example.uaep.network.CookieChanger
 import com.example.uaep.network.ReAuthService
 import com.example.uaep.ui.components.CommonTopAppBar
 import com.example.uaep.ui.profile.ProfileCard
 import com.example.uaep.ui.profile.ProfileDto
-import com.example.uaep.ui.theme.UaepTheme
-import com.example.uaep.ui.theme.md_theme_light_errorContainer
-import com.example.uaep.ui.theme.md_theme_light_inversePrimary
-import com.example.uaep.ui.theme.md_theme_light_onPrimary
-import com.example.uaep.ui.theme.md_theme_light_primary
-import com.example.uaep.ui.theme.md_theme_light_secondary
+import com.example.uaep.ui.theme.*
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import retrofit2.Call
@@ -277,6 +268,72 @@ fun RoomContainer(
             }
         }
         Log.i("flag", "flag1")
+        if(room.level_distribution !=null) {
+            Canvas(modifier = Modifier.fillMaxWidth().height(100.dp)){
+                drawContext.canvas.nativeCanvas.drawText("  선수 등급 분포도", 0f, 0f, android.graphics.Paint().apply{
+                    textSize=50f
+                    typeface = Typeface.create(Typeface.SANS_SERIF, Typeface.BOLD_ITALIC)
+                })
+                drawRect(
+                    color = Color.Gray,
+                    topLeft = Offset(size.width/5*0.25f, size.height-(room.level_distribution.starter*size.height)),
+                    size = Size(size.width/5*0.5f, room.level_distribution.starter*size.height)
+                )
+                drawRect(
+                    color = Color.Gray,
+                    topLeft = Offset(size.width/5*1.25f, size.height-(room.level_distribution.beginner*size.height)),
+                    size = Size(size.width/5*0.5f, room.level_distribution.beginner*size.height)
+                )
+                drawRect(
+                    color = Color.Gray,
+                    topLeft = Offset(size.width/5*2.25f, size.height-(room.level_distribution.amateur*size.height)),
+                    size = Size(size.width/5*0.5f, room.level_distribution.amateur*size.height)
+                )
+                drawRect(
+                    color = Color.Gray,
+                    topLeft = Offset(size.width/5*3.25f, size.height-(room.level_distribution.semiPro*size.height)),
+                    size = Size(size.width/5*0.5f, room.level_distribution.semiPro*size.height)
+                )
+                drawRect(
+                    color = Color.Gray,
+                    topLeft = Offset(size.width/5*4.25f, size.height-(room.level_distribution.pro*size.height)),
+                    size = Size(size.width/5*0.5f, room.level_distribution.pro*size.height)
+                )
+            }
+            Spacer(Modifier.height(15.dp))
+            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly){
+                Text(
+                    text = stringResource(R.string.match_starter),
+                    color = md_theme_light_primary,
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.ExtraBold
+                )
+                Text(
+                    text = stringResource(R.string.match_beginner),
+                    color = md_theme_light_primary,
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.ExtraBold
+                )
+                Text(
+                    text = stringResource(R.string.match_amateur),
+                    color = md_theme_light_primary,
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.ExtraBold
+                )
+                Text(
+                    text = stringResource(R.string.match_semi_pro),
+                    color = md_theme_light_primary,
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.ExtraBold
+                )
+                Text(
+                    text = stringResource(R.string.match_pro),
+                    color = md_theme_light_primary,
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.ExtraBold
+                )
+            }
+        }
         RoomDesc(room = room,
             modifier = Modifier
                 //.weight(1f)
@@ -286,6 +343,7 @@ fun RoomContainer(
     }
 
 }
+
 
 @Composable
 private fun BottomBar(
@@ -378,7 +436,7 @@ private fun BottomBar(
 
                             },
                             modifier = Modifier.fillMaxSize(),
-                            colors = ButtonDefaults.buttonColors(backgroundColor = md_theme_light_inverseSurface)
+                            colors = ButtonDefaults.buttonColors(backgroundColor =androidx.compose.material3.MaterialTheme.colorScheme.inverseSurface)
                         ) {
                             if(player!=null&&AuthService.getCookieJar().loadEmail()==player.email){
                                 Text(
@@ -521,7 +579,7 @@ fun positionButton(
     onRefresh: (String) -> Unit
 ){
     Button(
-        colors = ButtonDefaults.buttonColors(backgroundColor = md_theme_light_inverseOnSurface),
+        colors = ButtonDefaults.buttonColors(backgroundColor = androidx.compose.material3.MaterialTheme.colorScheme.inverseOnSurface),
         onClick = {
             var check = false
             val type = if(teamA)"A" else "B"
@@ -606,7 +664,7 @@ fun CaptainButton(
             color = androidx.compose.material3.MaterialTheme.colorScheme.primary,
             shape = RoundedCornerShape(0)
         ),
-        colors = ButtonDefaults.buttonColors(backgroundColor = md_theme_light_inverseSurface),
+        colors = ButtonDefaults.buttonColors(backgroundColor = androidx.compose.material3.MaterialTheme.colorScheme.inverseSurface),
         onClick = {
             var check = false
             val type = if(teamA)"A" else "B"
@@ -814,7 +872,8 @@ fun RoomDesc(
 fun RoomTitle(room: RoomDto){
     Log.i("TEXT", room.title)
     Text(room.title,
-        style = MaterialTheme.typography.h4)
+        style = MaterialTheme.typography.h4,
+    color = md_theme_light_inverseSurface)
 }
 
 @Composable
@@ -889,9 +948,8 @@ fun SimpleDescPreview() {
         teamA = null,
         teamB = null,
         status = null,
-        teamA_status = null,
-        teamB_status = null,
-        apply_flag = null
+        level_limit = null,
+        level_distribution = null
     )
 
     UaepTheme {
@@ -962,9 +1020,14 @@ fun SimpleRoomPreview() {
             )
         ),
         status = null,
-        teamA_status = null,
-        teamB_status = null,
-        apply_flag = null
+        level_limit = null,
+        level_distribution = Distribution(
+            starter =  0.1666667f,
+            beginner =  0.3333333f,
+            amateur =  0.5f,
+            semiPro= 0f,
+            pro = 0f
+        )
     )
 
     UaepTheme {

@@ -16,9 +16,8 @@ data class RoomDto(
     val teamA: Team?,
     val teamB: Team?,
     val status : String? = null,
-    val teamA_status : String? = null,
-    val teamB_status : String? = null,
-    val apply_flag : Boolean? = null
+    val level_limit: String?,
+    val level_distribution: Distribution?
 )
 
 data class Team(
@@ -46,4 +45,17 @@ data class Player(
     val town: String,
     val position: String,
     val level: String
+)
+
+data class Distribution(
+    @SerializedName("스타터")
+    val starter: Float,
+    @SerializedName("비기너")
+    val beginner: Float,
+    @SerializedName("아마추어")
+    var amateur: Float,
+    @SerializedName("세미프로")
+    val semiPro: Float,
+    @SerializedName("프로")
+    val pro: Float
 )
