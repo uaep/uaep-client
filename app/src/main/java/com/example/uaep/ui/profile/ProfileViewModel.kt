@@ -1,6 +1,8 @@
 package com.example.uaep.ui.profile
 
+import android.content.Context
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -12,6 +14,7 @@ import retrofit2.Response
 
 class ProfileViewModel(
     private val userApiService: UserApiService = UserApiService.getInstance(),
+    val context: Context
 ): ViewModel() {
 
     private val mName = mutableStateOf("")
@@ -71,7 +74,20 @@ class ProfileViewModel(
                     mProvince.value = response.body()!!.province
                     mTown.value = response.body()!!.town
                 } else {
-                    Log.d("debug2", (response.errorBody()?.charStream()).toString())
+                    Log.d("error",response.errorBody()?.string().toString())
+//                    val errorResponse: ErrorResponse? =
+//                        Gson().fromJson(
+//                            response.errorBody()!!.charStream(),
+//                            object : TypeToken<ErrorResponse>() {}.type
+//                        )
+
+//                    Log.d("error", errorResponse?.message.toString())
+
+                    if (response.errorBody()?.string().toString().contains("points")) {
+                        mToast(context, "포지션 변경 포인트가 부족합니다.")
+                    } else if (response.errorBody()?.string().toString().contains("Precondition")) {
+                        mToast(context, "포지션 변경을 위해선 현재 참여중인 방이 없어야합니다.")
+                    }
                 }
             }
             override fun onFailure(call: Call<UserUpdateDto>, t: Throwable) {
@@ -80,4 +96,7 @@ class ProfileViewModel(
         })
     }
 
+    private fun mToast(context: Context, msg: String){
+        Toast.makeText(context, msg, Toast.LENGTH_LONG).show()
+    }
 }

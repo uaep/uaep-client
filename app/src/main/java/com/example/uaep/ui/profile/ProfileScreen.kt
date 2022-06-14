@@ -14,6 +14,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -26,7 +27,7 @@ import com.example.uaep.ui.theme.UaepTheme
 @Composable
 fun ProfileScreen(
     userDto: UserDto,
-    viewModel: ProfileViewModel = ProfileViewModel(),
+    viewModel: ProfileViewModel = ProfileViewModel(context = LocalContext.current),
     navController: NavController
 ) {
     viewModel.updateName(userDto.name)
@@ -89,7 +90,7 @@ fun PreviewProfileScreen() {
             name = "김광진",
             gender = "남성",
             province = "서울",
-            town = "강남구 테헤란로",
+            town = "강남구",
             position = "GK",
             level = "비기너1",
             positionChangePoint = 1000,
