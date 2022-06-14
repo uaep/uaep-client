@@ -62,4 +62,5 @@
     <string name="review_level">Lv.</string>
     <string name="province">시/도</string>
     <string name="town">상세 주소</string>
+    <string name="level_limitation">레벨 제한</string>
 </resources>

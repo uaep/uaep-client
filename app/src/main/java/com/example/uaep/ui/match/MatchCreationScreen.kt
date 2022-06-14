@@ -45,13 +45,28 @@ import com.example.uaep.ui.components.SpinnerViewModel
 import com.example.uaep.ui.navigate.BottomNavigationBar
 import com.example.uaep.ui.theme.UaepTheme
 
+enum class Limitaion (val value: String) {
+    ALL("모든 레벨"),
+    BELOW_B3("비기너3 이하"),
+    HIGHER_SP1("세미프로1 이상")
+}
+
 @Composable
 fun MatchCreationScreen (
     vm: MatchCreationScreenViewModel = MatchCreationScreenViewModel(),
     navController: NavController
 ) {
     val spinnerViewModel = SpinnerViewModel()
-    Column(Modifier.fillMaxSize().verticalScroll(rememberScrollState())) {
+    val limitaionList = listOf(
+        Limitaion.ALL,
+        Limitaion.BELOW_B3,
+        Limitaion.HIGHER_SP1
+    )
+
+    Column(
+        Modifier
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState())) {
         Scaffold(
             Modifier.height(800.dp),
             topBar = {
@@ -76,7 +91,7 @@ fun MatchCreationScreen (
                     fontSize = MaterialTheme.typography.headlineLarge.fontSize,
                     fontWeight = FontWeight.Bold,
                 )
-                Spacer(modifier = Modifier.padding(vertical = 30.dp))
+                Spacer(modifier = Modifier.padding(vertical = 20.dp))
                 OutlinedTextField(
                     value = vm.place.value,
                     onValueChange = { vm.updatePlace(it) },
@@ -258,7 +273,69 @@ fun MatchCreationScreen (
                             )
                         }
                     }
-                    // TODO: 레벨 제한
+                    Spacer(modifier = Modifier.padding(vertical = 10.dp))
+                    Column {
+                        OutlinedTextField(
+                            value = vm.limitation.value,
+                            readOnly = true,
+                            onValueChange = {},
+                            label = {
+                                Text(
+                                    text = stringResource(R.string.level_limitation),
+                                    color = MaterialTheme.colorScheme.primary,
+                                    fontSize = MaterialTheme.typography.labelLarge.fontSize,
+                                    fontWeight = FontWeight.Bold
+                                )
+                            },
+                            modifier = Modifier
+                                .fillMaxWidth(0.8f)
+                                .clickable {
+                                    vm.onGenderSelected()
+                                },
+                            shape = MaterialTheme.shapes.medium,
+                            textStyle = MaterialTheme.typography.bodyLarge,
+                            colors = TextFieldDefaults.outlinedTextFieldColors(
+                                textColor = MaterialTheme.colorScheme.primary,
+                                focusedBorderColor = MaterialTheme.colorScheme.primary,
+                                unfocusedBorderColor = MaterialTheme.colorScheme.primary,
+                            ),
+                            trailingIcon = {
+                                Icon(
+                                    imageVector = vm.icon3,
+                                    contentDescription = null,
+                                    Modifier.clickable {
+                                        vm.onLimitationSelected()
+                                    },
+                                    tint = MaterialTheme.colorScheme.primary
+                                )
+                            }
+                        )
+                        DropdownMenu(
+                            expanded = vm.limitationSelected.value,
+                            onDismissRequest = {
+                                vm.onLimitationSelected()
+                            },
+                            modifier = Modifier
+                                .fillMaxWidth(0.8f)
+                                .background(color = MaterialTheme.colorScheme.onBackground)
+                        ) {
+                            limitaionList.forEach {
+                                DropdownMenuItem(
+                                    onClick = {
+                                        vm.updateLimitaion(it.value)
+                                        vm.onLimitationSelected()
+                                    }
+                                ) {
+                                    Text(
+                                        text = it.value,
+                                        color = MaterialTheme.colorScheme.primary,
+                                        fontSize = MaterialTheme.typography.labelLarge.fontSize,
+                                        fontWeight = FontWeight.ExtraBold
+                                    )
+                                }
+                            }
+                        }
+                    }
                     Spacer(modifier = Modifier.padding(vertical = 10.dp))
                     SpinnerView(viewModel = spinnerViewModel)
                     Spacer(modifier = Modifier.padding(vertical = 10.dp))
@@ -273,6 +350,7 @@ fun MatchCreationScreen (
                                 place = vm.place.value,
                                 numberOfUsers = vm.numPlayer.value,
                                 gender = vm.gender.value,
+                                limitaion =  vm.limitation.value
                             )
                             Log.i("create_date", newGame.toString())
                             vm.postGameCreation(
