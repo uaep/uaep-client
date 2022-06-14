@@ -15,6 +15,7 @@ import com.example.uaep.model.Room
 import com.example.uaep.network.AuthService
 import com.example.uaep.network.CookieChanger
 import com.example.uaep.network.ReAuthService
+import com.example.uaep.network.UserApiService
 import com.example.uaep.utils.ErrorMessage
 import com.example.ueap.model.RoomsFeed
 import com.google.gson.Gson
@@ -83,6 +84,7 @@ private data class HomeViewModelState(
 }
 
 class HomeViewModel(
+    participating: Boolean
 ) : ViewModel() {
 
     private val viewModelState = MutableStateFlow(HomeViewModelState(isLoading = true))
@@ -97,8 +99,11 @@ class HomeViewModel(
         )
 
     init {
-        refreshPosts()
-        refreshPosts()
+        if(participating)
+            refreshParticipating()
+        else
+            refreshPosts()
+        //refreshPosts()
     }
 
     /**
@@ -172,6 +177,73 @@ class HomeViewModel(
 
 
         //}
+    }
+
+
+    fun refreshParticipating() {
+        // Ui state is refreshing
+        viewModelState.update { it.copy(isLoading = true) }
+
+        var check = false
+        do {
+            UserApiService.getInstance().getUser().enqueue(object :
+                Callback<UserDto> {
+                override fun onResponse(
+                    call: Call<UserDto>,
+                    response: Response<UserDto>
+                ) {
+                    if (response.isSuccessful) {
+                        check = false
+                        room_list = response.body()?.games.orEmpty()
+                        Log.i("participating_response", response.body().toString())
+                        Log.i("participating_list", (room_list.orEmpty().toString()))
+                        val result = RoomsFeed(
+                            data = //listOf(room1, room2, room3)+
+                            room_list.orEmpty()
+                        )
+                        viewModelState.update {
+                            it.copy(roomsFeed = result, isLoading = false)
+                        }
+                        room_list = emptyList()
+                    } else {
+                        Log.i("rooms_fail_body", response.errorBody().toString())
+                        Log.i("rooms_fail_head", response.headers().toString())
+                        check = true
+                        val errorResponse: ErrorResponse? =
+                            Gson().fromJson(
+                                response.errorBody()!!.charStream(),
+                                object : TypeToken<ErrorResponse>() {}.type
+                            )
+                        if (errorResponse!!.message != null && (errorResponse!!.statusCode == 401)) {
+                            ReAuthService.getInstance().reauth().enqueue(object :
+                                Callback<DummyResponse> {
+
+                                override fun onResponse(
+                                    call: Call<DummyResponse>,
+                                    response: Response<DummyResponse>
+                                ) {
+                                    if (response.isSuccessful) {
+                                        val tokens = CookieChanger<DummyResponse>().change(response)
+                                        AuthService.getCookieJar().saveToken(tokens)
+                                    }
+                                }
+                                override fun onFailure(
+                                    call: Call<DummyResponse>,
+                                    t: Throwable
+                                ) {
+                                    Log.i("test", "실패$t")
+                                }
+                            })
+                        }
+                    }
+                }
+                override fun onFailure(call: Call<UserDto>, t: Throwable) {
+                    Log.i("test", "실패$t")
+                    check = true
+                }
+            })
+        }while(check)
+
     }
 
 
@@ -266,10 +338,11 @@ class HomeViewModel(
      */
     companion object {
         fun provideFactory(
+            participating: Boolean
         ): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
             @Suppress("UNCHECKED_CAST")
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                return HomeViewModel() as T
+                return HomeViewModel(participating) as T
             }
         }
     }

@@ -38,12 +38,7 @@ import androidx.compose.ui.window.DialogProperties
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.uaep.R
-import com.example.uaep.dto.DummyResponse
-import com.example.uaep.dto.ErrorResponse
-import com.example.uaep.dto.FormationRequestDto
-import com.example.uaep.dto.Player
-import com.example.uaep.dto.RoomDto
-import com.example.uaep.dto.Team
+import com.example.uaep.dto.*
 import com.example.uaep.model.Room
 import com.example.uaep.network.AuthService
 import com.example.uaep.network.CookieChanger
@@ -192,7 +187,7 @@ fun RoomContainer(
         Scaffold(
             modifier = Modifier
             //.weight(1f)
-                .height(550.dp),
+                .height(650.dp),
             bottomBar = {BottomAppBar(contentPadding = PaddingValues(0.dp),elevation = 0.dp, backgroundColor = Color(0xD9FFFFFF).compositeOver(Color.White)){} }
         ) { innerPadding ->
 
@@ -204,7 +199,7 @@ fun RoomContainer(
                 modifier = Modifier
                     .padding(innerPadding)
                     .fillMaxWidth()
-                    .height(500.dp)
+                    .height(600.dp)
                     //.fillMaxSize()
 
             )
@@ -212,13 +207,26 @@ fun RoomContainer(
             Column(verticalArrangement = Arrangement.SpaceBetween) {
                 Spacer(Modifier.height(10.dp))
                 if (room.teamA == null) {
-                    positionButton(modifier = Modifier.height(50.dp),room = room, teamA = true, onRefresh = onRefresh)
-                    Spacer(Modifier.height(200.dp))
+                    positionButton(modifier = Modifier.height(60.dp), room = room, teamA = true, onRefresh = onRefresh)
+                    Spacer(Modifier.height(210.dp))
                 }
-                else
-                    Spacer(Modifier.height(250.dp))
+                else {
+                    if(room.teamA.captain!=null && AuthService.getCookieJar().loadEmail()==room.teamA.captain.email){
+                        CaptainButton(
+                            modifier = Modifier.height(60.dp), room = room, teamA = true, onRefresh = onRefresh, profile = profile, context = LocalContext.current
+                        )
+                    }else{
+                        Spacer(Modifier.height(60.dp))
+                    }
+                    Spacer(Modifier.height(210.dp))
+                }
                 if (room.teamB == null)
-                    positionButton(modifier = Modifier.height(50.dp),room = room, teamA = false, onRefresh = onRefresh)
+                    positionButton(modifier = Modifier.height(60.dp),room = room, teamA = false, onRefresh = onRefresh)
+                else{
+                    if(room.teamB.captain!=null && AuthService.getCookieJar().loadEmail()==room.teamB.captain.email) {
+                        CaptainButton(modifier = Modifier.height(60.dp), room = room, teamA = false, onRefresh = onRefresh, profile = profile, context = LocalContext.current)
+                    }
+                }
             }
             if (profile != null&& userEmail != AuthService.getCookieJar().loadEmail())
                 ProfileDialog(visible = true, playerNotSelect, profile!!)
@@ -341,19 +349,19 @@ private fun BottomBar(
 
                             },
                             modifier = Modifier.fillMaxSize(),
-                            colors = ButtonDefaults.buttonColors(backgroundColor = md_theme_light_primary)
+                            colors = ButtonDefaults.buttonColors(backgroundColor = md_theme_light_inverseSurface)
                         ) {
                             if(player!=null&&AuthService.getCookieJar().loadEmail()==player.email){
                                 Text(
                                     text = stringResource(R.string.match_clear_ready),
-                                    color = md_theme_light_onPrimary,
+                                    color = md_theme_light_primary,
                                     fontSize = 20.sp,
                                     fontWeight = FontWeight.ExtraBold
                                 )
                             }else {
                                 Text(
                                     text = stringResource(R.string.match_ready),
-                                    color = md_theme_light_onPrimary,
+                                    color = md_theme_light_primary,
                                     fontSize = 20.sp,
                                     fontWeight = FontWeight.ExtraBold
                                 )
@@ -484,7 +492,7 @@ fun positionButton(
     onRefresh: (String) -> Unit
 ){
     Button(
-        colors = ButtonDefaults.buttonColors(backgroundColor = md_theme_light_secondary),
+        colors = ButtonDefaults.buttonColors(backgroundColor = md_theme_light_inverseOnSurface),
         onClick = {
             var check = false
             val type = if(teamA)"A" else "B"
@@ -542,13 +550,106 @@ fun positionButton(
         }
     ){
         if(teamA)
-            Text("TeamA formation create",
-                color = md_theme_light_onPrimary,
+            Text("TeamA\nFormation\nCreate",
+                color = md_theme_light_primary,
                 fontSize = 15.sp,
                 fontWeight = FontWeight.ExtraBold)
         else
-            Text("TeamB formation create",
-                color = md_theme_light_onPrimary,
+            Text("TeamB\nFormation\nCreate",
+                color = md_theme_light_primary,
+                fontSize = 15.sp,
+                fontWeight = FontWeight.ExtraBold)
+    }
+}
+
+@Composable
+fun CaptainButton(
+    modifier: Modifier = Modifier,
+    room: RoomDto,
+    teamA: Boolean,
+    onRefresh: (String) -> Unit,
+    profile: ProfileDto?,
+    context: Context
+){
+    Button(
+        modifier = Modifier.border(
+            width = 2.dp,
+            color = androidx.compose.material3.MaterialTheme.colorScheme.primary,
+            shape = RoundedCornerShape(0)
+        ),
+        colors = ButtonDefaults.buttonColors(backgroundColor = md_theme_light_inverseSurface),
+        onClick = {
+            var check = false
+            val type = if(teamA)"A" else "B"
+
+            if(profile!=null) {
+                do {
+
+                    AuthService.getInstance()
+                        .captain(room.id, type, CaptainRequestDto(profile.name)).enqueue(object :
+                            Callback<Void> {
+                            override fun onResponse(
+                                call: Call<Void>,
+                                response: Response<Void>
+                            ) {
+                                if (response.isSuccessful) {
+                                    Log.i("room_enter", response.body().toString())
+                                    onRefresh(room.id)
+                                } else {
+                                    Log.i("rooms_fail_raw", response.raw().toString())
+                                    Log.i("rooms_fail_head", response.headers().toString())
+
+                                    val errorResponse: ErrorResponse? =
+                                        Gson().fromJson(
+                                            response.errorBody()!!.charStream(),
+                                            object : TypeToken<ErrorResponse>() {}.type
+                                        )
+                                    if (errorResponse!!.message != null && (errorResponse!!.statusCode == 401)) {
+                                        ReAuthService.getInstance().reauth().enqueue(object :
+                                            Callback<DummyResponse> {
+
+                                            override fun onResponse(
+                                                call: Call<DummyResponse>,
+                                                response: Response<DummyResponse>
+                                            ) {
+                                                if (response.isSuccessful) {
+                                                    check = true
+                                                    val tokens =
+                                                        CookieChanger<DummyResponse>().change(response)
+                                                    AuthService.getCookieJar().saveToken(tokens)
+                                                }
+                                            }
+
+                                            override fun onFailure(
+                                                call: Call<DummyResponse>,
+                                                t: Throwable
+                                            ) {
+                                                Log.i("test", "실패$t")
+                                            }
+                                        })
+                                    }
+                                }
+                            }
+
+                            override fun onFailure(call: Call<Void>, t: Throwable) {
+                                Log.i("test", "실패$t")
+                            }
+                        })
+                } while (check)
+            }else{
+                Toast.makeText(context, R.string.match_captain_not_select, Toast.LENGTH_LONG).show()
+            }
+
+        }
+    ){
+        if(teamA)
+            Text("TeamA\nCaptain\nChange",
+                color = md_theme_light_primary,
+                fontSize = 15.sp,
+                fontWeight = FontWeight.ExtraBold)
+        else
+            Text("TeamB\nCaptain\nChange",
+                color = md_theme_light_primary,
                 fontSize = 15.sp,
                 fontWeight = FontWeight.ExtraBold)
     }

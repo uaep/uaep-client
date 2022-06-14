@@ -3,12 +3,15 @@ package com.example.uaep.ui.match
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.defaultMinSize
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Icon
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Copyright
+import androidx.compose.material.icons.twotone.Copyright
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -38,61 +41,43 @@ fun PositionButton(
     pos_name: String,
     reverse: Boolean,
     teamB: Boolean?,
-    profile: ProfileDto?
+    profile: ProfileDto?,
+    captain: Boolean
 ) {
     var enabled by remember { mutableStateOf(true) }
     var pos = player?.position
-
-    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        Box(contentAlignment= Alignment.Center,
+    if(profile != null &&pos_name==profile.position && teamB != null && teamB == reverse) {
+        Column(horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
-                .background(color, shape = CircleShape)
-                .layout() { measurable, constraints ->
-                    // Measure the composable
-                    val placeable = measurable.measure(constraints)
+                .border(
+                    width = 2.dp,
+                    color = md_theme_light_inverseSurface,
+                    shape = RoundedCornerShape(0)
+                )
+                .padding(5.dp)
+        ) {
+            Box(contentAlignment = Alignment.Center,
+                modifier = Modifier
+                    .background(color, shape = CircleShape)
+                    .layout() { measurable, constraints ->
+                        // Measure the composable
+                        val placeable = measurable.measure(constraints)
 
-                    //get the current max dimension to assign width=height
-                    val currentHeight = placeable.height
-                    var heightCircle = currentHeight
-                    if (placeable.width > heightCircle)
-                        heightCircle = placeable.width
+                        //get the current max dimension to assign width=height
+                        val currentHeight = placeable.height
+                        var heightCircle = currentHeight
+                        if (placeable.width > heightCircle)
+                            heightCircle = placeable.width
 
-                    //assign the dimension and the center position
-                    layout(heightCircle, heightCircle) {
-                        // Where the composable gets placed
-                        placeable.placeRelative(0, (heightCircle - currentHeight) / 2)
-                    }
-                }) {
-            Text(
-                text = position.value,
-                modifier = if(profile != null &&pos_name==profile.position && teamB != null && teamB == reverse) {
-                    Modifier
-                        .border(width = 5.dp, color = md_theme_dark_error, shape = CircleShape)
-                        .padding(10.dp)
-                        .defaultMinSize(20.dp)
-                        .clip(CircleShape)
-                        .clickable() {
-                            // TODO : 유저가 없으면 내가 들어가고
-                            // TODO : 유저가 있으면 그 유저 프로필 본다.
-                            if (position.value == Position.GK.value
-                                || position.value == Position.DF.value
-                                || position.value == Position.MF.value
-                                || position.value == Position.FW.value
-                            ) {
-                                //TODO: 유저 이름으로 변경되게하기
-                                playerSelect(player)
-                                teamSelect(reverse)
-                                posSelect(pos_name)
-                            } else {
-                                when (color) {
-                                    md_theme_light_primary -> pos = Position.GK.value
-                                    md_theme_light_tertiary -> pos = Position.DF.value
-                                    md_theme_light_secondary -> pos = Position.MF.value
-                                    md_theme_light_error -> pos = Position.FW.value
-                                }
-                            }
+                        //assign the dimension and the center position
+                        layout(heightCircle, heightCircle) {
+                            // Where the composable gets placed
+                            placeable.placeRelative(0, (heightCircle - currentHeight) / 2)
                         }
-                }else{
+                    }) {
+                Text(
+                    text = position.value,
+                    modifier =
                     Modifier
                         .padding(10.dp)
                         .defaultMinSize(20.dp)
@@ -118,15 +103,120 @@ fun PositionButton(
                                 }
                             }
                         }
-                     },
-                textAlign = TextAlign.Center,
-                color = md_theme_light_onPrimary,
-            )
+                    ,
+                    textAlign = TextAlign.Center,
+                    color = md_theme_light_onPrimary,
+                )
+            }
+            Row(verticalAlignment = Alignment.CenterVertically,modifier = Modifier
+                .background(color = md_theme_light_inverseSurface)
+                .padding(1.dp)
+                .border(
+                    width = 1.dp,
+                    color = MaterialTheme.colorScheme.primary,
+                    shape = RoundedCornerShape(0)
+                )
+                .padding(1.dp)) {
+                if (captain) {
+                    Icon(
+                        imageVector = Icons.TwoTone.Copyright,
+                        contentDescription = null,
+                        tint = md_theme_light_primary
+                    )
+                }
+                Text(
+                    text = player?.name ?: "",
+                    color = md_theme_light_primary,
+
+                    )
+            }
         }
-        Text(
-            text = player?.name ?: "",
-            modifier = Modifier.background(color = md_theme_light_onPrimary)
-        )
+    }else{
+        Column(horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier
+                .padding(5.dp)
+        ) {
+            Box(contentAlignment = Alignment.Center,
+                modifier = Modifier
+                    .background(color, shape = CircleShape)
+                    .layout() { measurable, constraints ->
+                        // Measure the composable
+                        val placeable = measurable.measure(constraints)
+
+                        //get the current max dimension to assign width=height
+                        val currentHeight = placeable.height
+                        var heightCircle = currentHeight
+                        if (placeable.width > heightCircle)
+                            heightCircle = placeable.width
+
+                        //assign the dimension and the center position
+                        layout(heightCircle, heightCircle) {
+                            // Where the composable gets placed
+                            placeable.placeRelative(0, (heightCircle - currentHeight) / 2)
+                        }
+                    }) {
+                Text(
+                    text = position.value,
+                    modifier =
+                    Modifier
+                        .padding(10.dp)
+                        .defaultMinSize(20.dp)
+                        .clip(CircleShape)
+                        .clickable() {
+                            // TODO : 유저가 없으면 내가 들어가고
+                            // TODO : 유저가 있으면 그 유저 프로필 본다.
+                            if (position.value == Position.GK.value
+                                || position.value == Position.DF.value
+                                || position.value == Position.MF.value
+                                || position.value == Position.FW.value
+                            ) {
+                                //TODO: 유저 이름으로 변경되게하기
+                                playerSelect(player)
+                                teamSelect(reverse)
+                                posSelect(pos_name)
+                            } else {
+                                when (color) {
+                                    md_theme_light_primary -> pos = Position.GK.value
+                                    md_theme_light_tertiary -> pos = Position.DF.value
+                                    md_theme_light_secondary -> pos = Position.MF.value
+                                    md_theme_light_error -> pos = Position.FW.value
+                                }
+                            }
+                        }
+                    ,
+                    textAlign = TextAlign.Center,
+                    color = md_theme_light_onPrimary,
+                )
+            }
+            if(player!=null) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically, modifier = Modifier
+                        .background(color = md_theme_light_inverseSurface)
+                        .padding(1.dp)
+                        .border(
+                            width = 1.dp,
+                            color = MaterialTheme.colorScheme.primary,
+                            shape = RoundedCornerShape(0)
+                        )
+                        .padding(1.dp)
+                ) {
+                    if (captain) {
+                        Icon(
+                            imageVector = Icons.Filled.Copyright,
+                            contentDescription = null,
+                            tint = md_theme_light_primary
+                        )
+                    }
+                    Text(
+                        text = player.name,
+                        color = md_theme_light_primary,
+
+                        )
+                }
+            }else{
+                Spacer(Modifier.height(20.dp))
+            }
+        }
     }
 }
 
@@ -161,7 +251,8 @@ fun PositionButtonPreview() {
                 position = "fw",
                 levelPoint = 0,
                 positionChangePoint = null
-            )
+            ),
+            captain = true
         )
     }
 }

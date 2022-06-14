@@ -92,13 +92,14 @@ fun UaepNavGraph(
         }
         composable(route = Screen.Home.route) {
             val homeViewModel: HomeViewModel = viewModel(
-                factory = HomeViewModel.provideFactory()
+                factory = HomeViewModel.provideFactory(false)
             )
             HomeRoute(
                 homeViewModel = homeViewModel,
                 isExpandedScreen = isExpandedScreen,
                 openDrawer = { /*TODO*/ },
-                navController = navController
+                navController = navController,
+                participating = false
             )
         }
         composable(
@@ -137,10 +138,15 @@ fun UaepNavGraph(
         composable(
             route = BottomNavItem.Participating.route
         ) {
-            ParticipatingScreen(
-                showTopAppBar = true,
-                openDrawer ={},
-                navController = navController
+            val homeViewModel: HomeViewModel = viewModel(
+                factory = HomeViewModel.provideFactory(true)
+            )
+            HomeRoute(
+                homeViewModel = homeViewModel,
+                isExpandedScreen = isExpandedScreen,
+                openDrawer = { /*TODO*/ },
+                navController = navController,
+                participating = true
             )
         }
     }

@@ -49,7 +49,8 @@ fun Formation(
                     pos_name = if (!reverse) "gk" else "fw",
                     reverse = reverse,
                     teamB = teamB,
-                    profile = profile
+                    profile = profile,
+                    captain = team.captain?.position?.lowercase() == (if (!reverse) "gk" else "fw")
                 )
             }
             Row(
@@ -66,7 +67,8 @@ fun Formation(
                     pos_name = if (!reverse) "df1" else "mf1",
                     reverse = reverse,
                     teamB = teamB,
-                    profile = profile
+                    profile = profile,
+                    captain = team.captain?.position?.lowercase() == (if (!reverse) "df1" else "mf1")
                 )
                 PositionButton(
                     color = if (!reverse) md_theme_light_tertiary else md_theme_light_secondary,
@@ -78,7 +80,8 @@ fun Formation(
                     pos_name = if (!reverse) "df2" else "mf2",
                     reverse = reverse,
                     teamB = teamB,
-                    profile = profile
+                    profile = profile,
+                    captain = team.captain?.position?.lowercase() == (if (!reverse) "df2" else "mf2")
                 )
             }
             Row(
@@ -96,7 +99,8 @@ fun Formation(
                     pos_name = if (!reverse) "mf2" else "df2",
                     reverse = reverse,
                     teamB = teamB,
-                    profile = profile
+                    profile = profile,
+                    captain = team.captain?.position?.lowercase() == (if (!reverse) "mf2" else "df2")
                 )
                 PositionButton(
                     color = if (!reverse) md_theme_light_secondary else md_theme_light_tertiary,
@@ -108,7 +112,8 @@ fun Formation(
                     pos_name = if (!reverse) "mf1" else "df1",
                     reverse = reverse,
                     teamB = teamB,
-                    profile = profile
+                    profile = profile,
+                    captain = team.captain?.position?.lowercase() == (if (!reverse) "mf1" else "df1")
                 )
             }
             Row(
@@ -125,12 +130,13 @@ fun Formation(
                     pos_name = if (!reverse) "fw" else "gk",
                     reverse = reverse,
                     teamB = teamB,
-                    profile = profile
+                    profile = profile,
+                    captain = team.captain?.position?.lowercase() == (if (!reverse) "fw" else "gk")
                 )
             }
         }
     }else{
-        Spacer(modifier = Modifier.height(200.dp))
+        Spacer(modifier = Modifier.height(250.dp))
     }
 }
 

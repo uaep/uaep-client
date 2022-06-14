@@ -17,7 +17,8 @@ fun HomeRoute(
     isExpandedScreen: Boolean,
     openDrawer: () -> Unit,
     scaffoldState: ScaffoldState = rememberScaffoldState(),
-    navController: NavHostController
+    navController: NavHostController,
+    participating: Boolean
 ) {
     // UiState of the HomeScreen
     val uiState by homeViewModel.uiState.collectAsState()
@@ -31,7 +32,9 @@ fun HomeRoute(
         onInteractWithFeed = { homeViewModel.interactedWithFeed() },
         openDrawer = openDrawer,
         scaffoldState = scaffoldState,
-        navController = navController
+        navController = navController,
+        participating = participating,
+        onRefreshParticipating = { homeViewModel.refreshParticipating() }
     )
 }
 
@@ -46,7 +49,9 @@ fun HomeRoute(
     onInteractWithFeed: () -> Unit,
     openDrawer: () -> Unit,
     scaffoldState: ScaffoldState,
-    navController : NavHostController
+    navController : NavHostController,
+    participating: Boolean,
+    onRefreshParticipating: () -> Unit
 ) {
     // Construct the lazy list states for the list and the details outside of deciding which one to
     // show. This allows the associated state to survive beyond that decision, and therefore
@@ -54,7 +59,7 @@ fun HomeRoute(
     val homeListLazyListState = rememberLazyListState()
 
 
-    val homeScreenType = getHomeScreenType(isExpandedScreen, uiState)
+    val homeScreenType = getHomeScreenType(isExpandedScreen, uiState, participating)
     when (homeScreenType) {
         HomeScreenType.Feed -> {
             HomeFeedScreen(
@@ -88,30 +93,63 @@ fun HomeRoute(
                 onInteractWithFeed()
             }
         }
+        HomeScreenType.Participating -> {
+            HomeFeedScreen(
+                uiState = uiState,
+                showTopAppBar = !isExpandedScreen,
+                onSelectPost = onSelectRoom,
+                onRefreshPosts = onRefreshParticipating,
+                onErrorDismiss = onErrorDismiss,
+                openDrawer = openDrawer,
+                homeListLazyListState = homeListLazyListState,
+                scaffoldState = scaffoldState,
+                navController = navController
+            )
+        }
     }
 }
 
 private enum class HomeScreenType {
     Feed,
-    ArticleDetails
+    ArticleDetails,
+    Participating
 }
 
 @Composable
 private fun getHomeScreenType(
     isExpandedScreen: Boolean,
-    uiState: HomeUiState
-): HomeScreenType = when (isExpandedScreen) {
-    false -> {
-        when (uiState) {
-            is HomeUiState.HasPosts -> {
-                if (uiState.isArticleOpen) {
-                    HomeScreenType.ArticleDetails
-                } else {
-                    HomeScreenType.Feed
+    uiState: HomeUiState,
+    participating: Boolean
+): HomeScreenType = if(participating) {
+    when (isExpandedScreen) {
+        false -> {
+            when (uiState) {
+                is HomeUiState.HasPosts -> {
+                    if (uiState.isArticleOpen) {
+                        HomeScreenType.ArticleDetails
+                    } else {
+                        HomeScreenType.Participating
+                    }
                 }
+                is HomeUiState.NoPosts -> HomeScreenType.Participating
             }
-            is HomeUiState.NoPosts -> HomeScreenType.Feed
         }
+        true -> HomeScreenType.Participating
     }
-    true -> HomeScreenType.Feed
+}else{
+    when (isExpandedScreen) {
+        false -> {
+            when (uiState) {
+                is HomeUiState.HasPosts -> {
+                    if (uiState.isArticleOpen) {
+                        HomeScreenType.ArticleDetails
+                    } else {
+                        HomeScreenType.Feed
+                    }
+                }
+                is HomeUiState.NoPosts -> HomeScreenType.Feed
+            }
+        }
+        true -> HomeScreenType.Feed
+    }
 }

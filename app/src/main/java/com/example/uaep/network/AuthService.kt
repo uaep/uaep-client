@@ -81,6 +81,15 @@ interface AuthService {
         @Body rateRequestDto: RateRequestDto
     ) : Call<Void>
 
+    @Headers("accept: application/json",
+        "content-type: application/json")
+    @PATCH("reviews/{id}/{teamType}/captain")
+    fun captain(
+        @Path("id") id: String,
+        @Path("teamType") type: String,
+        @Body captain: CaptainRequestDto
+    ) : Call<Void>
+
     // 싱글톤 객체로서, 인스턴스 생성 없이 사용할 수 있다.
     companion object{
         private var authService:AuthService? = null
