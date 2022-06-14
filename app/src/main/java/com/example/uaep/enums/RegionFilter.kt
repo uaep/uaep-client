@@ -1,6 +1,7 @@
 package com.example.uaep.enums
 
 enum class RegionFilter (val value: String) {
+    ALL("모든지역"),
     SEOUL("서울"),
     GG("경기/강원"),
     INCHEON("인천"),
