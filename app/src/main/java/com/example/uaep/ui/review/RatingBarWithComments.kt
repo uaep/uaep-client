@@ -44,11 +44,13 @@ private fun displayCommentByRating(rating: Float): String {
     var comment = "";
 
     comment = when(rating) {
+        0f -> "노쇼는 아니지.. :("
         1f -> "왼발의 맙소사!!"
         2f -> "이 레벨은 아닌거 같은데~"
         3f -> "적절한 레벨인 듯?"
         4f -> "내가 쫌~ 더 잘하지만 인정~!"
-        else -> "UAEP 말고 UEFA로..?"
+        5f -> "UAEP 말고 UEFA로..?"
+        else -> "올바른 별점 부탁해요!"
     }
 
     return comment;

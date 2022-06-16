@@ -19,6 +19,10 @@ import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -35,11 +39,11 @@ import com.example.uaep.dto.LoginRequestDto
 import com.example.uaep.dto.LoginResponseDto
 import com.example.uaep.network.AuthService
 import com.example.uaep.network.CookieChanger
+import com.example.uaep.ui.components.ErrorDialog
 import com.example.uaep.ui.components.PasswordOutlinedTextField
 import com.example.uaep.ui.navigate.Screen
 import com.example.uaep.ui.theme.UaepTheme
 import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -50,6 +54,16 @@ fun LoginScreen(
     navController: NavController,
 ) {
     Box {
+
+        var openDialog by remember { mutableStateOf(false) }
+        var errorMessage by remember { mutableStateOf("") }
+
+        if (openDialog)
+            ErrorDialog(
+                onError = { openDialog = false },
+                errorMessage = errorMessage
+            )
+
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center,
@@ -145,11 +159,31 @@ fun LoginScreen(
                                     AuthService.getCookieJar().saveEmail(vm.email.value)
                                     navController.navigate(Screen.Home.route)
                                 } else {
-                                    val errorResponse: ErrorResponse? =
-                                        Gson().fromJson(
-                                            response.errorBody()!!.charStream(),
-                                            object : TypeToken<ErrorResponse>() {}.type
-                                        )
+                                    val errorResponse = Gson().fromJson(
+                                        response.errorBody()?.string(),
+                                        ErrorResponse::class.java
+                                    )
+
+                                    Log.d("login", errorResponse.message.toString())
+                                    when (errorResponse.message) {
+                                        is String -> {
+                                            openDialog = true
+                                            var message = "";
+
+                                            if (errorResponse.message == "Incorrect password.") {
+                                                message = "비밀번호를 확인해주세요."
+                                            } else if (errorResponse.message == "User not Found: Incorrect email.") {
+                                                message = "올바른 이메일을 입력해주세요."
+                                            } else if (errorResponse.message == "Unauthorized") {
+                                                message = "이메일 및 비밀번호를 입력해주세요."
+                                            }
+
+                                            errorMessage = message
+                                        }
+                                        else -> {
+                                            Log.d("Any", errorResponse.message.toString())
+                                        }
+                                    }
                                 }
                             }
                             override fun onFailure(call: Call<LoginResponseDto>, t: Throwable) {

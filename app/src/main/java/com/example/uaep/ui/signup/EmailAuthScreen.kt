@@ -209,7 +209,7 @@ fun EmailAuthScreen (
                                             object : TypeToken<ErrorResponse>() {}.type
                                         )
 
-                                    mToast(context, errorResponse!!.message)
+//                                    mToast(context, errorResponse!!.message)
                                 }
                             }
 

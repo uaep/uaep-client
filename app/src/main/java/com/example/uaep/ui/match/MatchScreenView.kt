@@ -4,7 +4,10 @@ import android.content.Context
 import android.graphics.Typeface
 import android.util.Log
 import android.widget.Toast
-import androidx.compose.foundation.*
+import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -17,7 +20,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.BottomAppBar
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
@@ -42,7 +47,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Paint
 import androidx.compose.ui.graphics.compositeOver
 import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.layout.ContentScale
@@ -59,15 +63,27 @@ import androidx.compose.ui.window.DialogProperties
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.uaep.R
-import com.example.uaep.dto.*
-import com.example.uaep.model.Room
+import com.example.uaep.dto.CaptainRequestDto
+import com.example.uaep.dto.Distribution
+import com.example.uaep.dto.DummyResponse
+import com.example.uaep.dto.ErrorResponse
+import com.example.uaep.dto.FormationRequestDto
+import com.example.uaep.dto.Player
+import com.example.uaep.dto.RoomDto
+import com.example.uaep.dto.Team
 import com.example.uaep.network.AuthService
 import com.example.uaep.network.CookieChanger
 import com.example.uaep.network.ReAuthService
 import com.example.uaep.ui.components.CommonTopAppBar
 import com.example.uaep.ui.profile.ProfileCard
 import com.example.uaep.ui.profile.ProfileDto
-import com.example.uaep.ui.theme.*
+import com.example.uaep.ui.theme.UaepTheme
+import com.example.uaep.ui.theme.md_theme_light_errorContainer
+import com.example.uaep.ui.theme.md_theme_light_inversePrimary
+import com.example.uaep.ui.theme.md_theme_light_inverseSurface
+import com.example.uaep.ui.theme.md_theme_light_onPrimary
+import com.example.uaep.ui.theme.md_theme_light_primary
+import com.example.uaep.ui.theme.md_theme_light_secondary
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import retrofit2.Call
@@ -375,7 +391,7 @@ private fun BottomBar(
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
-                //.windowInsetsPadding(WindowInsets.navigationBars.only(WindowInsetsSides.Vertical))
+//                .windowInsetsPadding(WindowInsets.navigationBars.only(WindowInsetsSides.Vertical))
                 .height(56.dp)
                 .fillMaxWidth()
         ) {
@@ -527,7 +543,7 @@ private fun BottomBar(
                                                                 TypeToken<ErrorResponse>() {}.type
                                                         )
                                                     if(errorResponse!!.statusCode == 403){
-                                                        Toast.makeText(context, errorResponse.message, Toast.LENGTH_LONG).show()
+//                                                        Toast.makeText(context, errorResponse.message, Toast.LENGTH_LONG).show()
                                                     }
                                                     if (errorResponse!!.message != null && (errorResponse!!.statusCode == 401)) {
                                                         ReAuthService.getInstance().reauth()
@@ -800,7 +816,7 @@ private fun ProfileDialog(
                     .clip(RoundedCornerShape(12.dp))
                     .background(color = Color.Gray)
             ) {
-                ProfileCard(profileDto = profileDto, onUpdateUserInfo = {})
+                ProfileCard(profileDto = profileDto, onUpdateUserInfo = {}, onError = {}, onErrorMessage = {})
             }
         }
     }

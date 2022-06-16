@@ -27,6 +27,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -36,14 +40,26 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.uaep.R
+import com.example.uaep.dto.DummyResponse
+import com.example.uaep.dto.ErrorResponse
 import com.example.uaep.dto.GameCreateDto
+import com.example.uaep.dto.UrlResponseDto
 import com.example.uaep.enums.Gender
 import com.example.uaep.enums.NumPlayers
+import com.example.uaep.network.AuthService
+import com.example.uaep.network.CookieChanger
+import com.example.uaep.network.ReAuthService
 import com.example.uaep.ui.components.CommonTopAppBar
+import com.example.uaep.ui.components.ErrorDialog
 import com.example.uaep.ui.components.SpinnerView
 import com.example.uaep.ui.components.SpinnerViewModel
 import com.example.uaep.ui.navigate.BottomNavigationBar
+import com.example.uaep.ui.navigate.Screen
 import com.example.uaep.ui.theme.UaepTheme
+import com.google.gson.Gson
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 enum class Limitaion (val value: String) {
     ALL("모든 레벨"),
@@ -62,6 +78,15 @@ fun MatchCreationScreen (
         Limitaion.BELOW_B3,
         Limitaion.HIGHER_SP1
     )
+
+    var openDialog by remember { mutableStateOf(false) }
+    var errorMessage by remember { mutableStateOf("") }
+
+    if (openDialog)
+        ErrorDialog(
+            onError = { openDialog = false },
+            errorMessage = errorMessage
+        )
 
     Column(
         Modifier
@@ -352,11 +377,83 @@ fun MatchCreationScreen (
                                 gender = vm.gender.value,
                                 limitaion =  vm.limitation.value
                             )
-                            Log.i("create_date", newGame.toString())
-                            vm.postGameCreation(
-                                newGame,
-                                navController
-                            )
+                            vm.gameApiService.create(newGame).enqueue(object:
+                                Callback<UrlResponseDto> {
+                                override fun onResponse(
+                                    call: Call<UrlResponseDto>,
+                                    response: Response<UrlResponseDto>
+                                ) {
+                                    if (response.isSuccessful) {
+                                        navController.navigate(Screen.Home.route)
+                                    } else {
+                                        val errorResponse = Gson().fromJson(
+                                            response.errorBody()?.string(),
+                                            ErrorResponse::class.java
+                                        )
+
+                                        when (errorResponse.message) {
+                                            is String -> {
+                                                openDialog = true
+                                                var message = "";
+
+                                                if (errorResponse.message == "You can't create a game for 여성") {
+                                                    message = "여성 전용 경기를 생성할 수 없습니다."
+                                                } else if (errorResponse.message == "You can't create a game for 남성") {
+                                                    message = "남성 전용 경기를 생성할 수 없습니다."
+                                                } else if (errorResponse.message == "5vs5 game can only be created by users with 세미프로1 level or higher.") {
+                                                    message = "5vs5 경기는 세미프로1 이상만 생성할 수 있습니다."
+                                                } else if (errorResponse.message == "You can't create this game - Level limit 세미프로1 이상") {
+                                                    message = "세미프로 1 이상인 사람만 생성 가능합니다."
+                                                }
+
+                                                errorMessage = message
+                                            }
+                                            is List<*> -> {
+                                                openDialog = true
+                                                var message = "";
+
+                                                if (errorResponse.message[0].toString() == "place should not be empty") {
+                                                    message = "경기 장소를 입력하세요."
+                                                } else if (errorResponse.message[0].toString() == "number_of_users should not be empty") {
+                                                    message = "경기 인원수를 선택하세요."
+                                                } else if (errorResponse.message[0].toString() == "gender should not be empty") {
+                                                    message = "성별을 선택하세요."
+                                                } else if (errorResponse.message[0].toString() == "level_limit must be a valid enum value") {
+                                                    message = "레벨 제한을 선택하세요."
+                                                }
+                                                errorMessage = message
+                                            }
+                                            else -> {
+                                                Log.d("Any", errorResponse.message.toString())
+                                            }
+                                        }
+
+                                        if (errorResponse.message == "Expired access token") {
+                                            ReAuthService.getInstance().reauth().enqueue(object :
+                                                Callback<DummyResponse> {
+                                                override fun onResponse(
+                                                    call: Call<DummyResponse>,
+                                                    response: Response<DummyResponse>
+                                                ) {
+                                                    if (response.isSuccessful) {
+                                                        val tokens = CookieChanger<DummyResponse>().change(response)
+                                                        AuthService.getCookieJar().saveToken(tokens)
+                                                    }
+                                                }
+                                                override fun onFailure(
+                                                    call: Call<DummyResponse>,
+                                                    t: Throwable
+                                                ) {
+                                                    Log.i("test", "실패$t")
+                                                }
+                                            })
+                                        }
+                                    }
+                                }
+                                override fun onFailure(call: Call<UrlResponseDto>, t: Throwable) {
+                                    Log.i("test", "실패$t")
+                                }
+                            })
                         },
                         modifier = Modifier
                             .fillMaxWidth(0.8f)

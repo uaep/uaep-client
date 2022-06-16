@@ -12,10 +12,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class ProfileViewModel(
-    private val userApiService: UserApiService = UserApiService.getInstance(),
-    val context: Context
-): ViewModel() {
+class ProfileViewModel(): ViewModel() {
 
     private val mName = mutableStateOf("")
     private val mPosition = mutableStateOf("")
@@ -24,6 +21,7 @@ class ProfileViewModel(
     private val mGender = mutableStateOf("")
     private val mLevel= mutableStateOf("")
     private val mPositionChangePoint = mutableStateOf(0)
+    val userApiService: UserApiService = UserApiService.getInstance()
 
     val name: State<String> = mName
     val position: State<String> = mPosition
@@ -75,20 +73,6 @@ class ProfileViewModel(
                     mProvince.value = response.body()!!.province
                     mTown.value = response.body()!!.town
                 } else {
-                    Log.d("error",response.errorBody()?.string().toString())
-//                    val errorResponse: ErrorResponse? =
-//                        Gson().fromJson(
-//                            response.errorBody()!!.charStream(),
-//                            object : TypeToken<ErrorResponse>() {}.type
-//                        )
-
-//                    Log.d("error", errorResponse?.message.toString())
-
-                    if (response.errorBody()?.string().toString().contains("points")) {
-                        mToast(context, "포지션 변경 포인트가 부족합니다.")
-                    } else if (response.errorBody()?.string().toString().contains("Precondition")) {
-                        mToast(context, "포지션 변경을 위해선 현재 참여중인 방이 없어야합니다.")
-                    }
                 }
             }
             override fun onFailure(call: Call<UserUpdateDto>, t: Throwable) {

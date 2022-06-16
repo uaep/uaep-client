@@ -30,7 +30,9 @@ import com.example.uaep.ui.theme.UaepTheme
 @Composable
 fun ProfileCard(
     profileDto: ProfileDto,
-    onUpdateUserInfo: (UserUpdateDto) -> Unit
+    onUpdateUserInfo: (UserUpdateDto) -> Unit,
+    onError: () -> Unit,
+    onErrorMessage: (String) -> Unit
 ) {
 
     var isExpanded by rememberSaveable { mutableStateOf(false) }
@@ -63,7 +65,11 @@ fun ProfileCard(
             )
             ProfileInfo(profileInfoDto = profileDto)
             AnimatedVisibility(visible = isExpanded) {
-                ProfileUpdateForm(onUpdateUserInfo)
+                ProfileUpdateForm(
+                    onUpdateUserInfo = onUpdateUserInfo,
+                    onError = onError,
+                    onErrorMessage = onErrorMessage
+                )
             }
         }
     }
@@ -91,7 +97,9 @@ fun PreviewProfileCard() {
                 level = "비기너1",
                 positionChangePoint = 1000
             ),
-            onUpdateUserInfo = {}
+            onUpdateUserInfo = {},
+            onError = {},
+            onErrorMessage = {}
         )
     }
 }
