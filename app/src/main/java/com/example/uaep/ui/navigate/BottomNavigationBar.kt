@@ -27,7 +27,8 @@ fun BottomNavigationBar(navController: NavController) {
     val bottomNavItems = listOf(
         BottomNavItem.Matching,
         BottomNavItem.Review,
-        BottomNavItem.Participating
+        BottomNavItem.Participating,
+        BottomNavItem.Ranking
     )
 
 

@@ -19,6 +19,7 @@ import com.example.uaep.ui.login.LoginViewModel
 import com.example.uaep.ui.match.MatchCreationScreen
 import com.example.uaep.ui.match.ParticipatingScreen
 import com.example.uaep.ui.profile.ProfileScreen
+import com.example.uaep.ui.rank.RankingScreen
 import com.example.uaep.ui.review.ReviewRoute
 import com.example.uaep.ui.review.ReviewViewModel
 import com.example.uaep.ui.signup.AuthCodeScreen
@@ -149,6 +150,14 @@ fun UaepNavGraph(
                 openDrawer = { /*TODO*/ },
                 navController = navController,
                 participating = true
+            )
+        }
+
+        composable(
+            route = BottomNavItem.Ranking.route
+        ) {
+            RankingScreen(
+                navController = navController
             )
         }
     }

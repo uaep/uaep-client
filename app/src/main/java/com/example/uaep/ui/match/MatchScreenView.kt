@@ -95,14 +95,16 @@ fun MatchScreen(
     Log.i("room_enter_2", room.toString())
 
     val pos = remember{ mutableStateOf<String?>(null)}
+    Log.i("pos", pos.value.toString())
     val team = remember{ mutableStateOf<Boolean?>(false)}
+    Log.i("team", team.value.toString())
     val player = remember{ mutableStateOf<Player?>(null)}
+    Log.i("player", player.value.toString())
     val profile = getProfileDto(player.value)
+    Log.i("profile", profile.toString())
     val userEmail = player.value?.email ?: null
 
-    Log.i("player", player.value.toString())
-    Log.i("pos", pos.value.toString())
-    Log.i("team", team.value.toString())
+
     val context = LocalContext.current
     Row(modifier.fillMaxSize()) {
 
@@ -139,7 +141,8 @@ fun MatchScreen(
             profile = profile,
             userEmail = userEmail,
             navController = navController,
-            teamB = team.value
+            teamB = team.value,
+            pos = pos.value
         )
     }
 }
@@ -158,7 +161,8 @@ fun MatchScreenContent(
     profile: ProfileDto?,
     userEmail: String?,
     navController: NavController,
-    teamB: Boolean?
+    teamB: Boolean?,
+    pos: String?
 ){
     Scaffold(
         topBar = {
@@ -181,7 +185,8 @@ fun MatchScreenContent(
                 playerNotSelect = playerNotSelect,
                 profile = profile,
                 userEmail = userEmail,
-                teamB = teamB
+                teamB = teamB,
+                pos = pos
             )
         }
 
@@ -200,7 +205,8 @@ fun RoomContainer(
     playerNotSelect: () -> Unit,
     profile: ProfileDto?,
     userEmail: String?,
-    teamB: Boolean?
+    teamB: Boolean?,
+    pos: String?
 ) {
     Column(modifier.verticalScroll(rememberScrollState())) {
 
@@ -211,6 +217,7 @@ fun RoomContainer(
             bottomBar = {BottomAppBar(contentPadding = PaddingValues(0.dp),elevation = 0.dp, backgroundColor = Color(0xD9FFFFFF).compositeOver(Color.White)){} }
         ) { innerPadding ->
 
+            val dialog = remember{ mutableStateOf<ProfileDto?>(null)}
             Image(
                 painter = painterResource(id = R.drawable.football_background),
                 contentDescription = stringResource(id = R.string.foot_ball_back),
@@ -248,8 +255,8 @@ fun RoomContainer(
                     }
                 }
             }
-            if (profile != null&& userEmail != AuthService.getCookieJar().loadEmail())
-                ProfileDialog(visible = true, playerNotSelect, profile!!)
+            if (dialog.value != null&& userEmail != AuthService.getCookieJar().loadEmail())
+                ProfileDialog(visible = true, { dialog.value = null }, profile!!)
 
             Column(
                 modifier = modifier
@@ -259,17 +266,24 @@ fun RoomContainer(
             ) {
 
                 //Spacer(Modifier.height(defaultSpacerSize))
-                Formation(reverse = false, Modifier.fillMaxWidth(), room.teamA, playerSelect ,teamSelect, posSelect, teamB, profile)
+                Log.i("TEAM_CHECK", room.teamA.toString())
+                Formation(reverse = false, Modifier.fillMaxWidth(), room.teamA, playerSelect ,teamSelect, posSelect, teamB, profile, pos){
+                    dialog.value = it
+                }
 
                 //Spacer(Modifier.height(defaultSpacerSize))
 
-                Formation(reverse = true, Modifier.fillMaxWidth(), room.teamB, playerSelect,teamSelect, posSelect, teamB, profile)
+                Formation(reverse = true, Modifier.fillMaxWidth(), room.teamB, playerSelect,teamSelect, posSelect, teamB, profile, pos) {
+                    dialog.value = it
+                }
                 //Spacer(Modifier.height(50.dp))
             }
         }
         Log.i("flag", "flag1")
         if(room.level_distribution !=null) {
-            Canvas(modifier = Modifier.fillMaxWidth().height(100.dp)){
+            Canvas(modifier = Modifier
+                .fillMaxWidth()
+                .height(100.dp)){
                 drawContext.canvas.nativeCanvas.drawText("  선수 등급 분포도", 0f, 0f, android.graphics.Paint().apply{
                     textSize=50f
                     typeface = Typeface.create(Typeface.SANS_SERIF, Typeface.BOLD_ITALIC)
@@ -743,7 +757,7 @@ fun CaptainButton(
 }
 
 fun getProfileDto(player: Player?): ProfileDto?{
-    if(player != null){
+    if(player?.town != null && player.province!=null){
         return ProfileDto(
             player.name,
             player.position,

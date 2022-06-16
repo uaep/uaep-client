@@ -33,7 +33,9 @@ fun Formation(
     teamSelect: (Boolean?) -> Unit,
     posSelect: (String?) -> Unit,
     teamB: Boolean?,
-    profile: ProfileDto?
+    profile: ProfileDto?,
+    pos: String?,
+    dialogSelect: (ProfileDto?) -> Unit
 //    vm: FormationViewModel
 ) {
     if(team != null) {
@@ -57,7 +59,9 @@ fun Formation(
                     reverse = reverse,
                     teamB = teamB,
                     profile = profile,
-                    captain = team.captain?.position?.lowercase() == (if (!reverse) "gk" else "fw")
+                    captain = team.captain?.position?.lowercase() == (if (!reverse) "gk" else "fw"),
+                    pos = pos,
+                    dialogSelect = dialogSelect
                 )
             }
             Row(
@@ -75,7 +79,9 @@ fun Formation(
                     reverse = reverse,
                     teamB = teamB,
                     profile = profile,
-                    captain = team.captain?.position?.lowercase() == (if (!reverse) "df1" else "mf1")
+                    captain = team.captain?.position?.lowercase() == (if (!reverse) "df1" else "mf1"),
+                    pos = pos,
+                    dialogSelect = dialogSelect
                 )
                 PositionButton(
                     color = if (!reverse) md_theme_light_tertiary else md_theme_light_secondary,
@@ -88,7 +94,9 @@ fun Formation(
                     reverse = reverse,
                     teamB = teamB,
                     profile = profile,
-                    captain = team.captain?.position?.lowercase() == (if (!reverse) "df2" else "mf2")
+                    captain = team.captain?.position?.lowercase() == (if (!reverse) "df2" else "mf2"),
+                    pos = pos,
+                    dialogSelect = dialogSelect
                 )
             }
             Row(
@@ -107,7 +115,9 @@ fun Formation(
                     reverse = reverse,
                     teamB = teamB,
                     profile = profile,
-                    captain = team.captain?.position?.lowercase() == (if (!reverse) "mf2" else "df2")
+                    captain = team.captain?.position?.lowercase() == (if (!reverse) "mf2" else "df2"),
+                    pos = pos,
+                    dialogSelect = dialogSelect
                 )
                 PositionButton(
                     color = if (!reverse) md_theme_light_secondary else md_theme_light_tertiary,
@@ -120,7 +130,9 @@ fun Formation(
                     reverse = reverse,
                     teamB = teamB,
                     profile = profile,
-                    captain = team.captain?.position?.lowercase() == (if (!reverse) "mf1" else "df1")
+                    captain = team.captain?.position?.lowercase() == (if (!reverse) "mf1" else "df1"),
+                    pos = pos,
+                    dialogSelect = dialogSelect
                 )
             }
             Row(
@@ -138,7 +150,9 @@ fun Formation(
                     reverse = reverse,
                     teamB = teamB,
                     profile = profile,
-                    captain = team.captain?.position?.lowercase() == (if (!reverse) "fw" else "gk")
+                    captain = team.captain?.position?.lowercase() == (if (!reverse) "fw" else "gk"),
+                    pos = pos,
+                    dialogSelect = dialogSelect
                 )
             }
         }
@@ -199,7 +213,9 @@ fun FormationPreview() {
                     position = "fw",
                     level = "비기너1",
                     positionChangePoint = null
-                )
+                ),
+                pos = "fw",
+                dialogSelect = {}
             )
         }
     }

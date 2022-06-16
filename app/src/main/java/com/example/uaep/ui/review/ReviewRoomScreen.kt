@@ -214,6 +214,7 @@ fun ReviewRoomContainer(
                     Color.White)){} }
         ) { innerPadding ->
 
+            val dialog = remember{ mutableStateOf<ProfileDto?>(null)}
             Image(
                 painter = painterResource(id = R.drawable.football_background),
                 contentDescription = stringResource(id = R.string.foot_ball_back),
@@ -239,11 +240,15 @@ fun ReviewRoomContainer(
             ) {
 
                 //Spacer(Modifier.height(defaultSpacerSize))
-                Formation(reverse = false, Modifier.fillMaxWidth(), room.teamA, playerSelect ,teamSelect, posSelect, teamB, profile)
+                Formation(reverse = false, Modifier.fillMaxWidth(), room.teamA, playerSelect ,teamSelect, posSelect, teamB, profile, pos){
+                    dialog.value = it
+                }
 
                 //Spacer(Modifier.height(defaultSpacerSize))
 
-                Formation(reverse = true, Modifier.fillMaxWidth(), room.teamB, playerSelect,teamSelect, posSelect, teamB, profile)
+                Formation(reverse = true, Modifier.fillMaxWidth(), room.teamB, playerSelect,teamSelect, posSelect, teamB, profile, pos){
+                    dialog.value = it
+                }
                 //Spacer(Modifier.height(50.dp))
             }
         }

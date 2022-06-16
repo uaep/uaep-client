@@ -1,8 +1,7 @@
 package com.example.uaep.ui.match
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
+import android.util.Log
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -36,6 +35,7 @@ import com.example.uaep.ui.theme.md_theme_light_primary
 import com.example.uaep.ui.theme.md_theme_light_secondary
 import com.example.uaep.ui.theme.md_theme_light_tertiary
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun PositionButton(
     color: Color,
@@ -48,11 +48,14 @@ fun PositionButton(
     reverse: Boolean,
     teamB: Boolean?,
     profile: ProfileDto?,
-    captain: Boolean
+    captain: Boolean,
+    pos: String?,
+    dialogSelect: (ProfileDto?) -> Unit
 ) {
     var enabled by remember { mutableStateOf(true) }
-    var pos = player?.position
-    if(profile != null &&pos_name==profile.position && teamB != null && teamB == reverse) {
+    //var pos = player?.position
+    Log.i("position_button_stat", (player?.name ?: "none" ) + pos + pos_name + teamB.toString() + reverse.toString())
+    if(pos != null &&pos_name==pos && teamB != null && teamB == reverse) {
         Column(horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
                 .border(
@@ -88,53 +91,61 @@ fun PositionButton(
                         .padding(10.dp)
                         .defaultMinSize(20.dp)
                         .clip(CircleShape)
-                        .clickable() {
-                            // TODO : 유저가 없으면 내가 들어가고
-                            // TODO : 유저가 있으면 그 유저 프로필 본다.
-                            if (position.value == Position.GK.value
-                                || position.value == Position.DF.value
-                                || position.value == Position.MF.value
-                                || position.value == Position.FW.value
-                            ) {
-                                //TODO: 유저 이름으로 변경되게하기
-                                playerSelect(player)
-                                teamSelect(reverse)
-                                posSelect(pos_name)
-                            } else {
-                                when (color) {
-                                    md_theme_light_primary -> pos = Position.GK.value
-                                    md_theme_light_tertiary -> pos = Position.DF.value
-                                    md_theme_light_secondary -> pos = Position.MF.value
-                                    md_theme_light_error -> pos = Position.FW.value
-                                }
+                        .combinedClickable(
+                            onClick = {
+                                // TODO : 유저가 없으면 내가 들어가고
+                                // TODO : 유저가 있으면 그 유저 프로필 본다.
+//                                if (position.value == Position.GK.value
+//                                    || position.value == Position.DF.value
+//                                    || position.value == Position.MF.value
+//                                    || position.value == Position.FW.value
+//                                ) {
+                                    //TODO: 유저 이름으로 변경되게하기
+                                    playerSelect(player)
+                                    teamSelect(reverse)
+                                    posSelect(pos_name)
+//                                } else {
+//                                    when (color) {
+//                                        md_theme_light_primary -> pos = Position.GK.value
+//                                        md_theme_light_tertiary -> pos = Position.DF.value
+//                                        md_theme_light_secondary -> pos = Position.MF.value
+//                                        md_theme_light_error -> pos = Position.FW.value
+//                                    }
+//                                }
+                            },
+                            onLongClick = {
+                                dialogSelect(profile)
                             }
-                        }
+                        )
                     ,
                     textAlign = TextAlign.Center,
                     color = md_theme_light_onPrimary,
                 )
             }
-            Row(verticalAlignment = Alignment.CenterVertically,modifier = Modifier
-                .background(color = androidx.compose.material3.MaterialTheme.colorScheme.inverseSurface)
-                .padding(1.dp)
-                .border(
-                    width = 1.dp,
-                    color = MaterialTheme.colorScheme.primary,
-                    shape = RoundedCornerShape(0)
-                )
-                .padding(1.dp)) {
-                if (captain) {
-                    Icon(
-                        imageVector = Icons.TwoTone.Copyright,
-                        contentDescription = null,
-                        tint = md_theme_light_primary
+            if(player!=null) {
+                Row(verticalAlignment = Alignment.CenterVertically,modifier = Modifier
+                    .background(color = androidx.compose.material3.MaterialTheme.colorScheme.inverseSurface)
+                    .padding(1.dp)
+                    .border(
+                        width = 1.dp,
+                        color = MaterialTheme.colorScheme.primary,
+                        shape = RoundedCornerShape(0)
+                    )
+                    .padding(1.dp)) {
+                    if (captain) {
+                        Icon(
+                            imageVector = Icons.TwoTone.Copyright,
+                            contentDescription = null,
+                            tint = md_theme_light_primary
+                        )
+                    }
+                    Text(
+                        text = player.name,
+                        color = md_theme_light_primary
                     )
                 }
-                Text(
-                    text = player?.name ?: "",
-                    color = md_theme_light_primary,
-
-                    )
+            }else{
+                Spacer(Modifier.height(20.dp))
             }
         }
     }else{
@@ -168,27 +179,32 @@ fun PositionButton(
                         .padding(10.dp)
                         .defaultMinSize(20.dp)
                         .clip(CircleShape)
-                        .clickable() {
+                        .combinedClickable(
+                            onClick = {
                             // TODO : 유저가 없으면 내가 들어가고
                             // TODO : 유저가 있으면 그 유저 프로필 본다.
-                            if (position.value == Position.GK.value
-                                || position.value == Position.DF.value
-                                || position.value == Position.MF.value
-                                || position.value == Position.FW.value
-                            ) {
+//                            if (position.value == Position.GK.value
+//                                || position.value == Position.DF.value
+//                                || position.value == Position.MF.value
+//                                || position.value == Position.FW.value
+//                            ) {
                                 //TODO: 유저 이름으로 변경되게하기
                                 playerSelect(player)
                                 teamSelect(reverse)
                                 posSelect(pos_name)
-                            } else {
-                                when (color) {
-                                    md_theme_light_primary -> pos = Position.GK.value
-                                    md_theme_light_tertiary -> pos = Position.DF.value
-                                    md_theme_light_secondary -> pos = Position.MF.value
-                                    md_theme_light_error -> pos = Position.FW.value
-                                }
+//                            } else {
+//                                when (color) {
+//                                    md_theme_light_primary -> pos = Position.GK.value
+//                                    md_theme_light_tertiary -> pos = Position.DF.value
+//                                    md_theme_light_secondary -> pos = Position.MF.value
+//                                    md_theme_light_error -> pos = Position.FW.value
+//                                }
+//                            }
+                            },
+                            onLongClick = {
+                                dialogSelect(profile)
                             }
-                        }
+                        )
                     ,
                     textAlign = TextAlign.Center,
                     color = md_theme_light_onPrimary,
@@ -237,13 +253,13 @@ fun PositionButtonPreview() {
             color = md_theme_light_primary,
             position = Position.FW,
             player = Player(
-                email = "test@gmail.com",
+                email = "tma",
                 name = "name",
                 gender = "남성",
                 province = "province",
                 town = "town",
                 position = "fw",
-                level = "비기너1",
+                level = "비기너1"
             ),
             posSelect = {  },
             teamSelect = {},
@@ -260,7 +276,9 @@ fun PositionButtonPreview() {
                 level = "비기너1",
                 positionChangePoint = null
             ),
-            captain = true
+            captain = true,
+            pos = "fw",
+            dialogSelect = {}
         )
     }
 }

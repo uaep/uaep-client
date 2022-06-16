@@ -105,7 +105,7 @@ interface AuthService {
                 authService = Retrofit.Builder()
                     .baseUrl("http://10.0.2.2:3000/")
                     .client(httpClient)
-                    .addConverterFactory(GsonConverterFactory.create(GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss").create()))
+                    .addConverterFactory(GsonConverterFactory.create())
                     .build().create(AuthService::class.java)
             }
             return authService!!

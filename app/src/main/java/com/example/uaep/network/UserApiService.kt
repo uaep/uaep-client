@@ -59,6 +59,9 @@ interface UserApiService {
         @Body userUpdateDto: UserUpdateDto
     ) : Call<UserUpdateDto>
 
+    @GET("ranks")
+    fun getRanking() : Call<List<UserDto>>
+
     // 싱글톤 객체로서, 인스턴스 생성 없이 사용할 수 있다.
     companion object{
         private var userApiService:UserApiService? = null
