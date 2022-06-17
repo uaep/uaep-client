@@ -25,8 +25,19 @@ import java.util.*
 
 @Composable
 fun RoomTitle(room: Room){
-    Text(room.title,
-        style = MaterialTheme.typography.titleLarge)
+    Row(verticalAlignment = Alignment.CenterVertically) {
+        if(room.province != null) {
+            Text(room.province, style = MaterialTheme.typography.titleLarge)
+            Spacer(Modifier.width(7.dp))
+        }
+        if(room.town != null) {
+            Text(room.town, style = MaterialTheme.typography.titleLarge)
+            Spacer(Modifier.width(7.dp))
+        }
+        Text(room.title,
+            style = MaterialTheme.typography.titleLarge)
+    }
+
 }
 
 @Composable
@@ -52,7 +63,7 @@ fun ReadTime(room: Room) {
             )
         ),
         style = MaterialTheme.typography.titleLarge,
-        modifier = Modifier.width(120.dp),
+        modifier = Modifier.width(70.dp),
         textAlign = TextAlign.Start,
         color = MaterialTheme.colorScheme.primary
     )
@@ -172,7 +183,9 @@ fun SimpleRoomPreview() {
         teamA_status = null,
         teamB_status = null,
         apply_flag = null,
-        level_limit = "비기너3 이하"
+        level_limit = "비기너3 이하",
+        province = "서울특별시",
+        town = "강서구"
     )
 
     UaepTheme {
