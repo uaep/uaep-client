@@ -169,6 +169,7 @@ fun LoginScreen(
                                         is String -> {
                                             openDialog = true
                                             var message = "";
+                                            Log.d("login-error", errorResponse.toString())
 
                                             if (errorResponse.message == "Incorrect password.") {
                                                 message = "비밀번호를 확인해주세요."
@@ -176,6 +177,8 @@ fun LoginScreen(
                                                 message = "올바른 이메일을 입력해주세요."
                                             } else if (errorResponse.message == "Unauthorized") {
                                                 message = "이메일 및 비밀번호를 입력해주세요."
+                                            } else if (errorResponse.message.contains("Your account has been locked")) {
+                                                message = "계정이 3달동안 정지됐습니다."
                                             }
 
                                             errorMessage = message

@@ -44,7 +44,7 @@ private fun displayCommentByRating(rating: Float): String {
     var comment = "";
 
     comment = when(rating) {
-        0f -> "노쇼는 아니지.. :("
+        0f -> "0점은 반드시 노쇼일 때만!"
         1f -> "왼발의 맙소사!!"
         2f -> "이 레벨은 아닌거 같은데~"
         3f -> "적절한 레벨인 듯?"
