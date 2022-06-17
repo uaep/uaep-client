@@ -398,7 +398,7 @@ private fun BottomBar(
             Log.i("bottom_bar", room.number)
             Log.i("current_date", Date().toString())
             Log.i("renew_date", Date(room.date.time+9*60*60*1000).toString())
-            when(Date(room.date.time+9*60*60*1000) > Date()){
+            when(Date(room.date.time) > Date()){
                 true -> {
                     if (pos !=null && team !=null) {
                         Button(
@@ -702,6 +702,8 @@ fun CaptainButton(
             if(profile!=null) {
                 do {
 
+                    Log.i("profile_name", profile.name)
+                    Log.i("team", type)
                     AuthService.getInstance()
                         .captain(room.id, type, CaptainRequestDto(profile.name)).enqueue(object :
                             Callback<Void> {
