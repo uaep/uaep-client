@@ -83,7 +83,7 @@ interface AuthService {
 
     @Headers("accept: application/json",
         "content-type: application/json")
-    @PATCH("reviews/{id}/{teamType}/captain")
+    @PATCH("games/{id}/{teamType}/captain")
     fun captain(
         @Path("id") id: String,
         @Path("teamType") type: String,
