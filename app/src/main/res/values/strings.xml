@@ -9,7 +9,9 @@
     <string name="home_room_personnel">%1$d vs %1$d</string>
     <string name="home_room_rank">%1$s</string>
     <string name="home_room_date">%1$02d / %2$02d</string>
-    <string name="home_tap_to_load_content">Tap to load content</string>
+    <string name="home_tap_to_load_content">매칭되는 게임이 없습니다.\n\n방을 만들어주세요!\n\n화면을 누르면 다시 게임을 찾습니다.\n\n현재 존재하는 방 중에서 방 조건이 나와 맞고\n내 포지션에 빈 자리가 있어야 합니다</string>
+
+    <string name="auto_desc">현재 존재하는 방 중에서 내 포지션에 빈 자리가 있고 실력이 나랑 가장 유사한 방</string>
 
     <!-- Match Screen -->
     <string name="match_ready">포지션 선택</string>

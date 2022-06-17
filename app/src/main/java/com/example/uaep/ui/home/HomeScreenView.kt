@@ -1,18 +1,15 @@
 package com.example.uaep.ui.home
 
+import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.defaultMinSize
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Divider
 import androidx.compose.material.Scaffold
@@ -48,6 +45,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.uaep.R
@@ -65,6 +63,7 @@ import com.example.uaep.ui.navigate.Screen
 import com.example.uaep.ui.rememberContentPaddingForScreen
 import com.example.uaep.ui.theme.Jua
 import com.example.uaep.ui.theme.UaepTheme
+import com.example.uaep.ui.theme.md_theme_light_primary
 import com.example.ueap.model.RoomsFeed
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
@@ -86,8 +85,11 @@ fun HomeFeedScreen(
     homeListLazyListState: LazyListState,
     scaffoldState: ScaffoldState,
     modifier: Modifier = Modifier,
-    navController : NavController
+    navController : NavController,
+    participating: Boolean,
+    auto: Boolean,
 ) {
+    Log.i("auto", auto.toString())
     HomeScreenWithList(
         uiState = uiState,
         showTopAppBar = showTopAppBar,
@@ -113,7 +115,9 @@ fun HomeFeedScreen(
                 additionalTop = if (showTopAppBar) 0.dp else 8.dp
             ),
             modifier = contentModifier,
-            state = homeListLazyListState
+            state = homeListLazyListState,
+            participating = participating,
+            auto = auto
         )
     }
 }
@@ -271,16 +275,40 @@ private fun PostList(
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(0.dp),
     state: LazyListState = rememberLazyListState(),
+    participating: Boolean,
+    auto: Boolean,
 ) {
     Column {
-        FilteringBar(
-            getAllGamesByRegion = getAllGamesByRegion,
-            getAllGamesByGender = getAllGamesByGender,
-            getAllGamesByLevel = getAllGamesByLevel,
-            getAllGamesByNumPlayer = getAllGamesByNumPlayer,
-            getAllGamesByStatus = getAllGamesByStatus,
-            onRefreshPosts = onRefreshPosts
-        )
+        Log.i("partici and auto", participating.toString() + auto.toString())
+        if(!participating && !auto)
+            FilteringBar(
+                getAllGamesByRegion = getAllGamesByRegion,
+                getAllGamesByGender = getAllGamesByGender,
+                getAllGamesByLevel = getAllGamesByLevel,
+                getAllGamesByNumPlayer = getAllGamesByNumPlayer,
+                getAllGamesByStatus = getAllGamesByStatus,
+                onRefreshPosts = onRefreshPosts
+            )
+        else if(auto) {
+            Column(
+                modifier = Modifier
+                    .border(
+                        width = 2.dp,
+                        color = MaterialTheme.colorScheme.primary,
+                        shape = RoundedCornerShape(15)
+                    )
+                    .padding(16.dp)
+                    .fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    stringResource(id = R.string.auto_desc),
+                    color = md_theme_light_primary,
+                    fontSize = 15.sp,
+                    fontWeight = FontWeight.ExtraBold
+                )
+            }
+        }
         LazyColumn(
             modifier = modifier,
             contentPadding = contentPadding,
@@ -668,7 +696,9 @@ fun PreviewHomeListDrawerScreen() {
             openDrawer = {},
             homeListLazyListState = rememberLazyListState(),
             scaffoldState = rememberScaffoldState(),
-            navController = rememberNavController()
+            navController = rememberNavController(),
+            participating = false,
+            auto = false
         )
     }
 }

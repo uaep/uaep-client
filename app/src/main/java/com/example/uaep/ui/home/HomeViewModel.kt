@@ -43,7 +43,7 @@ sealed interface HomeUiState {
         val selectedRoom: RoomDto,
         override val isLoading: Boolean,
         override val errorMessages: List<ErrorMessage>,
-        val isArticleOpen: Boolean
+        val isArticleOpen: Boolean,
     ) : HomeUiState
 }
 
@@ -81,7 +81,8 @@ private data class HomeViewModelState(
 }
 
 class HomeViewModel(
-    participating: Boolean
+    participating: Boolean,
+    auto: Boolean
 ) : ViewModel() {
 
     private val viewModelState = MutableStateFlow(HomeViewModelState(isLoading = true))
@@ -96,10 +97,14 @@ class HomeViewModel(
         )
 
     init {
-        if(participating)
-            refreshParticipating()
-        else
-            refreshPosts()
+
+
+        when {
+            auto -> selectAutoMatching()
+            participating -> refreshParticipating()
+            else -> refreshPosts()
+        }
+
         //refreshPosts()
     }
 
@@ -308,6 +313,77 @@ class HomeViewModel(
 
     }
 
+    fun selectAutoMatching() {
+        // Treat selecting a detail as simply interacting with it
+        var check = false
+
+        do {
+
+            AuthService.getInstance().getRecommend().enqueue(object :
+                Callback<Room> {
+                override fun onResponse(
+                    call: Call<Room>,
+                    response: Response<Room>
+                ) {
+                    if (response.isSuccessful) {
+                        if(response.body() != null)
+                            room_list = listOf(response.body()!!)
+                        else
+                            room_list = emptyList()
+                        Log.i("participating_response", response.body().toString())
+                        Log.i("participating_list", (room_list.orEmpty().toString()))
+                        val result = RoomsFeed(
+                            data = //listOf(room1, room2, room3)+
+                            room_list.orEmpty()
+                        )
+                        viewModelState.update {
+                            it.copy(roomsFeed = result, isLoading = false)
+                        }
+                        room_list = emptyList()
+
+                    } else {
+                        Log.i("rooms_fail_raw", response.raw().toString())
+                        Log.i("rooms_fail_head", response.headers().toString())
+                        check = true
+                        val errorResponse: ErrorResponse? =
+                            Gson().fromJson(
+                                response.errorBody()!!.charStream(),
+                                object : TypeToken<ErrorResponse>() {}.type
+                            )
+                        if (errorResponse!!.message != null && (errorResponse!!.statusCode == 401)) {
+                            ReAuthService.getInstance().reauth().enqueue(object :
+                                Callback<DummyResponse> {
+
+                                override fun onResponse(
+                                    call: Call<DummyResponse>,
+                                    response: Response<DummyResponse>
+                                ) {
+                                    if (response.isSuccessful) {
+                                        val tokens = CookieChanger<DummyResponse>().change(response)
+                                        AuthService.getCookieJar().saveToken(tokens)
+                                    }
+                                }
+                                override fun onFailure(
+                                    call: Call<DummyResponse>,
+                                    t: Throwable
+                                ) {
+                                    Log.i("test", "실패$t")
+                                }
+                            })
+                        }
+                    }
+                }
+                override fun onFailure(call: Call<Room>, t: Throwable) {
+                    Log.i("test", "실패$t")
+                    check = true
+                }
+            })
+        }while(check)
+        viewModelState.update {
+            it.copy( isLoading = false)
+        }
+
+    }
 
     /**
      * Notify that an error was displayed on the screen
@@ -661,11 +737,12 @@ class HomeViewModel(
      */
     companion object {
         fun provideFactory(
-            participating: Boolean
+            participating: Boolean,
+            auto: Boolean
         ): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
             @Suppress("UNCHECKED_CAST")
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                return HomeViewModel(participating) as T
+                return HomeViewModel(participating, auto) as T
             }
         }
     }

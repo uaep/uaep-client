@@ -3,6 +3,8 @@ package com.example.uaep.ui.navigate
 import android.util.Log
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
@@ -17,7 +19,6 @@ import com.example.uaep.ui.home.HomeViewModel
 import com.example.uaep.ui.login.LoginScreen
 import com.example.uaep.ui.login.LoginViewModel
 import com.example.uaep.ui.match.MatchCreationScreen
-import com.example.uaep.ui.match.ParticipatingScreen
 import com.example.uaep.ui.profile.ProfileScreen
 import com.example.uaep.ui.rank.RankingScreen
 import com.example.uaep.ui.review.ReviewRoute
@@ -39,11 +40,19 @@ fun UaepNavGraph(
     openDrawer: () -> Unit = {},
     startDestination: String = Screen.Login.route
 ) {
+
     NavHost(
         navController = navController,
         startDestination = startDestination,
         modifier = modifier
     ) {
+
+        val participating =
+            mutableStateOf(false)
+
+        val auto =
+            mutableStateOf(false)
+
         composable(route = Screen.Login.route) {
             LoginScreen(
                 vm = LoginViewModel(),
@@ -93,15 +102,18 @@ fun UaepNavGraph(
             )
         }
         composable(route = Screen.Home.route) {
+            participating.value = false
+            auto.value = false
             val homeViewModel: HomeViewModel = viewModel(
-                factory = HomeViewModel.provideFactory(false)
+                factory = HomeViewModel.provideFactory(false, false)
             )
             HomeRoute(
                 homeViewModel = homeViewModel,
                 isExpandedScreen = isExpandedScreen,
                 openDrawer = { /*TODO*/ },
                 navController = navController,
-                participating = false
+                participating = participating.value,
+                auto = auto.value
             )
         }
         composable(
@@ -141,15 +153,18 @@ fun UaepNavGraph(
         composable(
             route = BottomNavItem.Participating.route
         ) {
+            participating.value = true
+            auto.value = false
             val homeViewModel: HomeViewModel = viewModel(
-                factory = HomeViewModel.provideFactory(true)
+                factory = HomeViewModel.provideFactory(true, false)
             )
             HomeRoute(
                 homeViewModel = homeViewModel,
                 isExpandedScreen = isExpandedScreen,
                 openDrawer = { /*TODO*/ },
                 navController = navController,
-                participating = true
+                participating = participating.value,
+                auto = auto.value
             )
         }
 
@@ -158,6 +173,24 @@ fun UaepNavGraph(
         ) {
             RankingScreen(
                 navController = navController
+            )
+        }
+
+        composable(
+            route = BottomNavItem.AutoMatching.route
+        ) {
+            participating.value = false
+            auto.value = true
+            val homeViewModel: HomeViewModel = viewModel(
+                factory = HomeViewModel.provideFactory(false, true)
+            )
+            HomeRoute(
+                homeViewModel = homeViewModel,
+                isExpandedScreen = isExpandedScreen,
+                openDrawer = { /*TODO*/ },
+                navController = navController,
+                participating = participating.value,
+                auto = auto.value
             )
         }
     }

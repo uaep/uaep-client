@@ -26,9 +26,10 @@ import com.example.uaep.ui.theme.UaepTheme
 fun BottomNavigationBar(navController: NavController) {
     val bottomNavItems = listOf(
         BottomNavItem.Matching,
-        BottomNavItem.Review,
+        BottomNavItem.AutoMatching,
         BottomNavItem.Participating,
-        BottomNavItem.Ranking
+        BottomNavItem.Ranking,
+        BottomNavItem.Review
     )
 
 

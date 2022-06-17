@@ -1,14 +1,14 @@
 package com.example.uaep.ui.home
 
+import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ScaffoldState
 import androidx.compose.material.rememberScaffoldState
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.navigation.NavHostController
+import com.example.uaep.ui.match.AutoMatchingScreen
 import com.example.uaep.ui.match.MatchScreen
 
 @Composable
@@ -18,7 +18,8 @@ fun HomeRoute(
     openDrawer: () -> Unit,
     scaffoldState: ScaffoldState = rememberScaffoldState(),
     navController: NavHostController,
-    participating: Boolean
+    participating: Boolean,
+    auto: Boolean
 ) {
     // UiState of the HomeScreen
     val uiState by homeViewModel.uiState.collectAsState()
@@ -39,7 +40,9 @@ fun HomeRoute(
         scaffoldState = scaffoldState,
         navController = navController,
         participating = participating,
-        onRefreshParticipating = { homeViewModel.refreshParticipating() }
+        onRefreshParticipating = { homeViewModel.refreshParticipating() },
+        auto = auto,
+        onAutoMatching = {homeViewModel.selectAutoMatching()}
     )
 }
 
@@ -61,7 +64,9 @@ fun HomeRoute(
     scaffoldState: ScaffoldState,
     navController : NavHostController,
     participating: Boolean,
-    onRefreshParticipating: () -> Unit
+    auto: Boolean,
+    onRefreshParticipating: () -> Unit,
+    onAutoMatching: ()->Unit
 ) {
     // Construct the lazy list states for the list and the details outside of deciding which one to
     // show. This allows the associated state to survive beyond that decision, and therefore
@@ -69,7 +74,7 @@ fun HomeRoute(
     val homeListLazyListState = rememberLazyListState()
 
 
-    val homeScreenType = getHomeScreenType(isExpandedScreen, uiState, participating)
+    val homeScreenType = getHomeScreenType(isExpandedScreen, uiState, participating, auto)
     when (homeScreenType) {
         HomeScreenType.Feed -> {
             HomeFeedScreen(
@@ -86,7 +91,9 @@ fun HomeRoute(
                 openDrawer = openDrawer,
                 homeListLazyListState = homeListLazyListState,
                 scaffoldState = scaffoldState,
-                navController = navController
+                navController = navController,
+                participating = participating,
+                auto = auto
             )
         }
         HomeScreenType.ArticleDetails -> {
@@ -123,53 +130,84 @@ fun HomeRoute(
                 openDrawer = openDrawer,
                 homeListLazyListState = homeListLazyListState,
                 scaffoldState = scaffoldState,
-                navController = navController
+                navController = navController,
+                participating = participating,
+                auto = auto
             )
         }
+        HomeScreenType.AutoMatching -> {
+            HomeFeedScreen(
+                uiState = uiState,
+                showTopAppBar = !isExpandedScreen,
+                onSelectPost = onSelectRoom,
+                onRefreshPosts = onAutoMatching,
+                onErrorDismiss = onErrorDismiss,
+                getAllGamesByRegion = getAllGamesByRegion,
+                getAllGamesByGender = getAllGamesByGender,
+                getAllGamesByLevel = getAllGamesByLevel,
+                getAllGamesByNumPlayer = getAllGamesByNumPlayer,
+                getAllGamesByStatus = getAllGamesByStatus,
+                openDrawer = openDrawer,
+                homeListLazyListState = homeListLazyListState,
+                scaffoldState = scaffoldState,
+                navController = navController,
+                participating = participating,
+                auto = auto
+            )
+
+        }
+
     }
 }
 
 private enum class HomeScreenType {
     Feed,
     ArticleDetails,
-    Participating
+    Participating,
+    AutoMatching
 }
 
 @Composable
 private fun getHomeScreenType(
     isExpandedScreen: Boolean,
     uiState: HomeUiState,
-    participating: Boolean
-): HomeScreenType = if(participating) {
-    when (isExpandedScreen) {
-        false -> {
-            when (uiState) {
-                is HomeUiState.HasPosts -> {
-                    if (uiState.isArticleOpen) {
-                        HomeScreenType.ArticleDetails
-                    } else {
-                        HomeScreenType.Participating
+    participating: Boolean,
+    auto: Boolean
+): HomeScreenType =
+    if(auto){
+        HomeScreenType.AutoMatching
+    }else {
+        if (participating) {
+            when (isExpandedScreen) {
+                false -> {
+                    when (uiState) {
+                        is HomeUiState.HasPosts -> {
+                            if (uiState.isArticleOpen) {
+                                HomeScreenType.ArticleDetails
+                            } else {
+                                HomeScreenType.Participating
+                            }
+                        }
+                        is HomeUiState.NoPosts -> HomeScreenType.Participating
                     }
                 }
-                is HomeUiState.NoPosts -> HomeScreenType.Participating
+                true -> HomeScreenType.Participating
             }
-        }
-        true -> HomeScreenType.Participating
-    }
-}else{
-    when (isExpandedScreen) {
-        false -> {
-            when (uiState) {
-                is HomeUiState.HasPosts -> {
-                    if (uiState.isArticleOpen) {
-                        HomeScreenType.ArticleDetails
-                    } else {
-                        HomeScreenType.Feed
+        } else {
+            when (isExpandedScreen) {
+                false -> {
+                    when (uiState) {
+                        is HomeUiState.HasPosts -> {
+                            if (uiState.isArticleOpen) {
+                                HomeScreenType.ArticleDetails
+                            } else {
+                                HomeScreenType.Feed
+                            }
+                        }
+                        is HomeUiState.NoPosts -> HomeScreenType.Feed
                     }
                 }
-                is HomeUiState.NoPosts -> HomeScreenType.Feed
+                true -> HomeScreenType.Feed
             }
         }
-        true -> HomeScreenType.Feed
     }
-}

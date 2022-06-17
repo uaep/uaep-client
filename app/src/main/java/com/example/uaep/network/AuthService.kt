@@ -90,6 +90,12 @@ interface AuthService {
         @Body captain: CaptainRequestDto
     ) : Call<Void>
 
+    @Headers("accept: application/json",
+        "content-type: application/json")
+    @GET("games/recommend")
+    fun getRecommend(
+    ) : Call<Room>
+
     // 싱글톤 객체로서, 인스턴스 생성 없이 사용할 수 있다.
     companion object{
         private var authService:AuthService? = null
