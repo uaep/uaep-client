@@ -38,13 +38,20 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.uaep.R
+import com.example.uaep.dto.ErrorResponse
 import com.example.uaep.dto.UserUpdateDto
 import com.example.uaep.enums.*
 import com.example.uaep.ui.theme.UaepTheme
+import com.google.gson.Gson
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 @Composable
 fun ProfileUpdateForm(
-    onUpdateUserInfo: (UserUpdateDto) -> Unit
+    onUpdateUserInfo: (UserUpdateDto) -> Unit,
+    onError: () -> Unit,
+    onErrorMessage: (String) -> Unit
 ) {
     var name by rememberSaveable { mutableStateOf("") }
     var position by rememberSaveable { mutableStateOf("") }
@@ -699,7 +706,56 @@ fun ProfileUpdateForm(
         Button(
             onClick = {
                 val userUpdateDto = UserUpdateDto(name, position, province, town)
-                Log.d("userUpdateDto", userUpdateDto.toString())
+                ProfileViewModel().userApiService.updateUserInfo(userUpdateDto).enqueue(object:
+                    Callback<UserUpdateDto> {
+                    override fun onResponse(
+                        call: Call<UserUpdateDto>,
+                        response: Response<UserUpdateDto>
+                    ) {
+                        if (!response.isSuccessful) {
+                            val errorResponse = Gson().fromJson(
+                                response.errorBody()?.string(),
+                                ErrorResponse::class.java
+                            )
+
+                            Log.d("profile update", errorResponse.message.toString())
+                            when (errorResponse.message) {
+                                is String -> {
+                                    onError()
+                                    var message = "";
+
+                                    if (errorResponse.message == "Precondition : Deselect positions in all participating games") {
+                                        message = "참가 중인 경기가 있으면 포지션 변경이 불가능합니다."
+                                    } else if (errorResponse.message.contains("Not enough points")) {
+                                        message = "포지션 변경 포인트가 부족합니다."
+                                    } else if (errorResponse.message == "No detailed region selected.") {
+                                        message = "상세 주소를 선택해주세요."
+                                    }
+
+                                    onErrorMessage(message)
+                                }
+                                is List<*> -> {
+                                    onError()
+                                    var message = "";
+
+                                    if (errorResponse.message[0] == "province must be a valid enum value") {
+                                        message = "변경할 도시를 선택해주세요."
+                                    } else if (errorResponse.message[0] == "position must be a valid enum value") {
+                                        message = "변경할 포지션을 선택해주세요."
+                                    }
+
+                                    onErrorMessage(message)
+                                }
+                                else -> {
+                                    Log.d("Any", errorResponse.message.toString())
+                                }
+                            }
+                        }
+                    }
+                    override fun onFailure(call: Call<UserUpdateDto>, t: Throwable) {
+                        Log.i("test", "실패$t")
+                    }
+                })
                 onUpdateUserInfo(userUpdateDto)
             }
         ) {
@@ -720,6 +776,10 @@ fun ProfileUpdateForm(
 @Composable
 fun PreviewProfileUpdateForm() {
     UaepTheme {
-        ProfileUpdateForm(onUpdateUserInfo = {})
+        ProfileUpdateForm(
+            onUpdateUserInfo = {},
+            onError = {},
+            onErrorMessage = {}
+        )
     }
 }

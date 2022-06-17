@@ -114,12 +114,13 @@ fun ReviewDialog(
                         onValueChange = {
                             Log.d("click", it.toString())
                             rating = when (rating) {
+                                0f -> it
                                 1f -> it
                                 2f -> it
                                 3f -> it
                                 4f -> it
                                 5f -> it
-                                else -> 1f
+                                else -> it
                             }
                         }
                     )
@@ -147,17 +148,9 @@ fun ReviewDialog(
                                             onRefresh(room.id)
                                             onDismissRequest()
                                         } else {
-                                            Log.i(
-                                                "position_fail_raw",
-                                                response.raw().toString()
-                                            )
-                                            Log.i(
-                                                "position_fail_head",
-                                                response.headers().toString()
-                                            )
                                             val errorResponse: ErrorResponse? =
                                                 Gson().fromJson(
-                                                    response.errorBody()!!.charStream(),
+                                                    response.errorBody()?.toString(),
                                                     object :
                                                         TypeToken<ErrorResponse>() {}.type
                                                 )
@@ -190,7 +183,6 @@ fun ReviewDialog(
                                             }
                                         }
                                     }
-
                                     override fun onFailure(
                                         call: Call<Void>,
                                         t: Throwable

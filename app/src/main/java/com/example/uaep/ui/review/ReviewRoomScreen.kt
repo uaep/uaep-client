@@ -362,7 +362,7 @@ private fun ProfileDialog(
                     .clip(RoundedCornerShape(12.dp))
                     .background(color = Color.Gray)
             ) {
-                ProfileCard(profileDto = profileDto, onUpdateUserInfo = {})
+                ProfileCard(profileDto = profileDto, onUpdateUserInfo = {}, onError = {}, onErrorMessage = {})
             }
         }
     }
