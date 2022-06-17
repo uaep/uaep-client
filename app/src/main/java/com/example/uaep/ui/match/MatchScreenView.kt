@@ -954,7 +954,7 @@ fun RoomRank(
                 text = stringResource(
                     id = R.string.home_room_date,
                     formatArgs = arrayOf(
-                        Date(room.date.time+9*60*60*1000).month,
+                        Date(room.date.time+9*60*60*1000).month + 1,
                         Date(room.date.time+9*60*60*1000).date
                     )
                 ),

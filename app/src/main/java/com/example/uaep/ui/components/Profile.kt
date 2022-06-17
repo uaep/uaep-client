@@ -28,11 +28,11 @@ fun Profile(reviewDto: ReviewDto) {
         imageVector = Icons.Filled.Person,
         contentDescription = "Contact profile picture",
         modifier = Modifier
-            .size(150.dp)
+            .size(100.dp)
             .clip(CircleShape)
             .border(4.dp, Color.Black, CircleShape)
     )
-    Spacer(Modifier.padding(top = 20.dp))
+    Spacer(Modifier.padding(top = 10.dp))
     Row {
         Text(
             text = reviewDto.name,

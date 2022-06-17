@@ -176,6 +176,8 @@ fun LoginScreen(
                                                 message = "올바른 이메일을 입력해주세요."
                                             } else if (errorResponse.message == "Unauthorized") {
                                                 message = "이메일 및 비밀번호를 입력해주세요."
+                                            } else if (errorResponse.message.contains("Your account has been locked")) {
+                                                message = "계정이 3달동안 정지됐습니다."
                                             }
 
                                             errorMessage = message
