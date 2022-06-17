@@ -59,7 +59,7 @@ fun Formation(
                     reverse = reverse,
                     teamB = teamB,
                     profile = profile,
-                    captain = team.captain?.position?.lowercase() == (if (!reverse) "gk" else "fw"),
+                    captain = team.captain?.email == (if (!reverse) team.gk?.email else team.fw?.email),
                     pos = pos,
                     dialogSelect = dialogSelect
                 )
@@ -79,7 +79,7 @@ fun Formation(
                     reverse = reverse,
                     teamB = teamB,
                     profile = profile,
-                    captain = team.captain?.position?.lowercase() == (if (!reverse) "df1" else "mf1"),
+                    captain = team.captain?.email == (if (!reverse) team.df1?.email else team.mf1?.email),
                     pos = pos,
                     dialogSelect = dialogSelect
                 )
@@ -94,7 +94,7 @@ fun Formation(
                     reverse = reverse,
                     teamB = teamB,
                     profile = profile,
-                    captain = team.captain?.position?.lowercase() == (if (!reverse) "df2" else "mf2"),
+                    captain = team.captain?.email == (if (!reverse) team.df2?.email else team.mf2?.email),
                     pos = pos,
                     dialogSelect = dialogSelect
                 )
@@ -115,7 +115,7 @@ fun Formation(
                     reverse = reverse,
                     teamB = teamB,
                     profile = profile,
-                    captain = team.captain?.position?.lowercase() == (if (!reverse) "mf2" else "df2"),
+                    captain = team.captain?.email == (if (!reverse) team.mf2?.email else team.df2?.email),
                     pos = pos,
                     dialogSelect = dialogSelect
                 )
@@ -130,7 +130,7 @@ fun Formation(
                     reverse = reverse,
                     teamB = teamB,
                     profile = profile,
-                    captain = team.captain?.position?.lowercase() == (if (!reverse) "mf1" else "df1"),
+                    captain = team.captain?.email == (if (!reverse) team.mf1?.email else team.df1?.email) ,
                     pos = pos,
                     dialogSelect = dialogSelect
                 )
@@ -150,7 +150,7 @@ fun Formation(
                     reverse = reverse,
                     teamB = teamB,
                     profile = profile,
-                    captain = team.captain?.position?.lowercase() == (if (!reverse) "fw" else "gk"),
+                    captain = team.captain?.email == (if (!reverse) team.fw?.email else team.gk?.email),
                     pos = pos,
                     dialogSelect = dialogSelect
                 )

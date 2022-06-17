@@ -54,6 +54,7 @@ fun PositionButton(
 ) {
     var enabled by remember { mutableStateOf(true) }
     //var pos = player?.position
+    Log.i("Captain", captain.toString())
     Log.i("position_button_stat", (player?.name ?: "none" ) + pos + pos_name + teamB.toString() + reverse.toString())
     if(pos != null &&pos_name==pos && teamB != null && teamB == reverse) {
         Column(horizontalAlignment = Alignment.CenterHorizontally,
