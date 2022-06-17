@@ -58,7 +58,10 @@ class MyCookieJar : CookieJar {
 
     fun loadAllToken(): List<Cookie>{
 
-        return listOf(accessCookie!!, refreshCookie!!)
+        return if(accessCookie != null && refreshCookie != null)
+            listOf(accessCookie!!, refreshCookie!!)
+        else
+            emptyList()
     }
 
     fun saveEmail(mailaddress: String?){
